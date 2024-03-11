@@ -1,10 +1,12 @@
 # [Star Walkin] Next.js Project Template
 
-Next.js 기반의 프로젝트용 템플릿
+Project template made by Next.js
+
+This settings are useful when make SSR project for apply SEO.
 
 ## Getting Started
 
-Next.js 14 기반 프로젝트이며, CI / CD에는 통합 배포 및 호스팅 어플리케이션 Vercel을 사용하는것을 상정했습니다.
+We are using 'Vercel' for CI / CD and hosting.
 
 ### Command for Run
 
