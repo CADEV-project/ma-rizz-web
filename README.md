@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# [Star Walkin] Next.js project template
+
+Next.js 기반의 프로젝트용 템플릿
 
 ## Getting Started
 
-First, run the development server:
+Next.js 14 기반 프로젝트이며, CI / CD에는 통합 배포 및 호스팅 어플리케이션 Vercel을 사용하는것을 상정했습니다.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Command for Run
+
+If you have authorization of vercel, you can run project by vercel.
+
+```
+vercel dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+If you don't have authorization of vercel, you can run project by general command
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+yarn dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+But, in this case, you should request some env variables from other team member or documentations.
 
-## Learn More
+## Specifications
 
-To learn more about Next.js, take a look at the following resources:
+### Languages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<div style="display: flex; gap: 2rem;">
+  <img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
+</div>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Libraries
 
-## Deploy on Vercel
+<div style="display: flex; gap: 2rem;">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white" />
+  <img src="https://img.shields.io/badge/axios-671ddf?style=for-the-badge&&logo=axios&logoColor=white" />
+  <img src="https://img.shields.io/badge/Z-zustand-FFFFFF.svg?style=for-the-badge" />
+</div>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Frameworks
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<div style="display: flex; gap: 2rem;">
+  <img src="https://img.shields.io/badge/next%20js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+</div>
+
+### CI/CD
+
+<div style="display: flex; gap: 2rem;">
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+</div>
+
+### Database
+
+<div style="display: flex; gap: 2rem;">
+  <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white" />
+</div>
+
+### Hosting
+
+<div style="display: flex; gap: 2rem;">
+  <img src="https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white" />
+</div>
+
+### Linters
+
+<div style="display: flex; gap: 2rem;">
+  <img src="https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white" />
+  <img src="https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E" />
+</div>
+
+### Docs
+
+<div style="display: flex; gap: 1rem;">
+Will be updated in here.
+</div>
