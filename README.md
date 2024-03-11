@@ -1,4 +1,4 @@
-# [Star Walkin] Next.js project template
+# [Star Walkin] Next.js Project Template
 
 Next.js 기반의 프로젝트용 템플릿
 
