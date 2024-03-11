@@ -6,19 +6,43 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "postbuild": "yarn build:sitemap && if [ -f '*.map' ]; then yarn delete:sourcemap; fi",
+    "build:sitemap": "next-sitemap",
+    "delete:sourcemap": "find .next -type f -name '*.map' -delete",
+    "clear": "rm -r .next",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.6",
+    "@mui/material": "^5.15.6",
+    "@mui/material-nextjs": "^5.15.9",
+    "axios": "^1.6.7",
+    "next": "14.1.0",
+    "next-auth": "^4.24.5",
+    "next-sitemap": "^4.2.3",
+    "notistack": "^3.0.1",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.1.3"
+    "zustand": "^4.5.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@next/eslint-plugin-next": "^14.1.0",
+    "@tanstack/react-query-devtools": "^5.17.21",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8",
-    "eslint-config-next": "14.1.3"
+    "eslint-config-next": "14.1.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.4",
+    "typescript": "^5"
   }
 }
