@@ -1,3 +1,8 @@
+/** NOTE: General Constants */
+
+/** NOTE: Back-end Constants */
+
+/** NOTE: Front-end Constants */
 export const TIME_FORMAT = {
   millisecond: 1,
   seconds: (second: number) => TIME_FORMAT.millisecond * 1000 * second,
