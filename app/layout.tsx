@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 
 import './globals.css';
-
-import { combinedFontFamily } from '@/front/_utils';
+import { combinedFontFamily } from './utils';
 
 export const metadata: Metadata = {
   title: 'Create Next App',

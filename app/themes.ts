@@ -1,7 +1,8 @@
 import { createTheme } from '@mui/material';
 
+import { combinedFontFamily } from './utils';
+
 import { COLOR } from '@/constants';
-import { combinedFontFamily } from '@/front/_utils/fonts';
 
 export const theme = createTheme({
   breakpoints: {

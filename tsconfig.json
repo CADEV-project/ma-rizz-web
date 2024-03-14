@@ -19,8 +19,6 @@
     ],
     "paths": {
       "@/*": ["./app/*"],
-      "@/front/*": ["./app/(front-end)/*"],
-      "@/back/*": ["./app/(back-end)/*"],
       "#/*": ["./public/*"]
     }
   },
