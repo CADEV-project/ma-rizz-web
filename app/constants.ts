@@ -1,8 +1,33 @@
-/** NOTE: General Constants */
+/** NOTE: General Constants Part */
 
-/** NOTE: Back-end Constants */
+/** NOTE: Back-end Constants Part */
+export const API_URL = {
+  health: '/health',
+  auths: {
+    update: '/auths/update',
+    delete: '/auths/delete',
+    verify: '/auths/verify',
+  },
+  users: {
+    me: '/users/me',
+  },
+} as const;
 
-/** NOTE: Front-end Constants */
+/** NOTE: Front-end Constants Part */
+export const ROUTE_URL = {
+  home: '/',
+  auths: {
+    signIn: '/auths/sign-in',
+    signUp: '/auths/sign-up',
+    verify: '/auths/verify',
+    newUser: '/auths/new-user',
+    error: '/auths/error',
+  },
+  users: {
+    me: '/users/me',
+  },
+} as const;
+
 export const TIME_FORMAT = {
   millisecond: 1,
   seconds: (second: number) => TIME_FORMAT.millisecond * 1000 * second,

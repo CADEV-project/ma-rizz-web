@@ -13,3 +13,9 @@ body {
   font-size: 1rem;
   font-weight: 400;
 }
+
+#global-layout {
+  max-width: 120rem;
+  margin: 0 auto;
+  height: 100%;
+}

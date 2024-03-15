@@ -1,11 +1,11 @@
-const SignInPage: React.FC = () => {
+const AuthSignInPage: React.FC = () => {
   return (
-    <main>
+    <section>
       <h1>/auths/sign-in</h1>
       <h3>Sign In Page</h3>
       <h5>로그인 페이지</h5>
-    </main>
+    </section>
   );
 };
 
-export default SignInPage;
+export default AuthSignInPage;
