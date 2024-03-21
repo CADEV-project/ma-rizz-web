@@ -1,4 +1,4 @@
-import { NotFound, UnprocessableEntity } from '@/(server)/errors';
+import { NotFound, ValidationFailed } from '@/(server)/errors';
 
 type CommonRequestBody = Record<string, unknown>;
 
@@ -13,21 +13,23 @@ export function requestBodyParser<RequestBody extends CommonRequestBody>(
   requestBody: any,
   fields: (keyof RequestBody)[]
 ): RequestBody | undefined {
-  const unprocessableEntities: string[] = [];
+  const validationFailedEntities: { field: string; reason: string }[] = [];
 
   if (!requestBody || typeof requestBody !== 'object' || Object.keys(requestBody).length === 0)
-    throw new NotFound({});
+    throw new NotFound({ type: 'NotFound', code: 404 });
 
   const requestBodyKeys = Object.keys(requestBody);
 
   fields.forEach(field => {
     if (typeof field !== 'string' || !requestBodyKeys.includes(field))
-      unprocessableEntities.push(field as string);
+      validationFailedEntities.push({ field: field as string, reason: 'required' });
   });
 
-  if (unprocessableEntities.length > 0)
-    throw new UnprocessableEntity({
-      detail: unprocessableEntities.map(entity => ({ field: entity, reason: 'Invalid field.' })),
+  if (validationFailedEntities.length > 0)
+    throw new ValidationFailed({
+      type: 'ValidationFailed',
+      code: 422,
+      detail: validationFailedEntities,
     });
 
   return requestBody as RequestBody;

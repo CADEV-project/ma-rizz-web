@@ -1,35 +1,21 @@
 import { NextResponse } from 'next/server';
 
 import { BaseError } from './BaseError';
-import {
-  BadRequest,
-  Conflict,
-  Forbidden,
-  Locked,
-  NotFound,
-  PreconditionFailed,
-  RequestTimeout,
-  TooManyRequests,
-  Unauthorized,
-  UnprocessableEntity,
-  UnsupportedMediaType,
-} from './clients';
-import { InternalServerError, NetworkAuthenticationRequired } from './servers';
+import { Forbidden } from './Forbidden';
+import { InternalServerError } from './InternalServerError';
+import { NotFound } from './NotFound';
+import { NotImplemented } from './NotImplemented';
+import { Unauthorized } from './Unauthorized';
+import { UnsupportedMediaType } from './UnsupportedMediaType';
+import { ValidationFailed } from './ValidationFailed';
 
 const BASE_ERROR: Record<string, typeof BaseError> = {
-  BadRequest,
-  Conflict,
   Forbidden,
-  Locked,
   NotFound,
-  PreconditionFailed,
-  RequestTimeout,
-  TooManyRequests,
+  NotImplemented,
   Unauthorized,
-  UnprocessableEntity,
   UnsupportedMediaType,
-  InternalServerError,
-  NetworkAuthenticationRequired,
+  ValidationFailed,
 };
 
 const isBaseError = (error: unknown): error is BaseError => {
@@ -41,27 +27,31 @@ const isBaseError = (error: unknown): error is BaseError => {
   );
 };
 
-export const errorHandler = (error: unknown) => {
-  if (isBaseError(error)) {
-    return NextResponse.json(error, { status: error.code, statusText: error.type });
+export const errorResponse = (error: unknown): NextResponse<BaseError> => {
+  if (!isBaseError(error)) {
+    const internalServerError = new InternalServerError({
+      type: 'InternalServerError',
+      code: 500,
+      detail: { error: error as Error },
+    });
+
+    return NextResponse.json(internalServerError, {
+      status: internalServerError.code,
+      statusText: internalServerError.type,
+    });
   }
 
-  return NextResponse.json(error, { status: 512, statusText: 'Unhandled Error' });
+  console.info('Case B');
+  return NextResponse.json(error, { status: error.code, statusText: error.type });
 };
 
 export * from './BaseError';
 export {
-  BadRequest,
-  Conflict,
   Forbidden,
-  Locked,
-  NotFound,
-  PreconditionFailed,
-  RequestTimeout,
-  TooManyRequests,
-  Unauthorized,
-  UnprocessableEntity,
-  UnsupportedMediaType,
   InternalServerError,
-  NetworkAuthenticationRequired,
+  NotFound,
+  NotImplemented,
+  Unauthorized,
+  UnsupportedMediaType,
+  ValidationFailed,
 };

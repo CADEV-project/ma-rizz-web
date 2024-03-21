@@ -1,0 +1,25 @@
+import { BaseErrorData, BaseError } from './BaseError';
+
+type InternalServerErrorType = 'InternalServerError';
+
+type InternalServerErrorCode = 500;
+
+type InternalServerErrorDetail = {
+  error: Error;
+};
+
+export class InternalServerError extends BaseError {
+  type!: InternalServerErrorType;
+  code!: InternalServerErrorCode;
+  detail!: InternalServerErrorDetail;
+
+  constructor(
+    payload: BaseErrorData<
+      InternalServerErrorType,
+      InternalServerErrorCode,
+      InternalServerErrorDetail
+    >
+  ) {
+    super(payload);
+  }
+}

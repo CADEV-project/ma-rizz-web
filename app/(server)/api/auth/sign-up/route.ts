@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { User, UserEntity } from '@/(server)/entities';
-import { errorHandler } from '@/(server)/errors';
+import { errorResponse } from '@/(server)/errors';
 import { dbConnect } from '@/(server)/libs';
 import { requestBodyParser } from '@/(server)/utils';
 
@@ -27,6 +27,6 @@ export const POST = async (request: NextRequest) => {
 
     return NextResponse.json({}, { status: 201, statusText: 'Success' });
   } catch (error) {
-    return errorHandler(error);
+    return errorResponse(error);
   }
 };
