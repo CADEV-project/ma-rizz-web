@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 import './globals.css';
-import { Provider } from './components';
-import { combinedFontFamily } from './utils';
+import { Provider } from './(client)/components';
+import { combinedFontFamily } from './(client)/utils';
 
 export const metadata: Metadata = {
   title: 'Next.js Project Template',

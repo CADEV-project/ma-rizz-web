@@ -1,15 +1,15 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
+import NextImage from 'next/image';
 import { useEffect } from 'react';
 
 import axios from 'axios';
 
-import { CommonLayout } from './components';
+import { CommonLayout } from './(client)/components';
+
+import earthWebP from '#/images/earth.webp';
 
 const Page: React.FC = () => {
-  const session = useSession();
-
   const healthCheck = async () => {
     try {
       const res = await axios.get('/api/health?type=test');
@@ -22,8 +22,6 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     healthCheck();
-
-    console.info('Session', session.data);
   }, []);
 
   return (
@@ -31,6 +29,7 @@ const Page: React.FC = () => {
       <h1>/</h1>
       <h3>Home Page</h3>
       <h5>홈 페이지</h5>
+      <NextImage alt='web-p' src={earthWebP} />
     </CommonLayout>
   );
 };

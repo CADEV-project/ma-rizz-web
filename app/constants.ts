@@ -1,24 +1,24 @@
-/** NOTE: General Constants Part */
-
 /** NOTE: Back-end Constants Part */
 export const API_URL = {
   health: '/health',
-  auths: {
-    update: '/auths/update',
-    delete: '/auths/delete',
-    verify: '/auths/verify',
-  },
-  users: {
-    me: '/users/me',
+  auth: {
+    duplicateCheck: '/auth/duplicate-check',
+    delete: '/auth/delete',
+    me: '/auth/me',
+    signIn: '/auth/sign-in',
+    signUp: '/auth/sign-up',
+    update: '/auth/update',
+    verify: '/auth/verify',
+    passwordReset: '/auth/password-reset',
   },
 } as const;
 
 /** NOTE: Front-end Constants Part */
 export const ROUTE_URL = {
   home: '/',
+  error: '/error',
   auths: {
     signIn: '/auths/sign-in',
-    signUp: '/auths/sign-up',
     verify: '/auths/verify',
     newUser: '/auths/new-user',
     error: '/auths/error',
