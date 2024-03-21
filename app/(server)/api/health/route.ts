@@ -1,8 +1,13 @@
-import { NextResponse } from 'next/server';
+import { SuccessResponse } from '@/(server)/utils';
 
+/**
+ * NOTE: /api/health
+ * This is a health check endpoint.
+ * @returns Empty object.
+ */
 export const GET = async () => {
   // TODO: Implement logging.
   console.info('GET /api/health');
 
-  return NextResponse.json({}, { status: 200, statusText: 'Success' });
+  return SuccessResponse();
 };

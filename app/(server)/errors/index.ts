@@ -27,7 +27,7 @@ const isBaseError = (error: unknown): error is BaseError => {
   );
 };
 
-export const errorResponse = (error: unknown): NextResponse<BaseError> => {
+export const ErrorResponse = (error: unknown): NextResponse<BaseError> => {
   if (!isBaseError(error)) {
     const internalServerError = new InternalServerError({
       type: 'InternalServerError',
@@ -41,7 +41,6 @@ export const errorResponse = (error: unknown): NextResponse<BaseError> => {
     });
   }
 
-  console.info('Case B');
   return NextResponse.json(error, { status: error.code, statusText: error.type });
 };
 

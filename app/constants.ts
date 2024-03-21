@@ -2,14 +2,20 @@
 export const API_URL = {
   health: '/health',
   auth: {
-    duplicateCheck: '/auth/duplicate-check',
-    delete: '/auth/delete',
-    me: '/auth/me',
-    signIn: '/auth/sign-in',
+    duplicateEmailCheck: '/auth/duplicate-email-check',
     signUp: '/auth/sign-up',
-    update: '/auth/update',
-    verify: '/auth/verify',
+    signIn: '/auth/sign-in',
+    findMyEmail: '/auth/find-my-email',
     passwordReset: '/auth/password-reset',
+    me: '/auth/me',
+    signOut: '/auth/sign-out',
+    update: {
+      email: '/auth/update/email',
+      password: '/auth/update/password',
+      me: '/auth/update/me',
+      status: '/auth/update/status',
+    },
+    delete: '/auth/delete',
   },
 } as const;
 
@@ -18,13 +24,19 @@ export const ROUTE_URL = {
   home: '/',
   error: '/error',
   auths: {
+    signUp: '/auths/sign-up',
     signIn: '/auths/sign-in',
-    verify: '/auths/verify',
-    newUser: '/auths/new-user',
-    error: '/auths/error',
+    findMyEmail: '/auths/find-my-email',
+    passwordReset: '/auths/password-reset',
+    me: '/auths/me',
+    updates: {
+      email: '/auths/updates/email',
+      password: '/auths/updates/password',
+      me: '/auths/updates/me',
+    },
   },
   users: {
-    me: '/users/me',
+    new: '/users/new',
   },
 } as const;
 

@@ -1,6 +1,6 @@
-import { NotFound, ValidationFailed } from '@/(server)/errors';
+import { NotFound } from '@/(server)/errors';
 
-type CommonRequestBody = Record<string, unknown>;
+type CommonBody = Record<string, unknown>;
 
 /**
  * NOTE: Check request body is valid
@@ -8,29 +8,29 @@ type CommonRequestBody = Record<string, unknown>;
  * - If request body has no key, return false.
  * - If request body has key that is not in fields, return false.
  */
-export function requestBodyParser<RequestBody extends CommonRequestBody>(
+export function bodyParser<Body extends CommonBody>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  requestBody: any,
-  fields: (keyof RequestBody)[]
-): RequestBody | undefined {
-  const validationFailedEntities: { field: string; reason: string }[] = [];
+  body: any,
+  fields: (keyof Body)[]
+): Body {
+  const notFoundFields: string[] = [];
 
-  if (!requestBody || typeof requestBody !== 'object' || Object.keys(requestBody).length === 0)
-    throw new NotFound({ type: 'NotFound', code: 404 });
+  if (!body || typeof body !== 'object' || Object.keys(body).length === 0)
+    throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['body'] } });
 
-  const requestBodyKeys = Object.keys(requestBody);
+  const requestBodyKeys = Object.keys(body);
 
   fields.forEach(field => {
     if (typeof field !== 'string' || !requestBodyKeys.includes(field))
-      validationFailedEntities.push({ field: field as string, reason: 'required' });
+      notFoundFields.push(field as string);
   });
 
-  if (validationFailedEntities.length > 0)
-    throw new ValidationFailed({
-      type: 'ValidationFailed',
-      code: 422,
-      detail: validationFailedEntities,
+  if (notFoundFields.length > 0)
+    throw new NotFound({
+      type: 'NotFound',
+      code: 404,
+      detail: { fields: notFoundFields },
     });
 
-  return requestBody as RequestBody;
+  return body as Body;
 }

@@ -14,22 +14,11 @@ import { Button } from '@mui/material';
 
 import * as S from './SignUpForm.styles';
 
-import { GENDER, Gender } from '@/(server)/unions';
-
-import { authSignUpRequest } from '@/(client)/requests';
+import { AuthSignUpRequestParams, authSignUpRequest } from '@/(client)/requests';
 
 import { ROUTE_URL } from '@/constants';
 
-type SignUpFormContextProps = {
-  email: string;
-  password: string;
-  passwordAccept: string;
-  name: string;
-  phoneNumber: string;
-  age: string;
-  gender: Gender;
-  address: string;
-};
+type SignUpFormContextProps = AuthSignUpRequestParams & { passwordAccept: string };
 
 const SIGN_UP_FORM_DEFAULT_VALUES: SignUpFormContextProps = {
   email: '',
@@ -38,7 +27,7 @@ const SIGN_UP_FORM_DEFAULT_VALUES: SignUpFormContextProps = {
   name: '',
   phoneNumber: '',
   age: '',
-  gender: GENDER['male'],
+  gender: 'male',
   address: '',
 };
 
