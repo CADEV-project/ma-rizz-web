@@ -1,27 +1,28 @@
 'use client';
 
 import NextImage from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import axios from 'axios';
+import { CommonLayout } from './(client)/component';
 
-import { CommonLayout } from './(client)/components';
-
-import earthWebP from '#/images/earth.webp';
+import dog1 from '#/images/dog1.jpg';
+import dog2 from '#/images/dog2.jpg';
 
 const Page: React.FC = () => {
-  const healthCheck = async () => {
-    try {
-      const res = await axios.get('/api/health?type=test');
-
-      console.info(res);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const [position, setPosition] = useState<'frame1' | 'frame2'>('frame1');
 
   useEffect(() => {
-    healthCheck();
+    const interval = setInterval(() => {
+      setPosition(prev => {
+        if (prev === 'frame1') {
+          return 'frame2';
+        }
+
+        return 'frame1';
+      });
+    }, 500);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -29,7 +30,7 @@ const Page: React.FC = () => {
       <h1>/</h1>
       <h3>Home Page</h3>
       <h5>홈 페이지</h5>
-      <NextImage alt='web-p' src={earthWebP} />
+      <NextImage alt='running-dog' src={position === 'frame1' ? dog1 : dog2} />
     </CommonLayout>
   );
 };
