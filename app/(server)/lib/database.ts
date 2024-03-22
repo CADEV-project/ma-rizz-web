@@ -1,4 +1,4 @@
-import { ConnectOptions, connect } from 'mongoose';
+import { ConnectOptions, Types, connect } from 'mongoose';
 
 import { InternalServerError, NotFound } from '@/(server)/error';
 
@@ -40,4 +40,8 @@ export const dbConnect = async () => {
       throw error;
     }
   }
+};
+
+export const getObjectId = (id: string) => {
+  return new Types.ObjectId(id);
 };

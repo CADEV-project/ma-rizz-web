@@ -6,7 +6,7 @@ import {
   FormContainer,
   PasswordElement,
   TextFieldElement,
-  useFormContext,
+  useForm,
 } from 'react-hook-form-mui';
 
 import { Button } from '@mui/material';
@@ -24,14 +24,12 @@ const SIGN_IN_FORM_DEFAULT_VALUES: SignInFormProps = {
 };
 
 export const SignInForm: React.FC = () => {
-  const signInFormContext = useFormContext<SignInFormProps>();
+  const signInForm = useForm<SignInFormProps>();
 
   const onSignInFormSuccess = async ({ email, password }: SignInFormProps) => {
-    await signIn('Credentials', {
+    await signIn('credentials', {
       email,
       password,
-      redirect: true,
-      callbackUrl: 'http://localhost:3000',
     });
   };
 
@@ -42,7 +40,7 @@ export const SignInForm: React.FC = () => {
   return (
     <S.Container>
       <FormContainer
-        context={signInFormContext}
+        formContext={signInForm}
         defaultValues={SIGN_IN_FORM_DEFAULT_VALUES}
         onSuccess={onSignInFormSuccess}
         onError={onSignInFormError}>

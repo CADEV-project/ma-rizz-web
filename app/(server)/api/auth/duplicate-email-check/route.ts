@@ -1,31 +1,32 @@
 import { NextRequest } from 'next/server';
 
-import { UserModel } from '@/(server)/entity';
-import { ErrorResponse, NotFound } from '@/(server)/error';
-import { dbConnect } from '@/(server)/lib';
-import { SuccessResponse } from '@/(server)/util';
+import {
+  AuthDuplicateEmailCheckRequestSearchParams,
+  AuthDuplicateEmailCheckResponse,
+} from './type';
 
-type GetResponse = {
-  isDuplicate: boolean;
-};
+import { ErrorResponse } from '@/(server)/error';
+import { dbConnect } from '@/(server)/lib';
+import { UserModel } from '@/(server)/model';
+import { SuccessResponse, searchParamsParser } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/duplicate-email-check
- * @params email: string
+ * @params AuthDuplicateEmailCheckRequestSearchParams
+ * @returns AuthDuplicateEmailCheckResponse
  */
 export const GET = async (request: NextRequest) => {
   try {
     await dbConnect();
 
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = searchParamsParser<AuthDuplicateEmailCheckRequestSearchParams>(
+      request.nextUrl.searchParams,
+      ['email']
+    );
 
-    const email = searchParams.get('email');
+    const user = await UserModel.findOne({ email: searchParams.email }).exec();
 
-    if (!email) throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['email'] } });
-
-    const user = await UserModel.findOne({ email });
-
-    return SuccessResponse<GetResponse>('GET', { isDuplicate: !!user });
+    return SuccessResponse<AuthDuplicateEmailCheckResponse>('GET', { isDuplicate: !!user });
   } catch (error) {
     return ErrorResponse(error);
   }

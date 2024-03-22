@@ -7,18 +7,29 @@ import {
   PasswordElement,
   RadioButtonGroup,
   TextFieldElement,
-  useFormContext,
+  useForm,
 } from 'react-hook-form-mui';
 
 import { Button } from '@mui/material';
 
 import * as S from './SignUpForm.styles';
 
-import { AuthSignUpRequestParams, authSignUpRequest } from '@/(client)/request';
+import { Gender } from '@/(server)/union';
+
+import { authSignUpRequest } from '@/(client)/request';
 
 import { ROUTE_URL } from '@/constant';
 
-type SignUpFormProps = AuthSignUpRequestParams & { passwordAccept: string };
+type SignUpFormProps = {
+  email: string;
+  password: string;
+  passwordAccept: string;
+  name: string;
+  phoneNumber: string;
+  age: string;
+  gender: Gender;
+  address: string;
+};
 
 const SIGN_UP_FORM_DEFAULT_VALUES: SignUpFormProps = {
   email: '',
@@ -33,7 +44,7 @@ const SIGN_UP_FORM_DEFAULT_VALUES: SignUpFormProps = {
 
 export const SignUpForm: React.FC = () => {
   const router = useRouter();
-  const signUpFormContext = useFormContext<SignUpFormProps>();
+  const signUpForm = useForm<SignUpFormProps>();
 
   const onSignUpFormSuccess = async ({
     email,
@@ -46,7 +57,11 @@ export const SignUpForm: React.FC = () => {
     address,
   }: SignUpFormProps) => {
     try {
-      if (password !== passwordAccept) throw new Error('비밀번호가 일치하지 않습니다.');
+      if (password !== passwordAccept) {
+        signUpForm.setError('passwordAccept', { message: '비밀번호가 일치하지 않습니다.' });
+
+        return;
+      }
 
       await authSignUpRequest({
         email,
@@ -71,7 +86,7 @@ export const SignUpForm: React.FC = () => {
   return (
     <S.Container>
       <FormContainer
-        context={signUpFormContext}
+        formContext={signUpForm}
         defaultValues={SIGN_UP_FORM_DEFAULT_VALUES}
         onSuccess={onSignUpFormSuccess}
         onError={onSignUpFormError}>

@@ -34,3 +34,36 @@ export function bodyParser<Body extends CommonBody>(
 
   return body as Body;
 }
+
+type CommonSearchParams = Record<string, unknown>;
+
+type SearchParamsParserReturn<T extends CommonSearchParams> = { [K in keyof T]: string };
+
+export function searchParamsParser<SearchParams extends CommonSearchParams>(
+  searchParams: URLSearchParams,
+  fields: (keyof SearchParams)[]
+): SearchParamsParserReturn<SearchParams> {
+  const notFoundFields: string[] = [];
+
+  if (!searchParams || searchParams.toString().length === 0)
+    throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['searchParams'] } });
+
+  const searchParamsKeys = Array.from(searchParams.keys());
+  const searchParamsObject: Record<string, string> = {};
+
+  fields.forEach(field => {
+    if (typeof field !== 'string' || !searchParamsKeys.includes(field))
+      return notFoundFields.push(field as string);
+
+    searchParamsObject[field as string] = searchParams.get(field as string) as string;
+  });
+
+  if (notFoundFields.length > 0)
+    throw new NotFound({
+      type: 'NotFound',
+      code: 404,
+      detail: { fields: notFoundFields },
+    });
+
+  return searchParamsObject as SearchParamsParserReturn<SearchParams>;
+}

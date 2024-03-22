@@ -1,18 +1,10 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import 'next-auth';
 import 'next-auth/jwt';
 
+import { AuthSignInResponse } from '@/(server)/api/auth/sign-in/type';
+
 declare module 'next-auth' {
-  interface User {
-    id: string;
-    email: string;
-    password: string;
-    name: string;
-    phoneNumber: string;
-    gender: string;
-    address: string;
-    createdAt: string;
-  }
+  export type User = AuthSignInResponse;
   interface Session {
     user: User;
   }
@@ -21,6 +13,5 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   interface JWT {
     id: string;
-    email: string;
   }
 }

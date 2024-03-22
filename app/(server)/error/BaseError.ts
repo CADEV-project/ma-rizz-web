@@ -14,10 +14,26 @@ export class BaseError extends Error {
   constructor(payload: BaseErrorData) {
     super();
 
-    this.name = this.constructor.name;
+    this.name = payload.type;
     this.type = payload.type;
     this.code = payload.code;
     this.detail = payload.detail || '';
     this.message = payload.message || '';
   }
 }
+
+export type DatabaseError = {
+  errors: DatabaseErrorColumn;
+};
+
+type DatabaseErrorColumn = Record<string, DatabaseErrorData>;
+
+type DatabaseErrorData = {
+  name: string;
+  message: string;
+  properties: unknown;
+  kind: string;
+  path: string;
+  value: string;
+  reason: BaseError;
+};

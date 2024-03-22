@@ -1,24 +1,26 @@
 import { NextRequest } from 'next/server';
 
-import { ErrorResponse, NotFound } from '@/(server)/error';
+import { AuthDeleteRequestSearchParams } from './type';
+
+import { ErrorResponse } from '@/(server)/error';
 import { dbConnect } from '@/(server)/lib';
-import { SuccessResponse } from '@/(server)/util';
+import { SuccessResponse, searchParamsParser } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/delete
  * @requires token
- * @params password: string
+ * @params AuthDeleteRequestSearchParams
  */
 export const DELETE = async (request: NextRequest) => {
   try {
     await dbConnect();
 
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = searchParamsParser<AuthDeleteRequestSearchParams>(
+      request.nextUrl.searchParams,
+      ['password']
+    );
 
-    const password = searchParams.get('password');
-
-    if (!password)
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['password'] } });
+    console.info(searchParams);
 
     // TODO: Implement logic.
     // Find account by token and check the password is correct.

@@ -1,19 +1,27 @@
 import { baseAPIRequest } from '.';
 
-import { User } from '@/(server)/entity';
-import { Gender, UserStatus } from '@/(server)/union';
-
+import { AuthDeleteRequestSearchParams } from '@/(server)/api/auth/delete/type';
+import {
+  AuthDuplicateEmailCheckRequestSearchParams,
+  AuthDuplicateEmailCheckResponse,
+} from '@/(server)/api/auth/duplicate-email-check/type';
+import {
+  AuthFindMyEmailRequestSearchParams,
+  AuthFindMyEmailResponse,
+} from '@/(server)/api/auth/find-my-email/type';
+import { AuthMeResponse } from '@/(server)/api/auth/me/type';
+import { AuthPasswordResetRequestBody } from '@/(server)/api/auth/password-reset/type';
+import { AuthSignInRequestBody, AuthSignInResponse } from '@/(server)/api/auth/sign-in/type';
+import { AuthSignUpRequestBody } from '@/(server)/api/auth/sign-up/type';
+import { AuthUpdateEmailRequestBody } from '@/(server)/api/auth/update/email/type';
+import { AuthUpdateMeRequestBody } from '@/(server)/api/auth/update/me/type';
+import { AuthUpdatePasswordRequestBody } from '@/(server)/api/auth/update/password/type';
+import { AuthUpdateStatusRequestBody } from '@/(server)/api/auth/update/status/type';
 import { API_URL } from '@/constant';
 
-type AuthDuplicateEmailCheckParams = {
-  email: string;
-};
-
-type AuthDuplicateEmailCheckResponse = {
-  isDuplicate: boolean;
-};
-
-export const authDulicateEmailCheckRequest = async ({ email }: AuthDuplicateEmailCheckParams) => {
+export const authDulicateEmailCheckRequest = async ({
+  email,
+}: AuthDuplicateEmailCheckRequestSearchParams) => {
   const response = await baseAPIRequest<AuthDuplicateEmailCheckResponse>({
     method: 'get',
     url: API_URL.auth.duplicateEmailCheck,
@@ -23,8 +31,6 @@ export const authDulicateEmailCheckRequest = async ({ email }: AuthDuplicateEmai
   return response.data;
 };
 
-export type AuthSignUpRequestParams = Omit<User, 'id' | 'status'>;
-
 export const authSignUpRequest = async ({
   email,
   password,
@@ -33,7 +39,7 @@ export const authSignUpRequest = async ({
   age,
   gender,
   address,
-}: AuthSignUpRequestParams) => {
+}: AuthSignUpRequestBody) => {
   const response = await baseAPIRequest<void>({
     method: 'post',
     url: API_URL.auth.signUp,
@@ -51,17 +57,7 @@ export const authSignUpRequest = async ({
   return response.data;
 };
 
-type AuthSignInParams = {
-  email: string;
-  password: string;
-};
-
-type AuthSignInResponse = {
-  accessToken: string;
-  refreshToken: string;
-};
-
-export const authSignInRequest = async ({ email, password }: AuthSignInParams) => {
+export const authSignInRequest = async ({ email, password }: AuthSignInRequestBody) => {
   const response = await baseAPIRequest<AuthSignInResponse>({
     method: 'post',
     url: API_URL.auth.signIn,
@@ -74,16 +70,11 @@ export const authSignInRequest = async ({ email, password }: AuthSignInParams) =
   return response.data;
 };
 
-type AuthFindMyEmailParams = {
-  isVerified: boolean;
-  phoneNumber: string;
-};
-
 export const authFindMyEmailRequest = async ({
   phoneNumber,
   isVerified,
-}: AuthFindMyEmailParams) => {
-  const response = await baseAPIRequest<void>({
+}: AuthFindMyEmailRequestSearchParams) => {
+  const response = await baseAPIRequest<AuthFindMyEmailResponse>({
     method: 'get',
     url: API_URL.auth.findMyEmail,
     params: {
@@ -95,17 +86,11 @@ export const authFindMyEmailRequest = async ({
   return response.data;
 };
 
-type AuthPasswordResetParams = {
-  email: string;
-  newPassword: string;
-  isVerified: boolean;
-};
-
 export const authPasswordResetRequest = async ({
   email,
   newPassword,
   isVerified,
-}: AuthPasswordResetParams) => {
+}: AuthPasswordResetRequestBody) => {
   const response = await baseAPIRequest<void>({
     method: 'patch',
     url: API_URL.auth.passwordReset,
@@ -118,8 +103,6 @@ export const authPasswordResetRequest = async ({
 
   return response.data;
 };
-
-export type AuthMeResponse = Omit<User, 'id'>;
 
 export const authMeRequest = async () => {
   const response = await baseAPIRequest<AuthMeResponse>({
@@ -141,11 +124,7 @@ export const authSignOutRequest = async () => {
   return response.data;
 };
 
-type AuthUpdateEmailParams = {
-  email: string;
-};
-
-export const authUpdateEmailRequest = async ({ email }: AuthUpdateEmailParams) => {
+export const authUpdateEmailRequest = async ({ email }: AuthUpdateEmailRequestBody) => {
   const response = await baseAPIRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.email,
@@ -158,15 +137,10 @@ export const authUpdateEmailRequest = async ({ email }: AuthUpdateEmailParams) =
   return response.data;
 };
 
-type AuthUpdatePasswordParams = {
-  currentPassword: string;
-  newPassword: string;
-};
-
 export const authUpdatePasswordRequest = async ({
   currentPassword,
   newPassword,
-}: AuthUpdatePasswordParams) => {
+}: AuthUpdatePasswordRequestBody) => {
   const response = await baseAPIRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.password,
@@ -180,21 +154,13 @@ export const authUpdatePasswordRequest = async ({
   return response.data;
 };
 
-type AuthUpdateMeParams = {
-  name: string;
-  phoneNumber: string;
-  age: string;
-  gender: Gender;
-  address: string;
-};
-
 export const authUpdateMeRequest = async ({
   name,
   phoneNumber,
   age,
   gender,
   address,
-}: AuthUpdateMeParams) => {
+}: AuthUpdateMeRequestBody) => {
   const response = await baseAPIRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.me,
@@ -211,11 +177,7 @@ export const authUpdateMeRequest = async ({
   return response.data;
 };
 
-type AuthUpdateStatusParams = {
-  status: UserStatus;
-};
-
-export const authUpdateStatusRequest = async ({ status }: AuthUpdateStatusParams) => {
+export const authUpdateStatusRequest = async ({ status }: AuthUpdateStatusRequestBody) => {
   const response = await baseAPIRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.status,
@@ -228,11 +190,7 @@ export const authUpdateStatusRequest = async ({ status }: AuthUpdateStatusParams
   return response.data;
 };
 
-type AuthDeleteParams = {
-  password: string;
-};
-
-export const authDeleteRequest = async ({ password }: AuthDeleteParams) => {
+export const authDeleteRequest = async ({ password }: AuthDeleteRequestSearchParams) => {
   const response = await baseAPIRequest<void>({
     method: 'delete',
     url: API_URL.auth.delete,

@@ -1,24 +1,22 @@
 import { NextRequest } from 'next/server';
 
-import { UserModel } from '@/(server)/entity';
+import { AuthUpdateStatusRequestBody } from './type';
+
 import { ErrorResponse } from '@/(server)/error';
 import { dbConnect } from '@/(server)/lib';
-import { UserStatus } from '@/(server)/union';
+import { UserModel } from '@/(server)/model';
 import { SuccessResponse, bodyParser } from '@/(server)/util';
 
-type PatchRequestBody = {
-  status: UserStatus;
-};
-
 /**
- * NOTE: /api/auth/update/email
- * @param email
+ * NOTE: /api/auth/update/status
+ * @requires token
+ * @body AuthUpdateStatusRequestBody
  */
 export const PATCH = async (request: NextRequest) => {
   try {
     await dbConnect();
 
-    const requestBody = bodyParser<PatchRequestBody>(await request.json(), ['status']);
+    const requestBody = bodyParser<AuthUpdateStatusRequestBody>(await request.json(), ['status']);
 
     // TODO: Implement logic.
     // Check if the current password is correct.

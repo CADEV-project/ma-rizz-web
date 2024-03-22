@@ -3,13 +3,19 @@ import Credentials from 'next-auth/providers/credentials';
 import Kakao from 'next-auth/providers/kakao';
 // import jsonwebtoken, { JwtPayload } from 'jsonwebtoken';
 
+import axios from 'axios';
+
+import { NotFound } from '@/(server)/error';
+
+import { AuthSignInResponse } from '@/(server)/api/auth/sign-in/type';
+import { API_URL, ROUTE_URL } from '@/constant';
 import { SERVER_SETTINGS } from '@/setting';
 
 const authOptions: NextAuthOptions = {
   pages: {
-    signIn: '/sign-in',
-    newUser: '/new',
-    error: '/error',
+    signIn: ROUTE_URL.auths.signIn,
+    newUser: ROUTE_URL.auths.new,
+    error: ROUTE_URL.auths.error,
   },
   secret: SERVER_SETTINGS.NEXTAUTH_SECRET,
   debug: false,
@@ -20,18 +26,22 @@ const authOptions: NextAuthOptions = {
         password: { type: 'text' },
       },
       async authorize(credentials) {
-        console.info('Authorize', credentials);
+        if (!credentials)
+          throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['credentials'] } });
 
-        return {
-          id: 'test',
-          email: 'test',
-          password: 'test',
-          name: 'tester',
-          gender: 'male',
-          address: 'Address',
-          createdAt: 'today',
-          phoneNumber: '010-1234-5678',
-        }; // Replace this line with the correct return value
+        const response = await axios.post<AuthSignInResponse>(
+          `${SERVER_SETTINGS.NEXTAUTH_URL}/api/${API_URL.auth.signIn}`,
+          {
+            email: credentials.email,
+            password: credentials.password,
+          }
+        );
+
+        const user = response.data;
+
+        if (response.status === 201 && user) return user;
+
+        return null;
       },
     }),
     Kakao({ clientId: '', clientSecret: '' }),

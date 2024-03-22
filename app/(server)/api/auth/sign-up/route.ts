@@ -1,27 +1,19 @@
 import { NextRequest } from 'next/server';
 
-import { User, UserModel } from '@/(server)/entity';
-import { ErrorResponse } from '@/(server)/error';
-import { dbConnect } from '@/(server)/lib';
-import { bodyParser, SuccessResponse } from '@/(server)/util';
+import { AuthSignUpRequestBody } from './type';
 
-type PostRequestBody = Omit<User, 'id' | 'createdAt'>;
+import { Conflict, ErrorResponse } from '@/(server)/error';
+import { dbConnect, getHashedPassword } from '@/(server)/lib';
+import { UserModel } from '@/(server)/model';
+import { bodyParser, SuccessResponse, validator } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/sign-up
- * @param email
- * @param password
- * @param name
- * @param phoneNumber
- * @param age
- * @param gender
- * @param address
+ * @body AuthSignUpRequest
  */
 export const POST = async (request: NextRequest) => {
   try {
-    await dbConnect();
-
-    const requestBody = bodyParser<PostRequestBody>(await request.json(), [
+    const requestBodyJSON = bodyParser<AuthSignUpRequestBody>(await request.json(), [
       'email',
       'password',
       'name',
@@ -31,9 +23,34 @@ export const POST = async (request: NextRequest) => {
       'address',
     ]);
 
-    // TODO: Implement logic.
-    // Password should be hashed before saving to the database.
-    await UserModel.create(requestBody);
+    validator({
+      email: requestBodyJSON.email,
+      password: requestBodyJSON.password,
+      phoneNumber: requestBodyJSON.phoneNumber,
+      age: requestBodyJSON.age,
+      gender: requestBodyJSON.gender,
+    });
+
+    await dbConnect();
+
+    const userWithEmail = await UserModel.findOne({ email: requestBodyJSON.email }).exec();
+
+    if (userWithEmail)
+      throw new Conflict({ type: 'Conflict', code: 409, detail: { fields: ['email'] } });
+
+    const userWithPhoneNumber = await UserModel.findOne({
+      phoneNumber: requestBodyJSON.phoneNumber,
+    }).exec();
+
+    if (userWithPhoneNumber)
+      throw new Conflict({ type: 'Conflict', code: 409, detail: { fields: ['phoneNumber'] } });
+
+    const hashedPassword = await getHashedPassword(requestBodyJSON.password);
+
+    await UserModel.create({
+      ...requestBodyJSON,
+      password: hashedPassword,
+    });
 
     return SuccessResponse('POST');
   } catch (error) {

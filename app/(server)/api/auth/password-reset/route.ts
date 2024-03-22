@@ -1,25 +1,21 @@
 import { NextRequest } from 'next/server';
 
-import { UserModel } from '@/(server)/entity';
+import { AuthPasswordResetRequestBody } from './type';
+
 import { ErrorResponse, Unauthorized } from '@/(server)/error';
 import { dbConnect } from '@/(server)/lib';
+import { UserModel } from '@/(server)/model';
 import { SuccessResponse, bodyParser } from '@/(server)/util';
-
-type PatchRequestBody = {
-  email: string;
-  newPassword: string;
-  isVerified: boolean;
-};
 
 /**
  * NOTE: /api/auth/password-reset
- * @body PatchRequestBody
+ * @body AuthPasswordResetRequestBody
  */
 export const PATCH = async (request: NextRequest) => {
   try {
     await dbConnect();
 
-    const requestBody = bodyParser<PatchRequestBody>(await request.json(), [
+    const requestBody = bodyParser<AuthPasswordResetRequestBody>(await request.json(), [
       'email',
       'newPassword',
       'isVerified',

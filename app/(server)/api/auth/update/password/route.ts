@@ -1,24 +1,22 @@
 import { NextRequest } from 'next/server';
 
-import { UserModel } from '@/(server)/entity';
+import { AuthUpdatePasswordRequestBody } from './type';
+
 import { ErrorResponse } from '@/(server)/error';
 import { dbConnect } from '@/(server)/lib';
+import { UserModel } from '@/(server)/model';
 import { SuccessResponse, bodyParser } from '@/(server)/util';
 
-type PatchRequestBody = {
-  currentPassword: string;
-  newPassword: string;
-};
-
 /**
- * NOTE: /api/auth/update/email
- * @param email
+ * NOTE: /api/auth/update/password
+ * @requires token
+ * @body AuthUpdatePasswordRequestBody
  */
 export const PATCH = async (request: NextRequest) => {
   try {
     await dbConnect();
 
-    const requestBody = bodyParser<PatchRequestBody>(await request.json(), [
+    const requestBody = bodyParser<AuthUpdatePasswordRequestBody>(await request.json(), [
       'currentPassword',
       'newPassword',
     ]);
