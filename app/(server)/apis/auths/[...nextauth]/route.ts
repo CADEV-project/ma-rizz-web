@@ -47,10 +47,8 @@ const authOptions: NextAuthOptions = {
   //   },
   // },
   pages: {
-    newUser: ROUTE_URL.auths.newUser,
+    newUser: ROUTE_URL.users.new,
     signIn: ROUTE_URL.auths.signIn,
-    error: ROUTE_URL.auths.error,
-    verifyRequest: ROUTE_URL.auths.verify,
   },
   callbacks: {
     async jwt({ token }) {

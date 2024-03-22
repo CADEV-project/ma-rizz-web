@@ -2,20 +2,20 @@
 export const API_URL = {
   health: '/health',
   auth: {
-    duplicateEmailCheck: '/auth/duplicate-email-check',
-    signUp: '/auth/sign-up',
-    signIn: '/auth/sign-in',
-    findMyEmail: '/auth/find-my-email',
-    passwordReset: '/auth/password-reset',
-    me: '/auth/me',
-    signOut: '/auth/sign-out',
+    duplicateEmailCheck: '/auths/duplicate-email-check',
+    signUp: '/auths/sign-up',
+    signIn: '/auths/sign-in',
+    findMyEmail: '/auths/find-my-email',
+    passwordReset: '/auths/password-reset',
+    me: '/auths/me',
+    signOut: '/auths/sign-out',
     update: {
-      email: '/auth/update/email',
-      password: '/auth/update/password',
-      me: '/auth/update/me',
-      status: '/auth/update/status',
+      email: '/auths/updates/email',
+      password: '/auths/updates/password',
+      me: '/auths/updates/me',
+      status: '/auths/updates/status',
     },
-    delete: '/auth/delete',
+    delete: '/auths/delete',
   },
 } as const;
 
