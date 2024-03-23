@@ -1,10 +1,12 @@
 import 'next-auth';
 import 'next-auth/jwt';
 
-import { AuthSignInResponse } from '@/(server)/api/auth/sign-in/type';
-
 declare module 'next-auth' {
-  export type User = AuthSignInResponse;
+  export type User = {
+    accessToken: string;
+    accessTokenExpiry: number;
+    refreshToken: string;
+  };
   interface Session {
     user: User;
   }
@@ -12,6 +14,8 @@ declare module 'next-auth' {
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    id: string;
+    accessToken: string;
+    accessTokenExpiry: number;
+    refreshToken: string;
   }
 }

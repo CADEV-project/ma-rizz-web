@@ -11,8 +11,11 @@ import { AuthSignInResponse } from '@/(server)/api/auth/sign-in/type';
 import { API_URL, ROUTE_URL } from '@/constant';
 import { SERVER_SETTINGS } from '@/setting';
 
+const COOKIE_MAX_AGE = 30 * 24 * 60 * 60;
+
 const authOptions: NextAuthOptions = {
   pages: {
+    // TODO: Implment this after.
     signIn: ROUTE_URL.auths.signIn,
     newUser: ROUTE_URL.auths.new,
     error: ROUTE_URL.auths.error,
@@ -37,68 +40,27 @@ const authOptions: NextAuthOptions = {
           }
         );
 
-        const user = response.data;
-
-        if (response.status === 201 && user) return user;
+        if (response.status === 201) return { ...response.data };
 
         return null;
       },
     }),
     Kakao({ clientId: '', clientSecret: '' }),
   ],
-  // session: {
-  //   strategy: 'jwt',
-  //   maxAge: 30 * 60, // 30 minutes
-  // },
-  // jwt: {
-  //   async encode({ secret, token }) {
-  //     if (!token) throw new Error('Token is required.');
+  session: {
+    strategy: 'jwt',
+    maxAge: COOKIE_MAX_AGE,
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      return { ...token, ...user };
+    },
+    async session({ session, token }) {
+      session.user = { ...token };
 
-  //     return jsonwebtoken.sign(token, secret);
-  //   },
-  //   async decode({ secret, token }) {
-  //     if (!token) throw new Error('Token is required.');
-
-  //     return jsonwebtoken.verify(token, secret) as JwtPayload | null;
-  //   },
-  // },
-  // callbacks: {
-  //   async signIn({ user, account, profile, email, credentials }) {
-  //     console.info('SignIn Callback', user, account, profile, email, credentials);
-
-  //     return true;
-  //   },
-  //   async jwt({ token }) {
-  //     // TODO: Make Token
-  //     return token;
-  //   },
-  //   async session({ session }) {
-  //     // TODO: Session 조회시 실행
-  //     return session;
-  //   },
-  // },
-  // events: {
-  //   async signIn(message) {
-  //     console.info('SignIn Event', message);
-  //   },
-  //   async signOut(message) {
-  //     console.info('signOut', message);
-  //   },
-  //   async createUser(message) {
-  //     console.info('createUser', message);
-  //   },
-  //   async updateUser(message) {
-  //     console.info('updateUser', message);
-  //   },
-  //   async session({ session, token }) {
-  //     console.info('session', session, token);
-  //   },
-  // },
-  // logger: {
-  //   error: (code, metadata) => console.error(code, metadata),
-  //   warn: code => console.warn(code),
-  //   debug: (code, metadata) => console.debug(code, metadata),
-  // },
+      return session;
+    },
+  },
 };
 
 const nextAuth = NextAuth(authOptions);

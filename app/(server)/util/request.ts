@@ -1,6 +1,13 @@
-import { NotFound } from '@/(server)/error';
+import { NotFound, Unauthorized } from '@/(server)/error';
 
 type CommonBody = Record<string, unknown>;
+
+export function tokenParser(token?: string | null): string {
+  if (!token || typeof token !== 'string' || !token.startsWith('Bearer '))
+    throw new Unauthorized({ type: 'Unauthorized', code: 401 });
+
+  return token.slice(7);
+}
 
 /**
  * NOTE: Check request body is valid

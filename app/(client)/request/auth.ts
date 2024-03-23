@@ -11,7 +11,6 @@ import {
 } from '@/(server)/api/auth/find-my-email/type';
 import { AuthMeResponse } from '@/(server)/api/auth/me/type';
 import { AuthPasswordResetRequestBody } from '@/(server)/api/auth/password-reset/type';
-import { AuthSignInRequestBody, AuthSignInResponse } from '@/(server)/api/auth/sign-in/type';
 import { AuthSignUpRequestBody } from '@/(server)/api/auth/sign-up/type';
 import { AuthUpdateEmailRequestBody } from '@/(server)/api/auth/update/email/type';
 import { AuthUpdateMeRequestBody } from '@/(server)/api/auth/update/me/type';
@@ -51,19 +50,6 @@ export const authSignUpRequest = async ({
       age,
       gender,
       address,
-    },
-  });
-
-  return response.data;
-};
-
-export const authSignInRequest = async ({ email, password }: AuthSignInRequestBody) => {
-  const response = await baseAPIRequest<AuthSignInResponse>({
-    method: 'post',
-    url: API_URL.auth.signIn,
-    data: {
-      email,
-      password,
     },
   });
 

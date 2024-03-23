@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { AuthSignInRequestBody, AuthSignInResponse } from './type';
 
 import { ErrorResponse, NotFound } from '@/(server)/error';
-import { comparePassword, dbConnect } from '@/(server)/lib';
+import { comparePassword, dbConnect, getSignedTokens } from '@/(server)/lib';
 import { UserModel } from '@/(server)/model';
 import { SuccessResponse, bodyParser, validator } from '@/(server)/util';
 
@@ -35,18 +35,14 @@ export const POST = async (request: NextRequest) => {
       throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['password'] } });
     }
 
-    return SuccessResponse<AuthSignInResponse>('POST', {
-      id: user._id.toHexString(),
-      email: user.email,
-      name: user.name,
-      phoneNumber: user.phoneNumber,
-      age: user.age,
-      gender: user.gender,
-      address: user.address,
-      status: user.status,
-      updatedAt: user.updatedAt,
-      createdAt: user.createdAt,
-    });
+    const tokenDatas = getSignedTokens({ userId: user._id.toHexString() });
+
+    await UserModel.findOneAndUpdate(
+      { _id: user._id },
+      { refreshToken: tokenDatas.refreshToken }
+    ).exec();
+
+    return SuccessResponse<AuthSignInResponse>('POST', tokenDatas);
   } catch (error) {
     return ErrorResponse(error);
   }

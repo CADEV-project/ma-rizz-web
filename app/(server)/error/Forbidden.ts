@@ -4,11 +4,17 @@ type ForbiddenType = 'Forbidden';
 
 type ForbiddenCode = 403;
 
+type ForbiddenDetail = {
+  error?: Error;
+  reason?: string;
+};
+
 export class Forbidden extends BaseError {
   type!: ForbiddenType;
   code!: ForbiddenCode;
+  detail!: ForbiddenDetail;
 
-  constructor(payload: BaseErrorData<ForbiddenType, ForbiddenCode>) {
+  constructor(payload: BaseErrorData<ForbiddenType, ForbiddenCode, ForbiddenDetail>) {
     super(payload);
   }
 }

@@ -23,7 +23,7 @@ const Page: React.FC = () => {
     }, 500);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [position]);
 
   return (
     <CommonLayout>
