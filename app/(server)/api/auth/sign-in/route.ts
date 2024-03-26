@@ -47,13 +47,13 @@ export const POST = async (request: NextRequest) => {
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
-        detail: { reason: 'account is not active.' },
+        detail: { reason: account.status },
       });
     }
 
     const tokenDatas = getSignedTokens({ userId: user._id.toHexString() });
 
-    await UserModel.findOneAndUpdate(
+    await AccountModel.findOneAndUpdate(
       { _id: user._id },
       { refreshToken: tokenDatas.refreshToken }
     ).exec();
