@@ -3,11 +3,14 @@ export const API_URL = {
   health: '/health',
   auth: {
     duplicateEmailCheck: '/auth/duplicate-email-check',
+    duplicateAccountCheck: '/auth/duplicate-account-check',
     signUp: '/auth/sign-up',
+    signUpWithOAuth: '/auth/sign-up-with-oauth',
+    signUpWithOAuthAdditionalInfo: '/auth/sign-up-with-oauth-additional-info',
     signIn: '/auth/sign-in',
+    signInWithOAuth: '/auth/sign-in-with-oauth',
     findMyEmail: '/auth/find-my-email',
     passwordReset: '/auth/password-reset',
-    me: '/auth/me',
     signOut: '/auth/sign-out',
     update: {
       email: '/auth/update/email',
@@ -15,21 +18,27 @@ export const API_URL = {
       me: '/auth/update/me',
       status: '/auth/update/status',
     },
+    refreshToken: '/auth/refresh-token',
     delete: '/auth/delete',
+  },
+  user: {
+    me: '/user/me',
   },
 } as const;
 
 /** NOTE: Front-end Part */
 export const ROUTE_URL = {
   home: '/',
-  auths: {
+  auth: {
     signUp: '/auth/sign-up',
     signIn: '/auth/sign-in',
     findMyEmail: '/auth/find-my-email',
     passwordReset: '/auth/password-reset',
-    me: '/auth/me',
     new: '/auth/new',
     error: '/auth/error',
+  },
+  user: {
+    me: '/user/me',
   },
 } as const;
 
@@ -44,6 +53,10 @@ export const TIME_FORMAT = {
 export const COLOR = {
   black: '#000000',
   white: '#ffffff',
+  themePurple: '#743ad5',
+  themePink: '#d53a9d',
+  kakao: '#FFEB00',
+  kakaoHover: '#C6A200',
   blackAlpha: (opacity: number) => `rgba(0, 0, 0, ${opacity})`,
   whiteAlpha: (opacity: number) => `rgba(255, 255, 255, ${opacity})`,
 } as const;

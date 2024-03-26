@@ -1,21 +1,28 @@
+import { AccountType } from '@/(server)/union';
 import 'next-auth';
 import 'next-auth/jwt';
 
 declare module 'next-auth' {
-  export type User = {
-    accessToken: string;
-    accessTokenExpiry: number;
-    refreshToken: string;
-  };
+  interface User {
+    id?: never; // Remove id property from User interface.
+    accessToken?: string;
+    accessTokenExpiry?: number;
+    refreshToken?: string;
+  }
   interface Session {
+    type?: AccountType;
+    accessToken?: string;
+    accessTokenExpiry?: number;
+    refreshToken?: string;
     user: User;
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    accessToken: string;
-    accessTokenExpiry: number;
-    refreshToken: string;
+    type?: AccountType;
+    accessToken?: string;
+    accessTokenExpiry?: number;
+    refreshToken?: string;
   }
 }

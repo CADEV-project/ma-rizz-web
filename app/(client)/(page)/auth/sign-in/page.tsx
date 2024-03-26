@@ -1,9 +1,9 @@
 import styles from './page.module.css';
 import { SignInForm } from './SignInForm';
 
-const Page: React.FC = () => {
+const Page: React.FC = async () => {
   return (
-    <section className={styles.container}>
+    <section className={`${styles.container} scrollableY`}>
       <SignInForm />
     </section>
   );

@@ -9,8 +9,8 @@ import {
   AuthFindMyEmailRequestSearchParams,
   AuthFindMyEmailResponse,
 } from '@/(server)/api/auth/find-my-email/type';
-import { AuthMeResponse } from '@/(server)/api/auth/me/type';
 import { AuthPasswordResetRequestBody } from '@/(server)/api/auth/password-reset/type';
+import { AuthSignInRequestBody, AuthSignInResponse } from '@/(server)/api/auth/sign-in/type';
 import { AuthSignUpRequestBody } from '@/(server)/api/auth/sign-up/type';
 import { AuthUpdateEmailRequestBody } from '@/(server)/api/auth/update/email/type';
 import { AuthUpdateMeRequestBody } from '@/(server)/api/auth/update/me/type';
@@ -30,10 +30,28 @@ export const authDulicateEmailCheckRequest = async ({
   return response.data;
 };
 
+export type { AuthSignInRequestBody, AuthSignInResponse };
+
+export const authSignInRequest = async ({ email, password }: AuthSignInRequestBody) => {
+  const response = await baseAPIRequest<AuthSignInResponse>({
+    method: 'post',
+    url: API_URL.auth.signIn,
+    data: {
+      email,
+      password,
+    },
+  });
+
+  return response.data;
+};
+
+export type { AuthSignUpRequestBody };
+
 export const authSignUpRequest = async ({
   email,
   password,
   name,
+  image,
   phoneNumber,
   age,
   gender,
@@ -46,6 +64,7 @@ export const authSignUpRequest = async ({
       email,
       password,
       name,
+      image,
       phoneNumber,
       age,
       gender,
@@ -90,21 +109,10 @@ export const authPasswordResetRequest = async ({
   return response.data;
 };
 
-export const authMeRequest = async () => {
-  const response = await baseAPIRequest<AuthMeResponse>({
-    method: 'get',
-    url: API_URL.auth.me,
-    tokenType: 'required',
-  });
-
-  return response.data;
-};
-
 export const authSignOutRequest = async () => {
   const response = await baseAPIRequest<void>({
     method: 'post',
     url: API_URL.auth.signOut,
-    tokenType: 'required',
   });
 
   return response.data;
@@ -117,7 +125,6 @@ export const authUpdateEmailRequest = async ({ email }: AuthUpdateEmailRequestBo
     data: {
       email,
     },
-    tokenType: 'required',
   });
 
   return response.data;
@@ -134,7 +141,6 @@ export const authUpdatePasswordRequest = async ({
       currentPassword,
       newPassword,
     },
-    tokenType: 'required',
   });
 
   return response.data;
@@ -157,7 +163,6 @@ export const authUpdateMeRequest = async ({
       gender,
       address,
     },
-    tokenType: 'required',
   });
 
   return response.data;
@@ -170,7 +175,6 @@ export const authUpdateStatusRequest = async ({ status }: AuthUpdateStatusReques
     data: {
       status,
     },
-    tokenType: 'required',
   });
 
   return response.data;
@@ -183,7 +187,6 @@ export const authDeleteRequest = async ({ password }: AuthDeleteRequestSearchPar
     params: {
       password,
     },
-    tokenType: 'required',
   });
 
   return response.data;

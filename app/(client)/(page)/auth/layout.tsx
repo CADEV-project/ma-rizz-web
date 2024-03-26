@@ -1,3 +1,6 @@
+import { Header } from './Header';
+import styles from './layout.module.css';
+
 type LayoutProps = {
   children: React.ReactNode;
 };
@@ -5,13 +8,8 @@ type LayoutProps = {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
-      <header>Auth Layout Header</header>
-      <nav>Auth Layout Navigation</nav>
-      <main>
-        <aside>Auth Layout Aside</aside>
-        {children}
-      </main>
-      <footer>Auth Layout Footer</footer>
+      <Header />
+      <main className={styles.main}>{children}</main>
     </>
   );
 };

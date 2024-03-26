@@ -5,7 +5,7 @@ type InternalServerErrorType = 'InternalServerError';
 type InternalServerErrorCode = 500;
 
 type InternalServerErrorDetail = {
-  error: Error;
+  error: unknown;
 };
 
 export class InternalServerError extends BaseError {

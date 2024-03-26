@@ -1,29 +1,43 @@
-'use client'; // Error components must be Client Components
+'use client';
 
-import { useEffect } from 'react';
+import { Typography } from '@mui/material';
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
+import * as S from './error.styles';
+
+import { BaseError } from '@/(server)/error';
+
+type ErrorProps = {
+  error: BaseError & { digest?: string };
   reset: () => void;
-}) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
+};
 
+const Error: React.FC<ErrorProps> = ({ error, reset }) => {
   return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }>
-        Try again
-      </button>
-    </div>
+    <S.Container>
+      <S.ErrorContentContainer>
+        <S.ErrorTitleContainer>
+          <Typography variant='h1' fontWeight='bold'>
+            Error
+          </Typography>
+          <Typography variant='h5' fontWeight='bold'>
+            Digest - {error.digest}
+          </Typography>
+        </S.ErrorTitleContainer>
+        <Typography variant='h3' fontWeight='bold'>
+          [{error.code}] {error.type}
+        </Typography>
+        <Typography variant='h4' fontWeight='bold'>
+          Oops!, something went wrong
+        </Typography>
+        <S.ErrorResetButton
+          onClick={() => reset()}
+          spellCheck={false}
+          style={{ textTransform: 'none' }}>
+          Don&apos;t worry, just reset by &apos;Click Here&apos;
+        </S.ErrorResetButton>
+      </S.ErrorContentContainer>
+    </S.Container>
   );
-}
+};
+
+export default Error;

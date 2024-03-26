@@ -71,7 +71,7 @@ export const ErrorResponse = (error: unknown): NextResponse<BaseError> => {
   const internalServerError = new InternalServerError({
     type: 'InternalServerError',
     code: 500,
-    detail: { error: error as Error },
+    detail: { error },
   });
 
   return NextResponse.json(internalServerError, {

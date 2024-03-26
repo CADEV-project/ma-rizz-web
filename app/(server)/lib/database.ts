@@ -29,16 +29,16 @@ export const dbConnect = async () => {
           detail: { error: error as Error },
         });
       });
+  }
 
-    try {
-      cachedMongoose.connection = await cachedMongoose.createConnectionPromise;
+  try {
+    cachedMongoose.connection = await cachedMongoose.createConnectionPromise;
 
-      return cachedMongoose.connection;
-    } catch (error) {
-      cachedMongoose.createConnectionPromise = null;
+    return cachedMongoose.connection;
+  } catch (error) {
+    cachedMongoose.createConnectionPromise = null;
 
-      throw error;
-    }
+    throw error;
   }
 };
 

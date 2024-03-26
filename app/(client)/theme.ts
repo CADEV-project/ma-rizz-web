@@ -74,6 +74,52 @@ export const theme = createTheme({
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          color: COLOR.white,
+          backgroundColor: COLOR.black,
+          border: `.0313rem solid ${COLOR.whiteAlpha(0.8)} !important`,
+          '&.Mui-focused fieldset': {
+            border: `.0625rem solid ${COLOR.white} !important`,
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: COLOR.white,
+          '&.Mui-focused': {
+            color: COLOR.white,
+          },
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          color: COLOR.white,
+          '&.Mui-focused': {
+            color: COLOR.white,
+          },
+        },
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          color: COLOR.white,
+        },
+      },
+    },
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          color: COLOR.white,
+        },
+      },
+    },
     MuiModal: {
       styleOverrides: {
         root: {
@@ -89,6 +135,16 @@ export const theme = createTheme({
         disableRipple: true,
       },
     },
+    MuiSkeleton: {
+      styleOverrides: {
+        root: {
+          backgroundColor: COLOR.whiteAlpha(0.8),
+          '&::after': {
+            background: `linear-gradient(90deg, transparent, ${COLOR.whiteAlpha(0.8)}, transparent) !important`,
+          },
+        },
+      },
+    },
   },
   typography: {
     fontFamily: combinedFontFamily,
@@ -98,23 +154,23 @@ export const theme = createTheme({
     fontWeightMedium: 500,
     fontWeightBold: 700,
     h1: {
-      fontSize: '2rem',
+      fontSize: '3rem',
       fontWeight: '400',
     },
     h2: {
-      fontSize: '1.5rem',
+      fontSize: '2.5rem',
       fontWeight: '400',
     },
     h3: {
-      fontSize: '1.25rem',
+      fontSize: '2rem',
       fontWeight: '400',
     },
     h4: {
-      fontSize: '1rem',
+      fontSize: '1.5rem',
       fontWeight: '400',
     },
     h5: {
-      fontSize: '.875rem',
+      fontSize: '1rem',
       fontWeight: '400',
     },
     h6: {

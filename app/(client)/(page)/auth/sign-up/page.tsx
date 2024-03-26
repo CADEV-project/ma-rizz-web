@@ -3,7 +3,7 @@ import { SignUpForm } from './SignUpForm';
 
 const Page: React.FC = () => {
   return (
-    <section className={styles.container}>
+    <section className={`${styles.Container} scrollableY`}>
       <SignUpForm />
     </section>
   );

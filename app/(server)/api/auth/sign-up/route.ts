@@ -4,7 +4,8 @@ import { AuthSignUpRequestBody } from './type';
 
 import { Conflict, ErrorResponse } from '@/(server)/error';
 import { dbConnect, getHashedPassword } from '@/(server)/lib';
-import { UserModel } from '@/(server)/model';
+import { AccountModel, UserModel } from '@/(server)/model';
+import { ACCOUNT_STATUS, ACCOUNT_TYPE } from '@/(server)/union';
 import { bodyParser, SuccessResponse, validator } from '@/(server)/util';
 
 /**
@@ -12,6 +13,10 @@ import { bodyParser, SuccessResponse, validator } from '@/(server)/util';
  * @body AuthSignUpRequest
  */
 export const POST = async (request: NextRequest) => {
+  const db = await dbConnect();
+
+  const session = await db.startSession();
+
   try {
     const requestBodyJSON = bodyParser<AuthSignUpRequestBody>(await request.json(), [
       'email',
@@ -31,8 +36,6 @@ export const POST = async (request: NextRequest) => {
       gender: requestBodyJSON.gender,
     });
 
-    await dbConnect();
-
     const userWithEmail = await UserModel.findOne({ email: requestBodyJSON.email }).exec();
 
     if (userWithEmail)
@@ -47,13 +50,33 @@ export const POST = async (request: NextRequest) => {
 
     const hashedPassword = await getHashedPassword(requestBodyJSON.password);
 
-    await UserModel.create({
-      ...requestBodyJSON,
-      password: hashedPassword,
+    await session.withTransaction(async () => {
+      const [newUser] = await UserModel.create(
+        [
+          {
+            ...requestBodyJSON,
+            password: hashedPassword,
+          },
+        ],
+        { session }
+      );
+
+      await AccountModel.create(
+        [
+          {
+            type: ACCOUNT_TYPE.credentials,
+            status: ACCOUNT_STATUS.active,
+            userId: newUser._id,
+          },
+        ],
+        { session }
+      );
     });
 
     return SuccessResponse('POST');
   } catch (error) {
     return ErrorResponse(error);
+  } finally {
+    await session.endSession();
   }
 };

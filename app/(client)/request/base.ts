@@ -6,24 +6,26 @@ const CONTENT_TYPE_KEY = 'Content-Type' as const;
 const CONTENT_TYPE = ['json', 'form', 'multipart'] as const;
 const DEFAULT_CONTENT_TYPE = CONTENT_TYPE[0];
 
-const TOKEN_TYPE = ['none', 'required', 'optional'] as const;
-const DEFAULT_TOKEN_TYPE = TOKEN_TYPE[0];
+// const AUTHORIZATION_KEY = 'Authorization' as const;
+// const TOKEN_TYPE = ['none', 'required', 'optional'] as const;
+// const DEFAULT_TOKEN_TYPE = TOKEN_TYPE[0];
 
 type ContentType = (typeof CONTENT_TYPE)[number];
 
-type TokenType = (typeof TOKEN_TYPE)[number];
+// type TokenType = (typeof TOKEN_TYPE)[number];
 
 type BaseAPIRequestProps = Pick<
   AxiosRequestConfig,
   | 'baseURL'
   | 'method'
+  | 'headers'
   | 'url'
   | 'params'
   | 'data'
   | 'responseType'
   | 'onDownloadProgress'
   | 'onUploadProgress'
-> & { contentType?: ContentType; tokenType?: TokenType };
+> & { contentType?: ContentType };
 
 /**
  * NOTE: This is a base class for all API services.
@@ -33,29 +35,30 @@ type BaseAPIRequestProps = Pick<
 export async function baseAPIRequest<TData>({
   baseURL,
   url,
+  headers,
   contentType,
-  tokenType,
+  // tokenType,
   ...restProps
 }: BaseAPIRequestProps) {
   try {
     const managedURL = urlManager(baseURL, url);
-    const managedHeader = await headerManager(contentType, tokenType);
+    const managedHeader = headerManager(contentType);
 
     return await axios<TData>({
       ...restProps,
       ...managedURL,
-      headers: managedHeader,
+      headers: {
+        ...headers,
+        ...managedHeader,
+      },
     });
   } catch (error) {
-    // NOTE: If this error is axios error, we will handle it.
     if (error instanceof AxiosError && error.isAxiosError) {
       if (error.response) {
-        // TODO: Handle error response.
-        throw error;
+        throw error.response.data;
       }
     }
 
-    // NOTE: If this error is not axios error, we will throw it.
     throw error;
   }
 }
@@ -64,9 +67,9 @@ const urlManager = (baseURL?: string, url?: string) => {
   return url?.startsWith('http') ? { url } : { baseURL: baseURL ?? CLIENT_SETTINGS.API_URL, url };
 };
 
-const headerManager = async (
-  contentType: ContentType = DEFAULT_CONTENT_TYPE,
-  tokenType: TokenType = DEFAULT_TOKEN_TYPE
+const headerManager = (
+  contentType: ContentType = DEFAULT_CONTENT_TYPE
+  // tokenType: TokenType = DEFAULT_TOKEN_TYPE
 ) => {
   const contentTypeHandler = () => {
     switch (contentType) {
@@ -89,17 +92,23 @@ const headerManager = async (
     }
   };
 
-  const authorizationHandler = () => {
-    if (tokenType === 'none') return {};
+  // const authorizationHandler = async () => {
+  //   const [clientSession, serverSession] = await Promise.all([
+  //     getSession(),
+  //     getServerSession(authOptions),
+  //   ]);
 
-    // TODO: Getting token from storage.
-    return {
-      Authorization: `Bearer `,
-    };
-  };
+  //   const activeSession = clientSession ?? serverSession;
+
+  //   if (tokenType === 'none' || !activeSession || !activeSession.accessToken) return {};
+
+  //   return {
+  //     [AUTHORIZATION_KEY]: `Bearer ${activeSession.accessToken}`,
+  //   };
+  // };
 
   return {
     ...contentTypeHandler(),
-    ...authorizationHandler(),
+    // ...(await authorizationHandler()),
   };
 };
