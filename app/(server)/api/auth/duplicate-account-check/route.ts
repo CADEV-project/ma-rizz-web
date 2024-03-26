@@ -5,7 +5,7 @@ import { AuthDuplicateAccountCheckRequestSearchParams } from './type';
 import { ErrorResponse } from '@/(server)/error';
 import { dbConnect } from '@/(server)/lib';
 import { AccountModel } from '@/(server)/model';
-import { SuccessResponse, searchParamsParser, validator } from '@/(server)/util';
+import { SuccessResponse, searchParamsParser, validate } from '@/(server)/util';
 
 export const GET = async (request: NextRequest) => {
   await dbConnect();
@@ -16,7 +16,7 @@ export const GET = async (request: NextRequest) => {
       ['type', 'accountId']
     );
 
-    validator({ accountType: searchParams.type });
+    validate({ accountType: searchParams.type });
 
     const accountWithAccountTypeAndAccountId = await AccountModel.findOne({
       type: searchParams.type,

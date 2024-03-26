@@ -6,7 +6,7 @@ import { Conflict, ErrorResponse } from '@/(server)/error';
 import { dbConnect, getHashedPassword } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
 import { ACCOUNT_STATUS, ACCOUNT_TYPE } from '@/(server)/union';
-import { bodyParser, SuccessResponse, validator } from '@/(server)/util';
+import { bodyParser, SuccessResponse, validate } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/sign-up
@@ -28,7 +28,7 @@ export const POST = async (request: NextRequest) => {
       'address',
     ]);
 
-    validator({
+    validate({
       email: requestBodyJSON.email,
       password: requestBodyJSON.password,
       phoneNumber: requestBodyJSON.phoneNumber,

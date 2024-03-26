@@ -5,7 +5,7 @@ import { AuthSignInRequestBody, AuthSignInResponse } from './type';
 import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
 import { comparePassword, dbConnect, getSignedTokens } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
-import { SuccessResponse, bodyParser, validator } from '@/(server)/util';
+import { SuccessResponse, bodyParser, validate } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/sign-in
@@ -21,7 +21,7 @@ export const POST = async (request: NextRequest) => {
       'password',
     ]);
 
-    validator({ email: requestBodyJSON.email, password: requestBodyJSON.password });
+    validate({ email: requestBodyJSON.email, password: requestBodyJSON.password });
 
     const user = await UserModel.findOne({ email: requestBodyJSON.email }).exec();
 

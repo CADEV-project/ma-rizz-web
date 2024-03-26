@@ -5,7 +5,7 @@ import { AuthSignUpWithOAuthRequestBody } from './type';
 import { Conflict, ErrorResponse } from '@/(server)/error';
 import { dbConnect } from '@/(server)/lib';
 import { AccountModel } from '@/(server)/model';
-import { SuccessResponse, bodyParser, validator } from '@/(server)/util';
+import { SuccessResponse, bodyParser, validate } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/sign-up-with-oauth
@@ -18,7 +18,7 @@ export const POST = async (request: NextRequest) => {
       'accountId',
     ]);
 
-    validator({
+    validate({
       accountType: requestBodyJSON.type,
     });
 

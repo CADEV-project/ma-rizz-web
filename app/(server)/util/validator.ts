@@ -103,7 +103,7 @@ type ValidatorParams = {
   accountType?: string;
 };
 
-export const validator = ({
+export const validate = ({
   email,
   password,
   phoneNumber,
