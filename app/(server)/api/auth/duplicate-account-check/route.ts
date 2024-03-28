@@ -1,29 +1,40 @@
 import { NextRequest } from 'next/server';
 
-import { AuthDuplicateAccountCheckRequestSearchParams } from './type';
+import {
+  AuthDuplicateAccountCheckRequestSearchParams,
+  AuthDuplicateAccountCheckResponse,
+} from './type';
 
 import { ErrorResponse } from '@/(server)/error';
-import { dbConnect } from '@/(server)/lib';
+import { getConnection } from '@/(server)/lib';
 import { AccountModel } from '@/(server)/model';
-import { SuccessResponse, searchParamsParser, validate } from '@/(server)/util';
+import { SuccessResponse, getRequestSearchPraramsJSON, validate } from '@/(server)/util';
 
+/**
+ * NOTE: /api/auth/duplicate-account-check
+ * @params AuthDuplicateAccountCheckRequestSearchParams
+ * @return AuthDuplicateAccountCheckResponse
+ */
 export const GET = async (request: NextRequest) => {
-  await dbConnect();
+  await getConnection();
 
   try {
-    const searchParams = searchParamsParser<AuthDuplicateAccountCheckRequestSearchParams>(
-      request.nextUrl.searchParams,
-      ['type', 'accountId']
+    const searchParams = getRequestSearchPraramsJSON<AuthDuplicateAccountCheckRequestSearchParams>(
+      request,
+      ['type', 'productAccountId']
     );
 
     validate({ accountType: searchParams.type });
 
-    const accountWithAccountTypeAndAccountId = await AccountModel.findOne({
+    const account = await AccountModel.findOne({
       type: searchParams.type,
-      accountId: searchParams.accountId,
+      productAccountId: searchParams.productAccountId,
     }).exec();
 
-    return SuccessResponse('GET', { isDuplicate: !!accountWithAccountTypeAndAccountId });
+    return SuccessResponse<AuthDuplicateAccountCheckResponse>({
+      method: 'GET',
+      data: { isDuplicate: !!account },
+    });
   } catch (error) {
     return ErrorResponse(error);
   }

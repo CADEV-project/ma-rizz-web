@@ -1,3 +1,5 @@
+'use server';
+
 import Link from 'next/link';
 
 import { Typography } from '@mui/material';
@@ -11,8 +13,7 @@ import { ROUTE_URL } from '@/constant';
 
 import companyLogoImage from '#/images/company_logo.png';
 
-export const Header: React.FC = () => {
-  // TODO: Request user data from server.
+export const Header: React.FC = async () => {
   return (
     <header className={styles.header}>
       <Link className={styles.headerLeftBox} href={ROUTE_URL.home}>
@@ -23,7 +24,7 @@ export const Header: React.FC = () => {
           Star Walkin&apos;
         </Typography>
       </Link>
-      <UserInfo name='이산하' />
+      <UserInfo />
     </header>
   );
 };

@@ -2,36 +2,38 @@ import { NextRequest } from 'next/server';
 
 import { AuthPasswordResetRequestBody } from './type';
 
-import { ErrorResponse, Unauthorized } from '@/(server)/error';
-import { dbConnect } from '@/(server)/lib';
+import { Conflict, ErrorResponse, NotFound } from '@/(server)/error';
+import { getConnection, getHashedPassword } from '@/(server)/lib';
 import { UserModel } from '@/(server)/model';
-import { SuccessResponse, bodyParser } from '@/(server)/util';
+import { SuccessResponse, getRequestBodyJSON } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/password-reset
  * @body AuthPasswordResetRequestBody
  */
 export const PATCH = async (request: NextRequest) => {
-  try {
-    await dbConnect();
+  await getConnection();
 
-    const requestBody = bodyParser<AuthPasswordResetRequestBody>(await request.json(), [
+  try {
+    const requestBodyJSON = await getRequestBodyJSON<AuthPasswordResetRequestBody>(request, [
       'email',
       'newPassword',
       'isVerified',
     ]);
 
-    if (!requestBody.isVerified)
-      throw new Unauthorized({ type: 'Unauthorized', code: 401, detail: { reason: 'NotVerfied' } });
+    if (!requestBodyJSON.isVerified) throw new Conflict({ type: 'Conflict', code: 409 });
 
-    // TODO: Implmemt logic.
-    // Password should be hashed before saving to the database.
-    await UserModel.findOneAndUpdate(
-      { email: requestBody.email },
-      { password: requestBody.newPassword }
-    );
+    const user = await UserModel.findOne({ email: requestBodyJSON.email }).exec();
 
-    return SuccessResponse('PATCH');
+    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['user'] } });
+
+    const hashedPassword = await getHashedPassword(requestBodyJSON.newPassword);
+
+    user.password = hashedPassword;
+
+    await user.save();
+
+    return SuccessResponse({ method: 'PATCH' });
   } catch (error) {
     return ErrorResponse(error);
   }

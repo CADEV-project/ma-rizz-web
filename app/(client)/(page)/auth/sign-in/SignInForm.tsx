@@ -30,12 +30,9 @@ export const SignInForm: React.FC = () => {
 
   const onSignInFormSuccess = async ({ email, password }: SignInFormProps) => {
     try {
-      const authSignInRequestData = await authSignInRequest({ email, password });
+      await authSignInRequest({ email, password });
 
-      console.info(authSignInRequestData);
-
-      // TODO: Add tokens
-      // router.push(ROUTE_URL.home);
+      router.push(ROUTE_URL.home);
     } catch (error) {
       // TODO: Handle error.
       console.info(error);

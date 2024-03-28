@@ -1,3 +1,5 @@
+'use server';
+
 import styles from './page.module.css';
 import { SignInForm } from './SignInForm';
 

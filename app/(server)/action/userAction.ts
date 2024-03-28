@@ -1,13 +1,12 @@
-import { clientAPIRequest } from '.';
+import { baseAction } from './baseAction';
 
 import { UserMeResponse } from '@/(server)/api/user/me/type';
 import { API_URL } from '@/constant';
 
 export type { UserMeResponse };
 
-export const userMeRequest = async () => {
-  const response = await clientAPIRequest<UserMeResponse>({
-    method: 'get',
+export const userMeAction = async () => {
+  const response = await baseAction<UserMeResponse>({
     url: API_URL.user.me,
   });
 

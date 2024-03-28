@@ -1,22 +1,28 @@
 import { NextRequest } from 'next/server';
 
-import { AuthSignInRequestBody, AuthSignInResponse } from './type';
+import { AuthSignInRequestBody } from './type';
 
 import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
-import { comparePassword, dbConnect, getSignedTokens } from '@/(server)/lib';
+import { comparePassword, getConnection, getSignedTokens } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
-import { SuccessResponse, bodyParser, validate } from '@/(server)/util';
+import {
+  SuccessResponse,
+  getRequestBodyJSON,
+  getAccessTokenCokie,
+  getRefreshTokenCookie,
+  validate,
+} from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/sign-in
  * @body AuthSignInRequestBody
- * @returns AuthSignInResponse
+ * @returns void
  */
 export const POST = async (request: NextRequest) => {
-  await dbConnect();
+  await getConnection();
 
   try {
-    const requestBodyJSON = bodyParser<AuthSignInRequestBody>(await request.json(), [
+    const requestBodyJSON = await getRequestBodyJSON<AuthSignInRequestBody>(request, [
       'email',
       'password',
     ]);
@@ -51,14 +57,22 @@ export const POST = async (request: NextRequest) => {
       });
     }
 
-    const tokenDatas = getSignedTokens({ userId: user._id.toHexString() });
+    const signedTokens = getSignedTokens({
+      accountId: account._id.toHexString(),
+      userId: user._id.toHexString(),
+    });
 
-    await AccountModel.findOneAndUpdate(
-      { _id: user._id },
-      { refreshToken: tokenDatas.refreshToken }
-    ).exec();
+    account.refreshToken = signedTokens.refreshToken;
 
-    return SuccessResponse<AuthSignInResponse>('POST', tokenDatas);
+    await account.save();
+
+    const accessTokenCookie = getAccessTokenCokie(signedTokens.accessToken);
+    const refreshTokenCookie = getRefreshTokenCookie(signedTokens.refreshToken);
+
+    return SuccessResponse({
+      method: 'POST',
+      cookies: [accessTokenCookie, refreshTokenCookie],
+    });
   } catch (error) {
     return ErrorResponse(error);
   }

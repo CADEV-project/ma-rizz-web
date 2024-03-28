@@ -2,10 +2,10 @@ import { NextRequest } from 'next/server';
 
 import { AuthDeleteRequestSearchParams } from './type';
 
-import { Conflict, ErrorResponse, NotFound, Unauthorized } from '@/(server)/error';
-import { comparePassword, dbConnect, getDecodedToken, getObjectId } from '@/(server)/lib';
-import { UserModel } from '@/(server)/model';
-import { SuccessResponse, searchParamsParser, tokenParser } from '@/(server)/util';
+import { Conflict, ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
+import { comparePassword, getConnection, getObjectId } from '@/(server)/lib';
+import { AccountModel, UserModel } from '@/(server)/model';
+import { SuccessResponse, getAuthorization, getRequestSearchPraramsJSON } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/delete
@@ -13,31 +13,40 @@ import { SuccessResponse, searchParamsParser, tokenParser } from '@/(server)/uti
  * @params AuthDeleteRequestSearchParams
  */
 export const DELETE = async (request: NextRequest) => {
+  await getConnection();
+
   try {
-    const token = tokenParser(request.headers.get('Authorization'));
+    const { accountId, userId } = getAuthorization(request, 'bearer');
 
-    const decodedToken = getDecodedToken(token);
+    const account = await AccountModel.findOne({
+      _id: getObjectId(accountId),
+      userId: getObjectId(userId),
+    }).exec();
 
-    const searchParams = searchParamsParser<AuthDeleteRequestSearchParams>(
-      request.nextUrl.searchParams,
-      ['password']
-    );
+    if (!account)
+      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['account'] } });
 
-    await dbConnect();
-
-    const user = await UserModel.findById(getObjectId(decodedToken.userId)).exec();
+    const user = await UserModel.findById(getObjectId(userId)).exec();
 
     if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['user'] } });
 
-    if (user.status === 'withdrew') throw new Conflict({ type: 'Conflict', code: 409 });
+    if (account.status === 'withdrew') throw new Conflict({ type: 'Conflict', code: 409 });
 
-    const isAuthorized = comparePassword(searchParams.password, user.password);
+    if (account.type === 'credentials') {
+      const searchParams = getRequestSearchPraramsJSON<AuthDeleteRequestSearchParams>(request, [
+        'password',
+      ]);
 
-    if (!isAuthorized) throw new Unauthorized({ type: 'Unauthorized', code: 401 });
+      const isAuthorized = comparePassword(searchParams.password, user.password);
 
-    await UserModel.findOneAndUpdate({ _id: user._id }, { status: 'withdrew' });
+      if (!isAuthorized) throw new Forbidden({ type: 'Forbidden', code: 403 });
+    }
 
-    return SuccessResponse('DELETE');
+    account.status = 'withdrew';
+
+    await account.save();
+
+    return SuccessResponse({ method: 'DELETE' });
   } catch (error) {
     return ErrorResponse(error);
   }

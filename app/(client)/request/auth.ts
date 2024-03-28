@@ -1,4 +1,4 @@
-import { baseAPIRequest } from '.';
+import { clientAPIRequest } from '.';
 
 import { AuthDeleteRequestSearchParams } from '@/(server)/api/auth/delete/type';
 import {
@@ -21,7 +21,7 @@ import { API_URL } from '@/constant';
 export const authDulicateEmailCheckRequest = async ({
   email,
 }: AuthDuplicateEmailCheckRequestSearchParams) => {
-  const response = await baseAPIRequest<AuthDuplicateEmailCheckResponse>({
+  const response = await clientAPIRequest<AuthDuplicateEmailCheckResponse>({
     method: 'get',
     url: API_URL.auth.duplicateEmailCheck,
     params: { email },
@@ -33,7 +33,7 @@ export const authDulicateEmailCheckRequest = async ({
 export type { AuthSignInRequestBody, AuthSignInResponse };
 
 export const authSignInRequest = async ({ email, password }: AuthSignInRequestBody) => {
-  const response = await baseAPIRequest<AuthSignInResponse>({
+  const response = await clientAPIRequest<AuthSignInResponse>({
     method: 'post',
     url: API_URL.auth.signIn,
     data: {
@@ -57,7 +57,7 @@ export const authSignUpRequest = async ({
   gender,
   address,
 }: AuthSignUpRequestBody) => {
-  const response = await baseAPIRequest<void>({
+  const response = await clientAPIRequest<void>({
     method: 'post',
     url: API_URL.auth.signUp,
     data: {
@@ -79,7 +79,7 @@ export const authFindMyEmailRequest = async ({
   phoneNumber,
   isVerified,
 }: AuthFindMyEmailRequestSearchParams) => {
-  const response = await baseAPIRequest<AuthFindMyEmailResponse>({
+  const response = await clientAPIRequest<AuthFindMyEmailResponse>({
     method: 'get',
     url: API_URL.auth.findMyEmail,
     params: {
@@ -96,7 +96,7 @@ export const authPasswordResetRequest = async ({
   newPassword,
   isVerified,
 }: AuthPasswordResetRequestBody) => {
-  const response = await baseAPIRequest<void>({
+  const response = await clientAPIRequest<void>({
     method: 'patch',
     url: API_URL.auth.passwordReset,
     data: {
@@ -110,7 +110,7 @@ export const authPasswordResetRequest = async ({
 };
 
 export const authSignOutRequest = async () => {
-  const response = await baseAPIRequest<void>({
+  const response = await clientAPIRequest<void>({
     method: 'post',
     url: API_URL.auth.signOut,
   });
@@ -119,7 +119,7 @@ export const authSignOutRequest = async () => {
 };
 
 export const authUpdateEmailRequest = async ({ email }: AuthUpdateEmailRequestBody) => {
-  const response = await baseAPIRequest<void>({
+  const response = await clientAPIRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.email,
     data: {
@@ -134,7 +134,7 @@ export const authUpdatePasswordRequest = async ({
   currentPassword,
   newPassword,
 }: AuthUpdatePasswordRequestBody) => {
-  const response = await baseAPIRequest<void>({
+  const response = await clientAPIRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.password,
     data: {
@@ -153,7 +153,7 @@ export const authUpdateMeRequest = async ({
   gender,
   address,
 }: AuthUpdateMeRequestBody) => {
-  const response = await baseAPIRequest<void>({
+  const response = await clientAPIRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.me,
     data: {
@@ -169,7 +169,7 @@ export const authUpdateMeRequest = async ({
 };
 
 export const authUpdateStatusRequest = async ({ status }: AuthUpdateStatusRequestBody) => {
-  const response = await baseAPIRequest<void>({
+  const response = await clientAPIRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.status,
     data: {
@@ -181,7 +181,7 @@ export const authUpdateStatusRequest = async ({ status }: AuthUpdateStatusReques
 };
 
 export const authDeleteRequest = async ({ password }: AuthDeleteRequestSearchParams) => {
-  const response = await baseAPIRequest<void>({
+  const response = await clientAPIRequest<void>({
     method: 'delete',
     url: API_URL.auth.delete,
     params: {

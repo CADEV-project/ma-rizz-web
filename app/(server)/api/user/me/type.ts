@@ -1,3 +1,4 @@
-import { UserSchema } from '@/(server)/model';
+import { AccountSchema, UserSchema } from '@/(server)/model';
 
-export type UserMeResponse = Omit<UserSchema, '_id' | 'password' | 'refreshToken'>;
+export type UserMeResponse = Pick<AccountSchema, 'type'> &
+  Omit<UserSchema, '_id' | 'password' | 'refreshToken'>;

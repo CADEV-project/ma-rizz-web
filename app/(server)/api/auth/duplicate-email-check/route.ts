@@ -6,9 +6,9 @@ import {
 } from './type';
 
 import { ErrorResponse } from '@/(server)/error';
-import { dbConnect } from '@/(server)/lib';
+import { getConnection } from '@/(server)/lib';
 import { UserModel } from '@/(server)/model';
-import { SuccessResponse, searchParamsParser } from '@/(server)/util';
+import { SuccessResponse, getRequestSearchPraramsJSON } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/duplicate-email-check
@@ -16,17 +16,19 @@ import { SuccessResponse, searchParamsParser } from '@/(server)/util';
  * @returns AuthDuplicateEmailCheckResponse
  */
 export const GET = async (request: NextRequest) => {
+  await getConnection();
   try {
-    await dbConnect();
-
-    const searchParams = searchParamsParser<AuthDuplicateEmailCheckRequestSearchParams>(
-      request.nextUrl.searchParams,
+    const searchParams = getRequestSearchPraramsJSON<AuthDuplicateEmailCheckRequestSearchParams>(
+      request,
       ['email']
     );
 
     const user = await UserModel.findOne({ email: searchParams.email }).exec();
 
-    return SuccessResponse<AuthDuplicateEmailCheckResponse>('GET', { isDuplicate: !!user });
+    return SuccessResponse<AuthDuplicateEmailCheckResponse>({
+      method: 'GET',
+      data: { isDuplicate: !!user },
+    });
   } catch (error) {
     return ErrorResponse(error);
   }

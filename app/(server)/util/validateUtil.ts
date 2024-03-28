@@ -1,15 +1,6 @@
 import { ValidationFailed } from '../error';
 
-export const requiredValidate = (value?: string) => {
-  if (!value)
-    throw new ValidationFailed({
-      type: 'ValidationFailed',
-      code: 422,
-      detail: [{ field: 'required', reason: 'Value is required' }],
-    });
-};
-
-export const emailValidate = (email: string) => {
+export const emailRegexValidate = (email: string) => {
   const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
   if (!EMAIL_REGEX.test(email)) {
@@ -21,7 +12,7 @@ export const emailValidate = (email: string) => {
   }
 };
 
-export const passwordValidate = (password: string) => {
+export const passwordRegexValidate = (password: string) => {
   const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
 
   if (!PASSWORD_REGEX.test(password)) {
@@ -33,7 +24,7 @@ export const passwordValidate = (password: string) => {
   }
 };
 
-export const phoneNumberValidate = (phoneNumber: string) => {
+export const phoneNumberRegexValidate = (phoneNumber: string) => {
   const PHONE_NUMBER_REGEX = /^\d{3}\d{3,4}\d{4}$/;
 
   if (!PHONE_NUMBER_REGEX.test(phoneNumber)) {
@@ -45,7 +36,7 @@ export const phoneNumberValidate = (phoneNumber: string) => {
   }
 };
 
-export const ageValidate = (age: string) => {
+export const ageRegexValidate = (age: string) => {
   const AGE_REGEX = /^\d{1,3}$/;
 
   if (!AGE_REGEX.test(age)) {
@@ -57,7 +48,7 @@ export const ageValidate = (age: string) => {
   }
 };
 
-export const genderValidate = (gender: string) => {
+export const genderRegexvalidate = (gender: string) => {
   const GENDER_REGEX = /^(male|female)$/;
 
   if (!GENDER_REGEX.test(gender)) {
@@ -69,7 +60,7 @@ export const genderValidate = (gender: string) => {
   }
 };
 
-export const accountStatusValidate = (status: string) => {
+export const accountStatusRegexValidate = (status: string) => {
   const ACCOUNT_STATUS_REGEX = /^(active|inactive|pending|withdrew)$/;
 
   if (!ACCOUNT_STATUS_REGEX.test(status)) {
@@ -81,7 +72,7 @@ export const accountStatusValidate = (status: string) => {
   }
 };
 
-export const accountTypeValidate = (type: string) => {
+export const accountTypeRegexValidate = (type: string) => {
   const ACCOUNT_TYPE_REGEX = /^(credentials|kakao|google)$/;
 
   if (!ACCOUNT_TYPE_REGEX.test(type)) {
@@ -93,7 +84,7 @@ export const accountTypeValidate = (type: string) => {
   }
 };
 
-type ValidatorParams = {
+type ValidateParams = {
   email?: string;
   password?: string;
   phoneNumber?: string;
@@ -111,12 +102,12 @@ export const validate = ({
   gender,
   accountStatus,
   accountType,
-}: ValidatorParams) => {
-  if (email) emailValidate(email);
-  if (password) passwordValidate(password);
-  if (phoneNumber) phoneNumberValidate(phoneNumber);
-  if (age) ageValidate(age);
-  if (gender) genderValidate(gender);
-  if (accountStatus) accountStatusValidate(accountStatus);
-  if (accountType) accountTypeValidate(accountType);
+}: ValidateParams) => {
+  if (email) emailRegexValidate(email);
+  if (password) passwordRegexValidate(password);
+  if (phoneNumber) phoneNumberRegexValidate(phoneNumber);
+  if (age) ageRegexValidate(age);
+  if (gender) genderRegexvalidate(gender);
+  if (accountStatus) accountStatusRegexValidate(accountStatus);
+  if (accountType) accountTypeRegexValidate(accountType);
 };

@@ -1,31 +1,51 @@
-import { NotFound, Unauthorized } from '@/(server)/error';
+import { NextRequest } from 'next/server';
+
+import { getDecodedBasicToken, getDecodedBearerToken } from '.';
+
+import { NotFound, NotImplemented, Unauthorized } from '@/(server)/error';
+import { getVerifiedAccessToken } from '@/(server)/lib';
+
+import { AUTHORIZATION, AuthorizationType } from '@/constant';
 
 type CommonBody = Record<string, unknown>;
 
-export function tokenParser(token?: string | null): string {
-  if (!token || typeof token !== 'string' || !token.startsWith('Bearer '))
-    throw new Unauthorized({ type: 'Unauthorized', code: 401 });
+export const getAuthorization = (request: NextRequest, authorizationType: AuthorizationType) => {
+  const authorization = request.headers.get(AUTHORIZATION);
 
-  return token.slice(7);
-}
+  if (!authorization || typeof authorization !== 'string')
+    throw new Unauthorized({
+      type: 'Unauthorized',
+      code: 401,
+      detail: { reason: 'AuthorizationRequired' },
+    });
 
-/**
- * NOTE: Check request body is valid
- * - If request body is not object or empty, return false.
- * - If request body has no key, return false.
- * - If request body has key that is not in fields, return false.
- */
-export function bodyParser<Body extends CommonBody>(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body: any,
+  if (authorizationType === 'basic') {
+    getDecodedBasicToken(authorization);
+
+    throw new NotImplemented({
+      type: 'NotImplemented',
+      code: 501,
+      detail: { reason: 'BasicAuth' },
+    });
+  }
+
+  const token = getDecodedBearerToken(authorization);
+
+  return getVerifiedAccessToken(token);
+};
+
+export async function getRequestBodyJSON<Body extends CommonBody>(
+  request: NextRequest,
   fields: (keyof Body)[]
-): Body {
+): Promise<Body> {
+  const requestBody = await request.json();
+
   const notFoundFields: string[] = [];
 
-  if (!body || typeof body !== 'object' || Object.keys(body).length === 0)
+  if (!requestBody || typeof requestBody !== 'object' || Object.keys(requestBody).length === 0)
     throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['body'] } });
 
-  const requestBodyKeys = Object.keys(body);
+  const requestBodyKeys = Object.keys(requestBody);
 
   fields.forEach(field => {
     if (typeof field !== 'string' || !requestBodyKeys.includes(field))
@@ -39,17 +59,19 @@ export function bodyParser<Body extends CommonBody>(
       detail: { fields: notFoundFields },
     });
 
-  return body as Body;
+  return requestBody as Body;
 }
 
 type CommonSearchParams = Record<string, unknown>;
 
 type SearchParamsParserReturn<T extends CommonSearchParams> = { [K in keyof T]: string };
 
-export function searchParamsParser<SearchParams extends CommonSearchParams>(
-  searchParams: URLSearchParams,
+export function getRequestSearchPraramsJSON<SearchParams extends CommonSearchParams>(
+  request: NextRequest,
   fields: (keyof SearchParams)[]
 ): SearchParamsParserReturn<SearchParams> {
+  const searchParams = request.nextUrl.searchParams;
+
   const notFoundFields: string[] = [];
 
   if (!searchParams || searchParams.toString().length === 0)

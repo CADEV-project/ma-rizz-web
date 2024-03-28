@@ -1,14 +1,14 @@
-import { Model, Schema, model, models } from 'mongoose';
+import { Model, Schema, Types, model, models } from 'mongoose';
 
 import { AccountStatus, AccountType } from '@/(server)/union';
-import { accountStatusValidate, accountTypeValidate } from '@/(server)/util';
+import { accountStatusRegexValidate, accountTypeRegexValidate } from '@/(server)/util';
 
 export type AccountSchema = {
-  _id: Schema.Types.ObjectId;
+  _id: Types.ObjectId;
   type: AccountType;
-  accountId?: string;
+  productAccountId?: string;
   status: AccountStatus;
-  userId: Schema.Types.ObjectId;
+  userId: Types.ObjectId;
   refreshToken: string;
   createdAt: Date;
   updatedAt: Date;
@@ -17,9 +17,9 @@ export type AccountSchema = {
 export const accountSchema = new Schema<AccountSchema>(
   {
     _id: { type: Schema.Types.ObjectId, auto: true },
-    type: { type: String, required: true, validate: accountTypeValidate },
-    accountId: { type: String },
-    status: { type: String, required: true, validate: accountStatusValidate },
+    type: { type: String, required: true, validate: accountTypeRegexValidate },
+    productAccountId: { type: String },
+    status: { type: String, required: true, validate: accountStatusRegexValidate },
     userId: { type: Schema.Types.ObjectId, ref: 'Users' },
     refreshToken: { type: String },
     createdAt: { type: Date, default: Date.now() },

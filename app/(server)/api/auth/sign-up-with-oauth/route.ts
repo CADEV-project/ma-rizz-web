@@ -3,42 +3,42 @@ import { NextRequest } from 'next/server';
 import { AuthSignUpWithOAuthRequestBody } from './type';
 
 import { Conflict, ErrorResponse } from '@/(server)/error';
-import { dbConnect } from '@/(server)/lib';
+import { getConnection } from '@/(server)/lib';
 import { AccountModel } from '@/(server)/model';
-import { SuccessResponse, bodyParser, validate } from '@/(server)/util';
+import { SuccessResponse, getRequestBodyJSON, validate } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/sign-up-with-oauth
  * @body AuthSignUpWithOAuthRequest
  */
 export const POST = async (request: NextRequest) => {
+  await getConnection();
+
   try {
-    const requestBodyJSON = bodyParser<AuthSignUpWithOAuthRequestBody>(await request.json(), [
+    const requestBodyJSON = await getRequestBodyJSON<AuthSignUpWithOAuthRequestBody>(request, [
       'type',
-      'accountId',
+      'productAccountId',
     ]);
 
     validate({
       accountType: requestBodyJSON.type,
     });
 
-    await dbConnect();
-
-    const accountWithAccountTypeAndId = await AccountModel.findOne({
+    const accountWithAccountTypeAndProductAccountId = await AccountModel.findOne({
       type: requestBodyJSON.type,
-      accountId: requestBodyJSON.accountId,
+      accountId: requestBodyJSON.productAccountId,
     }).exec();
 
-    if (accountWithAccountTypeAndId)
+    if (accountWithAccountTypeAndProductAccountId)
       throw new Conflict({ type: 'Conflict', code: 409, detail: { fields: ['account'] } });
 
     await AccountModel.create({
       type: requestBodyJSON.type,
-      accountId: requestBodyJSON.accountId,
+      accountId: requestBodyJSON.productAccountId,
       status: 'pending',
     });
 
-    return SuccessResponse('POST');
+    return SuccessResponse({ method: 'POST' });
   } catch (error) {
     return ErrorResponse(error);
   }

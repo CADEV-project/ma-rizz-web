@@ -4,5 +4,5 @@ import { SuccessResponse } from '@/(server)/util';
  * NOTE: /api/health
  */
 export const GET = async () => {
-  return SuccessResponse('GET');
+  return SuccessResponse({ method: 'GET' });
 };

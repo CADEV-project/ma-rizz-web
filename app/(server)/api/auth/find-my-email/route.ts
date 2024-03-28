@@ -2,10 +2,10 @@ import { NextRequest } from 'next/server';
 
 import { AuthFindMyEmailRequestSearchParams, AuthFindMyEmailResponse } from './type';
 
-import { ErrorResponse, NotFound } from '@/(server)/error';
-import { dbConnect } from '@/(server)/lib';
+import { Conflict, ErrorResponse, NotFound } from '@/(server)/error';
+import { getConnection } from '@/(server)/lib';
 import { UserModel } from '@/(server)/model';
-import { SuccessResponse, searchParamsParser } from '@/(server)/util';
+import { SuccessResponse, getRequestSearchPraramsJSON } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/find-my-email
@@ -14,21 +14,20 @@ import { SuccessResponse, searchParamsParser } from '@/(server)/util';
  */
 export const GET = async (request: NextRequest) => {
   try {
-    await dbConnect();
+    await getConnection();
 
-    const searchParams = searchParamsParser<AuthFindMyEmailRequestSearchParams>(
-      request.nextUrl.searchParams,
-      ['isVerified', 'phoneNumber']
-    );
+    const searchParams = getRequestSearchPraramsJSON<AuthFindMyEmailRequestSearchParams>(request, [
+      'isVerified',
+      'phoneNumber',
+    ]);
 
-    if (searchParams.isVerified !== 'true')
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['isVerified'] } });
+    if (searchParams.isVerified !== 'true') throw new Conflict({ type: 'Conflict', code: 409 });
 
     const user = await UserModel.findOne({ phoneNumber: searchParams.phoneNumber }).exec();
 
     if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['user'] } });
 
-    return SuccessResponse<AuthFindMyEmailResponse>('GET', { email: user.email });
+    return SuccessResponse<AuthFindMyEmailResponse>({ method: 'GET', data: { email: user.email } });
   } catch (error) {
     return ErrorResponse(error);
   }

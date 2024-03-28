@@ -1,3 +1,3 @@
-import { UserSchema } from '@/(server)/model';
+import { AccountSchema } from '@/(server)/model';
 
-export type AuthUpdateStatusRequestBody = Pick<UserSchema, 'status'>;
+export type AuthUpdateStatusRequestBody = Pick<AccountSchema, 'status'>;

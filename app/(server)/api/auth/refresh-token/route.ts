@@ -1,34 +1,59 @@
 import { NextRequest } from 'next/server';
 
-import { AuthRefreshTokenResponse } from './type';
+import { ErrorResponse, NotFound, Unauthorized } from '@/(server)/error';
+import {
+  getConnection,
+  getObjectId,
+  getSignedTokens,
+  getVerifiedRefreshToken,
+} from '@/(server)/lib';
+import { AccountModel } from '@/(server)/model';
+import { SuccessResponse, getAccessTokenCokie, getRefreshTokenCookie } from '@/(server)/util';
 
-import { ErrorResponse, NotFound } from '@/(server)/error';
-import { getSignedTokens } from '@/(server)/lib';
-import { UserModel } from '@/(server)/model';
-import { SuccessResponse, tokenParser } from '@/(server)/util';
+import { COOKIE_KEY } from '@/constant';
 
 /**
  *
  * @requires token
  * @returns AuthRefreshTokenResponse
  */
-export const GET = async (request: NextRequest) => {
+export const POST = async (request: NextRequest) => {
+  await getConnection();
+
   try {
-    const token = tokenParser(request.headers.get('Authorization'));
+    const refreshTokenCookie = request.cookies.get(COOKIE_KEY.refreshToken);
 
-    const user = await UserModel.findOne({ refreshToken: token }).exec();
+    if (!refreshTokenCookie)
+      throw new Unauthorized({
+        type: 'Unauthorized',
+        code: 401,
+        detail: { reason: 'Refresh token is not exist.' },
+      });
 
-    if (!user)
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['refreshToken'] } });
+    const { accountId, userId } = getVerifiedRefreshToken(refreshTokenCookie.value);
 
-    const tokenDatas = getSignedTokens({ userId: user._id.toHexString() });
+    const account = await AccountModel.findOne({
+      _id: getObjectId(accountId),
+      userId: getObjectId(userId),
+      refreshToken: refreshTokenCookie.value,
+    }).exec();
 
-    await UserModel.findOneAndUpdate(
-      { _id: user._id },
-      { refreshToken: tokenDatas.refreshToken }
-    ).exec();
+    if (!account)
+      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['account'] } });
 
-    return SuccessResponse<AuthRefreshTokenResponse>('GET', tokenDatas);
+    const newSignedTokens = getSignedTokens({ accountId, userId });
+
+    account.refreshToken = newSignedTokens.refreshToken;
+
+    await account.save();
+
+    const newAccessTokenCookie = getAccessTokenCokie(newSignedTokens.accessToken);
+    const newRefreshTokenCookie = getRefreshTokenCookie(newSignedTokens.refreshToken);
+
+    return SuccessResponse({
+      method: 'POST',
+      cookies: [newAccessTokenCookie, newRefreshTokenCookie],
+    });
   } catch (error) {
     return ErrorResponse(error);
   }

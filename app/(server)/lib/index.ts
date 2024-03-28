@@ -1,3 +1,3 @@
-export * from './database';
-export * from './jwt';
-export * from './cryption';
+export * from './databaseLib';
+export * from './jwtLib';
+export * from './cryptionLib';

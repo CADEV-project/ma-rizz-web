@@ -20,7 +20,7 @@ const BASE_ERROR: Record<string, typeof BaseError> = {
   ValidationFailed,
 };
 
-const isBaseError = (error: unknown): error is BaseError => {
+export const isBaseError = (error: unknown): error is BaseError => {
   return (
     typeof error === 'object' &&
     'type' in (error as object) &&

@@ -1,3 +1,5 @@
+'use server';
+
 import { CommonLayout } from '@/(client)/component';
 
 const Page: React.FC = async () => {

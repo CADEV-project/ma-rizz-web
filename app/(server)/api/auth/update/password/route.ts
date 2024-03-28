@@ -2,31 +2,46 @@ import { NextRequest } from 'next/server';
 
 import { AuthUpdatePasswordRequestBody } from './type';
 
-import { ErrorResponse } from '@/(server)/error';
-import { dbConnect } from '@/(server)/lib';
-import { UserModel } from '@/(server)/model';
-import { SuccessResponse, bodyParser } from '@/(server)/util';
+import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
+import { comparePassword, getConnection, getObjectId } from '@/(server)/lib';
+import { AccountModel, UserModel } from '@/(server)/model';
+import { SuccessResponse, getAuthorization, getRequestBodyJSON } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/update/password
  * @requires token
  * @body AuthUpdatePasswordRequestBody
+ * @return void;
  */
 export const PATCH = async (request: NextRequest) => {
-  try {
-    await dbConnect();
+  await getConnection();
 
-    const requestBody = bodyParser<AuthUpdatePasswordRequestBody>(await request.json(), [
+  try {
+    const { accountId, userId } = getAuthorization(request, 'bearer');
+
+    const requestBody = await getRequestBodyJSON<AuthUpdatePasswordRequestBody>(request, [
       'currentPassword',
       'newPassword',
     ]);
 
-    // TODO: Implement logic.
-    // Check if the current password is correct.
-    // Get user information from the token and update the email.
-    await UserModel.findOneAndUpdate({}, { password: requestBody.newPassword });
+    const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
-    return SuccessResponse('PATCH');
+    if (!account)
+      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['account'] } });
+
+    const user = await UserModel.findById(getObjectId(userId)).exec();
+
+    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['user'] } });
+
+    const isAuthorized = comparePassword(requestBody.currentPassword, user.password);
+
+    if (!isAuthorized) throw new Forbidden({ type: 'Forbidden', code: 403 });
+
+    user.password = requestBody.newPassword;
+
+    await user.save();
+
+    return SuccessResponse({ method: 'PATCH' });
   } catch (error) {
     return ErrorResponse(error);
   }

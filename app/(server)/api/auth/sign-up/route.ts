@@ -3,22 +3,22 @@ import { NextRequest } from 'next/server';
 import { AuthSignUpRequestBody } from './type';
 
 import { Conflict, ErrorResponse } from '@/(server)/error';
-import { dbConnect, getHashedPassword } from '@/(server)/lib';
+import { getConnection, getHashedPassword } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
 import { ACCOUNT_STATUS, ACCOUNT_TYPE } from '@/(server)/union';
-import { bodyParser, SuccessResponse, validate } from '@/(server)/util';
+import { getRequestBodyJSON, SuccessResponse, validate } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/sign-up
- * @body AuthSignUpRequest
+ * @body AuthSignUpRequestBody
  */
 export const POST = async (request: NextRequest) => {
-  const db = await dbConnect();
+  const db = await getConnection();
 
   const session = await db.startSession();
 
   try {
-    const requestBodyJSON = bodyParser<AuthSignUpRequestBody>(await request.json(), [
+    const requestBodyJSON = await getRequestBodyJSON<AuthSignUpRequestBody>(request, [
       'email',
       'password',
       'name',
@@ -73,7 +73,7 @@ export const POST = async (request: NextRequest) => {
       );
     });
 
-    return SuccessResponse('POST');
+    return SuccessResponse({ method: 'POST' });
   } catch (error) {
     return ErrorResponse(error);
   } finally {

@@ -9,7 +9,7 @@ let cachedMongoose = global.mongoose;
 if (!cachedMongoose)
   cachedMongoose = global.mongoose = { connection: null, createConnectionPromise: null };
 
-export const dbConnect = async () => {
+export const getConnection = async () => {
   if (!SERVER_SETTINGS.DATABASE_URL)
     throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['DATABASE_URL'] } });
 
