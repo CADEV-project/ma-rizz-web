@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { ErrorResponse, NotFound, Unauthorized } from '@/(server)/error';
+import { ErrorResponse, NotFound } from '@/(server)/error';
 import {
   getConnection,
   getObjectId,
@@ -8,34 +8,33 @@ import {
   getVerifiedRefreshToken,
 } from '@/(server)/lib';
 import { AccountModel } from '@/(server)/model';
-import { SuccessResponse, getAccessTokenCokie, getRefreshTokenCookie } from '@/(server)/util';
-
-import { COOKIE_KEY } from '@/constant';
+import {
+  SuccessResponse,
+  getAccessTokenCokie,
+  getAutoSignInCookie,
+  getRefreshTokenCookie,
+  getRequestAutoSignIn,
+  getRequestRefreshToken,
+} from '@/(server)/util';
 
 /**
- *
+ * NOTE: /api/auth/refresh-token
  * @requires token
- * @returns AuthRefreshTokenResponse
+ * @return AuthRefreshTokenResponse
  */
 export const POST = async (request: NextRequest) => {
   await getConnection();
 
   try {
-    const refreshTokenCookie = request.cookies.get(COOKIE_KEY.refreshToken);
+    const refreshToken = getRequestRefreshToken(request);
+    const autoSignIn = getRequestAutoSignIn(request);
 
-    if (!refreshTokenCookie)
-      throw new Unauthorized({
-        type: 'Unauthorized',
-        code: 401,
-        detail: { reason: 'Refresh token is not exist.' },
-      });
-
-    const { accountId, userId } = getVerifiedRefreshToken(refreshTokenCookie.value);
+    const { accountId, userId } = getVerifiedRefreshToken(refreshToken);
 
     const account = await AccountModel.findOne({
       _id: getObjectId(accountId),
       userId: getObjectId(userId),
-      refreshToken: refreshTokenCookie.value,
+      refreshToken,
     }).exec();
 
     if (!account)
@@ -47,12 +46,21 @@ export const POST = async (request: NextRequest) => {
 
     await account.save();
 
-    const newAccessTokenCookie = getAccessTokenCokie(newSignedTokens.accessToken);
-    const newRefreshTokenCookie = getRefreshTokenCookie(newSignedTokens.refreshToken);
+    const newAccessTokenCookie = getAccessTokenCokie({
+      value: newSignedTokens.accessToken,
+      autoSignIn,
+    });
+    const newRefreshTokenCookie = getRefreshTokenCookie({
+      value: newSignedTokens.refreshToken,
+      autoSignIn,
+    });
+    const newAutoSignInCookie = autoSignIn ? getAutoSignInCookie(autoSignIn) : undefined;
 
     return SuccessResponse({
       method: 'POST',
-      cookies: [newAccessTokenCookie, newRefreshTokenCookie],
+      cookies: newAutoSignInCookie
+        ? [newAccessTokenCookie, newRefreshTokenCookie, newAutoSignInCookie]
+        : [newAccessTokenCookie, newRefreshTokenCookie],
     });
   } catch (error) {
     return ErrorResponse(error);

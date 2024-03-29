@@ -3,20 +3,32 @@ import { NextRequest } from 'next/server';
 import { AuthDeleteRequestSearchParams } from './type';
 
 import { Conflict, ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
-import { comparePassword, getConnection, getObjectId } from '@/(server)/lib';
+import {
+  comparePassword,
+  getConnection,
+  getObjectId,
+  getVerifiedAccessToken,
+} from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
-import { SuccessResponse, getAuthorization, getRequestSearchPraramsJSON } from '@/(server)/util';
+import {
+  SuccessResponse,
+  getRequestAccessToken,
+  getRequestSearchPraramsJSON,
+} from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/delete
  * @requires token
  * @params AuthDeleteRequestSearchParams
+ * @return void
  */
 export const DELETE = async (request: NextRequest) => {
   await getConnection();
 
   try {
-    const { accountId, userId } = getAuthorization(request, 'bearer');
+    const accessToken = getRequestAccessToken(request);
+
+    const { accountId, userId } = getVerifiedAccessToken(accessToken);
 
     const account = await AccountModel.findOne({
       _id: getObjectId(accountId),

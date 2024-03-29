@@ -3,20 +3,22 @@ import { NextRequest } from 'next/server';
 import { UserMeResponse } from './type';
 
 import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
-import { getConnection, getObjectId } from '@/(server)/lib';
+import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
-import { SuccessResponse, getAuthorization } from '@/(server)/util';
+import { SuccessResponse, getRequestAccessToken } from '@/(server)/util';
 
 /**
  * NOTE: /api/user/me
  * @requires token
- * @returns UserMeResponse
+ * @return UserMeResponse
  */
 export const GET = async (request: NextRequest) => {
   await getConnection();
 
   try {
-    const { accountId, userId } = getAuthorization(request, 'bearer');
+    const accessToken = getRequestAccessToken(request);
+
+    const { accountId, userId } = getVerifiedAccessToken(accessToken);
 
     const user = await UserModel.findById(getObjectId(userId)).exec();
     const account = await AccountModel.findById(getObjectId(accountId)).exec();

@@ -3,20 +3,23 @@ import { NextRequest } from 'next/server';
 import { AuthUpdateEmailRequestBody } from './type';
 
 import { ErrorResponse, NotFound } from '@/(server)/error';
-import { getConnection, getObjectId } from '@/(server)/lib';
+import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
-import { SuccessResponse, getAuthorization, getRequestBodyJSON } from '@/(server)/util';
+import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/update/email
  * @requires token
  * @body AuthUpdateEmailRequestBody
+ * @return void
  */
 export const PATCH = async (request: NextRequest) => {
   await getConnection();
 
   try {
-    const { accountId, userId } = getAuthorization(request, 'bearer');
+    const accessToken = getRequestAccessToken(request);
+
+    const { accountId, userId } = getVerifiedAccessToken(accessToken);
 
     const requestBody = await getRequestBodyJSON<AuthUpdateEmailRequestBody>(await request.json(), [
       'newEmail',

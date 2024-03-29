@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { UserMeResponse, userMeRequest } from '@/(client)/request/user';
+import { UserMeResponse, userMeRequest } from '@/(client)/request/userRequest';
 
 export const Component: React.FC = () => {
   const [user, setUser] = useState<UserMeResponse>();

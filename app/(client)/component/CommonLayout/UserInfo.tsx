@@ -8,7 +8,7 @@ import * as S from './UserInfo.styles';
 
 import { SmartImage } from '@/(client)/component';
 
-import { UserMeResponse, userMeRequest } from '@/(client)/request/user';
+import { UserMeResponse, userMeRequest } from '@/(client)/request/userRequest';
 import { ROUTE_URL } from '@/constant';
 
 export const UserInfo: React.FC = () => {
@@ -21,6 +21,10 @@ export const UserInfo: React.FC = () => {
   };
 
   useEffect(() => {
+    getUser();
+    getUser();
+    getUser();
+    getUser();
     getUser();
   }, []);
 

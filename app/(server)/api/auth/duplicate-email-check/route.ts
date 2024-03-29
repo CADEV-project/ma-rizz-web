@@ -13,7 +13,7 @@ import { SuccessResponse, getRequestSearchPraramsJSON } from '@/(server)/util';
 /**
  * NOTE: /api/auth/duplicate-email-check
  * @params AuthDuplicateEmailCheckRequestSearchParams
- * @returns AuthDuplicateEmailCheckResponse
+ * @return AuthDuplicateEmailCheckResponse
  */
 export const GET = async (request: NextRequest) => {
   await getConnection();

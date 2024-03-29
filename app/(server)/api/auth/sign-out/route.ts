@@ -1,19 +1,22 @@
 import { NextRequest } from 'next/server';
 
 import { ErrorResponse, NotFound } from '@/(server)/error';
-import { getConnection, getObjectId } from '@/(server)/lib';
+import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { AccountModel } from '@/(server)/model';
-import { SuccessResponse, getAuthorization } from '@/(server)/util';
+import { SuccessResponse, getRequestAccessToken } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/sign-out
  * @requires token
+ * @return void
  */
 export const POST = async (request: NextRequest) => {
   await getConnection();
 
   try {
-    const { accountId, userId } = getAuthorization(request, 'bearer');
+    const accessToken = getRequestAccessToken(request);
+
+    const { accountId, userId } = getVerifiedAccessToken(accessToken);
 
     const account = await AccountModel.findOne({
       _id: getObjectId(accountId),

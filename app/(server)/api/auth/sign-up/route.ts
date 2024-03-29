@@ -11,6 +11,7 @@ import { getRequestBodyJSON, SuccessResponse, validate } from '@/(server)/util';
 /**
  * NOTE: /api/auth/sign-up
  * @body AuthSignUpRequestBody
+ * @return void
  */
 export const POST = async (request: NextRequest) => {
   const db = await getConnection();

@@ -9,8 +9,8 @@ import { SuccessResponse, getRequestSearchPraramsJSON } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/find-my-email
- * @param AuthFindMyEmailRequestSearchParams
- * @returns AuthFindMyEmailResponse
+ * @params AuthFindMyEmailRequestSearchParams
+ * @return AuthFindMyEmailResponse
  */
 export const GET = async (request: NextRequest) => {
   try {

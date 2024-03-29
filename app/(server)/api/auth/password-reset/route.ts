@@ -10,6 +10,7 @@ import { SuccessResponse, getRequestBodyJSON } from '@/(server)/util';
 /**
  * NOTE: /api/auth/password-reset
  * @body AuthPasswordResetRequestBody
+ * @return void
  */
 export const PATCH = async (request: NextRequest) => {
   await getConnection();

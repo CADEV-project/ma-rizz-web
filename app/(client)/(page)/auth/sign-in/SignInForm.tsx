@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import {
+  CheckboxElement,
   FieldErrors,
   FormContainer,
   PasswordElement,
@@ -17,20 +18,21 @@ import { AuthSignInRequestBody, authSignInRequest } from '@/(client)/request';
 
 import { ROUTE_URL } from '@/constant';
 
-type SignInFormProps = AuthSignInRequestBody;
+type SignInFormProps = Omit<AuthSignInRequestBody, 'autoSignIn'> & { autoSignIn?: boolean };
 
 const SIGN_IN_FORM_DEFAULT_VALUES: SignInFormProps = {
   email: '',
   password: '',
+  autoSignIn: false,
 };
 
 export const SignInForm: React.FC = () => {
   const router = useRouter();
   const signInForm = useForm<SignInFormProps>();
 
-  const onSignInFormSuccess = async ({ email, password }: SignInFormProps) => {
+  const onSignInFormSuccess = async ({ email, password, autoSignIn }: SignInFormProps) => {
     try {
-      await authSignInRequest({ email, password });
+      await authSignInRequest({ email, password, autoSignIn: !!autoSignIn });
 
       router.push(ROUTE_URL.home);
     } catch (error) {
@@ -44,8 +46,7 @@ export const SignInForm: React.FC = () => {
   };
 
   const onKakaoLoginButtonClick = async () => {
-    // TOOD: Implement Kakao login.
-    // await signIn('kakao');
+    alert('미구현 기능입니다.');
   };
 
   const onSignUpButtonClick = () => {
@@ -69,13 +70,8 @@ export const SignInForm: React.FC = () => {
         onError={onSignInFormError}>
         <S.FormContainer>
           <TextFieldElement name='email' label='Email' required />
-          <PasswordElement
-            name='password'
-            label='비밀번호'
-            type='password'
-            required
-            style={{ marginBottom: '1rem' }}
-          />
+          <PasswordElement name='password' label='비밀번호' type='password' required />
+          <CheckboxElement name='autoSignIn' label='재방문을 위해 기억해주세요' />
           <S.LoginButton type='submit'>이메일로 로그인하기</S.LoginButton>
           <S.KakaoLoginButton onClick={onKakaoLoginButtonClick}>
             카카오로 로그인하기

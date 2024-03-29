@@ -2,26 +2,31 @@
 export const API_URL = {
   health: '/health',
   auth: {
-    duplicateEmailCheck: '/auth/duplicate-email-check',
+    prefix: '/auth',
+    delete: '/auth/delete',
     duplicateAccountCheck: '/auth/duplicate-account-check',
-    signUp: '/auth/sign-up',
-    signUpWithOAuth: '/auth/sign-up-with-oauth',
-    signUpWithOAuthAdditionalInfo: '/auth/sign-up-with-oauth-additional-info',
-    signIn: '/auth/sign-in',
-    signInWithOAuth: '/auth/sign-in-with-oauth',
+    duplicateEmailCheck: '/auth/duplicate-email-check',
     findMyEmail: '/auth/find-my-email',
     passwordReset: '/auth/password-reset',
+    refreshToken: '/auth/refresh-token',
+    signIn: '/auth/sign-in',
     signOut: '/auth/sign-out',
+    signUp: '/auth/sign-up',
+    sso: {
+      prefix: '/sso',
+      signUp: '/auth/sso/sign-up',
+      register: '/auth/sso/register',
+    },
     update: {
+      prefix: '/update',
       email: '/auth/update/email',
-      password: '/auth/update/password',
       me: '/auth/update/me',
+      password: '/auth/update/password',
       status: '/auth/update/status',
     },
-    refreshToken: '/auth/refresh-token',
-    delete: '/auth/delete',
   },
   user: {
+    prefix: '/user',
     me: '/user/me',
   },
 } as const;
@@ -67,13 +72,5 @@ export const COLOR = {
 export const COOKIE_KEY = {
   accessToken: 'nextjs_template-secure-access_token',
   refreshToken: 'nextje_template-secure-refresh_token',
+  autoSignIn: 'nextjs_template-secure-auto_sign_in',
 } as const;
-
-export type AuthorizationType = keyof typeof AUTHORIZATION_TYPE;
-
-export const AUTHORIZATION_TYPE = {
-  basic: 'Basic ',
-  bearer: 'Bearer ',
-} as const;
-
-export const AUTHORIZATION = 'Authorization' as const;

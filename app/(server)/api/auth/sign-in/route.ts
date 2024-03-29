@@ -11,12 +11,13 @@ import {
   getAccessTokenCokie,
   getRefreshTokenCookie,
   validate,
+  getAutoSignInCookie,
 } from '@/(server)/util';
 
 /**
  * NOTE: /api/auth/sign-in
  * @body AuthSignInRequestBody
- * @returns void
+ * @return void
  */
 export const POST = async (request: NextRequest) => {
   await getConnection();
@@ -25,6 +26,7 @@ export const POST = async (request: NextRequest) => {
     const requestBodyJSON = await getRequestBodyJSON<AuthSignInRequestBody>(request, [
       'email',
       'password',
+      'autoSignIn',
     ]);
 
     validate({ email: requestBodyJSON.email, password: requestBodyJSON.password });
@@ -66,12 +68,19 @@ export const POST = async (request: NextRequest) => {
 
     await account.save();
 
-    const accessTokenCookie = getAccessTokenCokie(signedTokens.accessToken);
-    const refreshTokenCookie = getRefreshTokenCookie(signedTokens.refreshToken);
+    const accessTokenCookie = getAccessTokenCokie({
+      value: signedTokens.accessToken,
+      autoSignIn: requestBodyJSON.autoSignIn,
+    });
+    const refreshTokenCookie = getRefreshTokenCookie({
+      value: signedTokens.refreshToken,
+      autoSignIn: requestBodyJSON.autoSignIn,
+    });
+    const autoSignInCookie = getAutoSignInCookie(requestBodyJSON.autoSignIn);
 
     return SuccessResponse({
       method: 'POST',
-      cookies: [accessTokenCookie, refreshTokenCookie],
+      cookies: [accessTokenCookie, refreshTokenCookie, autoSignInCookie],
     });
   } catch (error) {
     return ErrorResponse(error);

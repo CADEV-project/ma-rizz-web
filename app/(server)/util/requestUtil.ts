@@ -1,37 +1,48 @@
 import { NextRequest } from 'next/server';
 
-import { getDecodedBasicToken, getDecodedBearerToken } from '.';
+import { NotFound, Unauthorized } from '@/(server)/error';
 
-import { NotFound, NotImplemented, Unauthorized } from '@/(server)/error';
-import { getVerifiedAccessToken } from '@/(server)/lib';
-
-import { AUTHORIZATION, AuthorizationType } from '@/constant';
+import { COOKIE_KEY } from '@/constant';
 
 type CommonBody = Record<string, unknown>;
 
-export const getAuthorization = (request: NextRequest, authorizationType: AuthorizationType) => {
-  const authorization = request.headers.get(AUTHORIZATION);
+export const getRequestAccessToken = (request: NextRequest) => {
+  const accessTokenCookie = request.cookies.get(COOKIE_KEY.accessToken);
 
-  if (!authorization || typeof authorization !== 'string')
+  if (!accessTokenCookie)
     throw new Unauthorized({
       type: 'Unauthorized',
       code: 401,
-      detail: { reason: 'AuthorizationRequired' },
+      detail: { reason: 'AccessTokenNotExist' },
     });
 
-  if (authorizationType === 'basic') {
-    getDecodedBasicToken(authorization);
+  return accessTokenCookie.value;
+};
 
-    throw new NotImplemented({
-      type: 'NotImplemented',
-      code: 501,
-      detail: { reason: 'BasicAuth' },
+export const getRequestRefreshToken = (request: NextRequest) => {
+  const refreshTokenCookie = request.cookies.get(COOKIE_KEY.refreshToken);
+
+  if (!refreshTokenCookie)
+    throw new Unauthorized({
+      type: 'Unauthorized',
+      code: 401,
+      detail: { reason: 'RefreshTokenNotExist' },
     });
-  }
 
-  const token = getDecodedBearerToken(authorization);
+  return refreshTokenCookie.value;
+};
 
-  return getVerifiedAccessToken(token);
+export const getRequestAutoSignIn = (request: NextRequest) => {
+  const autoSignInCookie = request.cookies.get(COOKIE_KEY.autoSignIn);
+
+  if (!autoSignInCookie)
+    throw new Unauthorized({
+      type: 'Unauthorized',
+      code: 401,
+      detail: { reason: 'AutoSignInNotExist' },
+    });
+
+  return autoSignInCookie.value === 'true';
 };
 
 export async function getRequestBodyJSON<Body extends CommonBody>(

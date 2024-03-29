@@ -22,29 +22,61 @@ export const getCookie = (
   };
 };
 
+export const getAutoSignInCookie = (autoSignIn: boolean): Cookie => {
+  const AUTO_SIGN_IN_COOKIE_MAX_AGE = getNumericTime({ type: 'minute', day: 30 });
+
+  return getCookie(COOKIE_KEY.autoSignIn, `${autoSignIn}`, {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: true,
+    maxAge: AUTO_SIGN_IN_COOKIE_MAX_AGE,
+    path: '/',
+  });
+};
+
+type GetAccessTokenCookieParams = {
+  value: string;
+  options?: Partial<ResponseCookie>;
+  autoSignIn: boolean;
+};
+
 /** NOTE: Expires in 1h */
-export const getAccessTokenCokie = (value: string, options?: Partial<ResponseCookie>): Cookie => {
+export const getAccessTokenCokie = ({
+  value,
+  options,
+  autoSignIn,
+}: GetAccessTokenCookieParams): Cookie => {
   const ACCESS_TOKEN_COOKIE_MAX_AGE = getNumericTime({ type: 'minute', hour: 1 });
 
   return getCookie(COOKIE_KEY.accessToken, value, {
     httpOnly: true,
     sameSite: 'strict',
     secure: true,
-    maxAge: ACCESS_TOKEN_COOKIE_MAX_AGE,
+    maxAge: autoSignIn ? ACCESS_TOKEN_COOKIE_MAX_AGE : undefined,
     path: '/',
     ...options,
   });
 };
 
+type GetRefreshTokenCookieParams = {
+  value: string;
+  options?: Partial<ResponseCookie>;
+  autoSignIn: boolean;
+};
+
 /** NOTE: Expires in 30d */
-export const getRefreshTokenCookie = (value: string, options?: Partial<ResponseCookie>): Cookie => {
+export const getRefreshTokenCookie = ({
+  value,
+  options,
+  autoSignIn,
+}: GetRefreshTokenCookieParams): Cookie => {
   const REFRESH_TOKEN_COOKIE_MAX_AGE = getNumericTime({ type: 'minute', day: 30 });
 
   return getCookie(COOKIE_KEY.refreshToken, value, {
     httpOnly: true,
     sameSite: 'strict',
     secure: true,
-    maxAge: REFRESH_TOKEN_COOKIE_MAX_AGE,
+    maxAge: autoSignIn ? REFRESH_TOKEN_COOKIE_MAX_AGE : undefined,
     path: '/',
     ...options,
   });

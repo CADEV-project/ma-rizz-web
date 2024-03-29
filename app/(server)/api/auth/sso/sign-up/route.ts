@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { AuthSignUpWithOAuthRequestBody } from './type';
+import { AuthSSOSignUpRequestBody } from './type';
 
 import { Conflict, ErrorResponse } from '@/(server)/error';
 import { getConnection } from '@/(server)/lib';
@@ -8,14 +8,15 @@ import { AccountModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON, validate } from '@/(server)/util';
 
 /**
- * NOTE: /api/auth/sign-up-with-oauth
- * @body AuthSignUpWithOAuthRequest
+ * NOTE: /api/auth/sso/sign-up
+ * @body AuthSSOSignUpRequestBody
+ * @return void
  */
 export const POST = async (request: NextRequest) => {
   await getConnection();
 
   try {
-    const requestBodyJSON = await getRequestBodyJSON<AuthSignUpWithOAuthRequestBody>(request, [
+    const requestBodyJSON = await getRequestBodyJSON<AuthSSOSignUpRequestBody>(request, [
       'type',
       'productAccountId',
     ]);
