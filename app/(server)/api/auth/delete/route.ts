@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 import { AuthDeleteRequestSearchParams } from './type';
 
-import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
+import { ErrorResponse, Forbidden } from '@/(server)/error';
 import {
   comparePassword,
   getConnection,
@@ -37,11 +37,11 @@ export const DELETE = async (request: NextRequest) => {
       userId: getObjectId(userId),
     }).exec();
 
-    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
+    if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
 
     const user = await UserModel.findById(getObjectId(userId)).exec();
 
-    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: 'user' });
+    if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
 
     if (account.status === 'withdrew')
       throw new Forbidden({

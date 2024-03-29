@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 import { AuthUpdateStatusRequestBody } from './type';
 
-import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
+import { ErrorResponse, Forbidden } from '@/(server)/error';
 import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(server)/util';
@@ -27,11 +27,11 @@ export const PATCH = async (request: NextRequest) => {
 
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
-    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
+    if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
 
     const user = await UserModel.findById(getObjectId(userId)).exec();
 
-    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: 'user' });
+    if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
 
     if (requestBodyJSON.status === 'pending' || requestBodyJSON.status === 'withdrew')
       throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'accountStatus' });

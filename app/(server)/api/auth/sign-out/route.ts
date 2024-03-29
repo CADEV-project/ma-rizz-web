@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { ErrorResponse, NotFound } from '@/(server)/error';
+import { ErrorResponse, Forbidden } from '@/(server)/error';
 import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { AccountModel } from '@/(server)/model';
 import { SuccessResponse, getRequestAccessToken } from '@/(server)/util';
@@ -25,7 +25,7 @@ export const POST = async (request: NextRequest) => {
       userId: getObjectId(userId),
     }).exec();
 
-    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
+    if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
 
     account.refreshToken = '';
 

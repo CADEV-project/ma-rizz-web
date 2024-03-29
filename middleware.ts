@@ -39,13 +39,13 @@ export const middleware = async (request: NextRequest) => {
     }
   } else {
     if (isAuthPageRoute) {
-      if (accessTokenCookie) {
-        if (refreshTokenCookie) {
-          // NOTE: When go to auth pages, If the access token and refresh token is included in the request, can't access the auth page.
+      if (refreshTokenCookie) {
+        // NOTE: When go to auth pages, if the refresh token is included in the request, redirect to home page.
 
-          return NextResponse.redirect(new URL(ROUTE_URL.home, request.url));
-        } else {
-          // NOTE: When go to auth pages, if the access token is included in the request and refresh token is not included, the access token is deleted on the server side.
+        return NextResponse.redirect(new URL(ROUTE_URL.home, request.url));
+      } else {
+        if (accessTokenCookie) {
+          // NOTE: When go to auth pages, if the access token is included in the request, redirect to home page.
 
           request.cookies.delete(COOKIE_KEY.accessToken);
 

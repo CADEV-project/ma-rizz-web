@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 import { AuthSignInRequestBody } from './type';
 
-import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
+import { ErrorResponse, Forbidden } from '@/(server)/error';
 import { comparePassword, getConnection, getSignedTokens } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
 import {
@@ -34,19 +34,19 @@ export const POST = async (request: NextRequest) => {
     const user = await UserModel.findOne({ email: requestBodyJSON.email }).exec();
 
     if (!user) {
-      throw new NotFound({ type: 'NotFound', code: 404, detail: 'email' });
+      throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'email' });
     }
 
     const isAuthorized = await comparePassword(requestBodyJSON.password, user.password);
 
     if (!isAuthorized) {
-      throw new NotFound({ type: 'NotFound', code: 404, detail: 'password' });
+      throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'password' });
     }
 
     const account = await AccountModel.findOne({ userId: user._id }).exec();
 
     if (!account) {
-      throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
+      throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
     }
 
     const isActive = account.status === 'active';

@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 import { AuthSSORegisterRequestBody } from './type';
 
-import { ErrorResponse, NotFound } from '@/(server)/error';
+import { ErrorResponse, Forbidden } from '@/(server)/error';
 import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
 import {
@@ -45,7 +45,7 @@ export const POST = async (request: NextRequest) => {
 
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
-    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
+    if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
 
     await session.withTransaction(async () => {
       const [user] = await UserModel.create(

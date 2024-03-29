@@ -29,7 +29,7 @@ export const getAutoSignInCookie = (autoSignIn: boolean): Cookie => {
     httpOnly: true,
     sameSite: 'strict',
     secure: true,
-    maxAge: AUTO_SIGN_IN_COOKIE_MAX_AGE,
+    maxAge: autoSignIn ? AUTO_SIGN_IN_COOKIE_MAX_AGE : undefined,
     path: '/',
   });
 };
@@ -41,18 +41,14 @@ type GetAccessTokenCookieParams = {
 };
 
 /** NOTE: Expires in 1h */
-export const getAccessTokenCokie = ({
-  value,
-  options,
-  autoSignIn,
-}: GetAccessTokenCookieParams): Cookie => {
+export const getAccessTokenCokie = ({ value, options }: GetAccessTokenCookieParams): Cookie => {
   const ACCESS_TOKEN_COOKIE_MAX_AGE = getNumericTime({ type: 'minute', hour: 1 });
 
   return getCookie(COOKIE_KEY.accessToken, value, {
     httpOnly: true,
     sameSite: 'strict',
     secure: true,
-    maxAge: autoSignIn ? ACCESS_TOKEN_COOKIE_MAX_AGE : undefined,
+    maxAge: ACCESS_TOKEN_COOKIE_MAX_AGE,
     path: '/',
     ...options,
   });

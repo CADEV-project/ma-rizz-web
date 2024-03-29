@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 import { AuthPasswordResetRequestBody } from './type';
 
-import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
+import { ErrorResponse, Forbidden } from '@/(server)/error';
 import { getConnection, getHashedPassword } from '@/(server)/lib';
 import { UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON } from '@/(server)/util';
@@ -31,7 +31,7 @@ export const PATCH = async (request: NextRequest) => {
 
     const user = await UserModel.findOne({ email: requestBodyJSON.email }).exec();
 
-    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: 'user' });
+    if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
 
     const hashedPassword = await getHashedPassword(requestBodyJSON.newPassword);
 

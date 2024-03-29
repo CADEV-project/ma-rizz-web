@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { ErrorResponse, NotFound } from '@/(server)/error';
+import { ErrorResponse, Forbidden } from '@/(server)/error';
 import {
   getConnection,
   getObjectId,
@@ -16,6 +16,8 @@ import {
   getRequestAutoSignIn,
   getRequestRefreshToken,
 } from '@/(server)/util';
+
+import { COOKIE_KEY } from '@/constant';
 
 /**
  * NOTE: /api/auth/refresh-token
@@ -37,7 +39,7 @@ export const POST = async (request: NextRequest) => {
       refreshToken,
     }).exec();
 
-    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
+    if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
 
     const newSignedTokens = getSignedTokens({ accountId, userId });
 
@@ -62,6 +64,12 @@ export const POST = async (request: NextRequest) => {
         : [newAccessTokenCookie, newRefreshTokenCookie],
     });
   } catch (error) {
-    return ErrorResponse(error);
+    const response = ErrorResponse(error);
+
+    response.cookies.delete(COOKIE_KEY.accessToken);
+    response.cookies.delete(COOKIE_KEY.refreshToken);
+    response.cookies.delete(COOKIE_KEY.autoSignIn);
+
+    return response;
   }
 };
