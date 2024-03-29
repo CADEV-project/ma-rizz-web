@@ -31,12 +31,11 @@ export const PATCH = async (request: NextRequest) => {
 
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
-    if (!account)
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['account'] } });
+    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
 
     const user = await UserModel.findById(getObjectId(userId)).exec();
 
-    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['user'] } });
+    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: 'user' });
 
     user.name = requestBody.name;
     user.phoneNumber = requestBody.phoneNumber;

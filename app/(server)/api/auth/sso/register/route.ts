@@ -14,7 +14,7 @@ import {
 
 /**
  * NOTE: /api/auth/sso/register
- * @param AuthSSORegisterRequestBody
+ * @body AuthSSORegisterRequestBody
  * @return void
  */
 export const POST = async (request: NextRequest) => {
@@ -45,8 +45,7 @@ export const POST = async (request: NextRequest) => {
 
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
-    if (!account)
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['account'] } });
+    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
 
     await session.withTransaction(async () => {
       const [user] = await UserModel.create(

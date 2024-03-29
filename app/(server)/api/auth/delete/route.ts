@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 import { AuthDeleteRequestSearchParams } from './type';
 
-import { Conflict, ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
+import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
 import {
   comparePassword,
   getConnection,
@@ -15,6 +15,8 @@ import {
   getRequestAccessToken,
   getRequestSearchPraramsJSON,
 } from '@/(server)/util';
+
+import { COOKIE_KEY } from '@/constant';
 
 /**
  * NOTE: /api/auth/delete
@@ -35,14 +37,18 @@ export const DELETE = async (request: NextRequest) => {
       userId: getObjectId(userId),
     }).exec();
 
-    if (!account)
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['account'] } });
+    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
 
     const user = await UserModel.findById(getObjectId(userId)).exec();
 
-    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['user'] } });
+    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: 'user' });
 
-    if (account.status === 'withdrew') throw new Conflict({ type: 'Conflict', code: 409 });
+    if (account.status === 'withdrew')
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: 'accountStatus',
+      });
 
     if (account.type === 'credentials') {
       const searchParams = getRequestSearchPraramsJSON<AuthDeleteRequestSearchParams>(request, [
@@ -51,14 +57,20 @@ export const DELETE = async (request: NextRequest) => {
 
       const isAuthorized = comparePassword(searchParams.password, user.password);
 
-      if (!isAuthorized) throw new Forbidden({ type: 'Forbidden', code: 403 });
+      if (!isAuthorized) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'password' });
     }
 
     account.status = 'withdrew';
 
     await account.save();
 
-    return SuccessResponse({ method: 'DELETE' });
+    const response = SuccessResponse({ method: 'DELETE' });
+
+    response.cookies.delete(COOKIE_KEY.accessToken);
+    response.cookies.delete(COOKIE_KEY.refreshToken);
+    response.cookies.delete(COOKIE_KEY.autoSignIn);
+
+    return response;
   } catch (error) {
     return ErrorResponse(error);
   }

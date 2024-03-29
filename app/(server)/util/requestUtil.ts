@@ -13,7 +13,10 @@ export const getRequestAccessToken = (request: NextRequest) => {
     throw new Unauthorized({
       type: 'Unauthorized',
       code: 401,
-      detail: { reason: 'AccessTokenNotExist' },
+      detail: {
+        name: 'TokenNotExist',
+        message: 'access token not exist',
+      },
     });
 
   return accessTokenCookie.value;
@@ -26,7 +29,10 @@ export const getRequestRefreshToken = (request: NextRequest) => {
     throw new Unauthorized({
       type: 'Unauthorized',
       code: 401,
-      detail: { reason: 'RefreshTokenNotExist' },
+      detail: {
+        name: 'TokenNotExist',
+        message: 'refresh token not exist',
+      },
     });
 
   return refreshTokenCookie.value;
@@ -39,7 +45,10 @@ export const getRequestAutoSignIn = (request: NextRequest) => {
     throw new Unauthorized({
       type: 'Unauthorized',
       code: 401,
-      detail: { reason: 'AutoSignInNotExist' },
+      detail: {
+        name: 'TokenNotExist',
+        message: 'auto sign in not exist',
+      },
     });
 
   return autoSignInCookie.value === 'true';
@@ -54,7 +63,7 @@ export async function getRequestBodyJSON<Body extends CommonBody>(
   const notFoundFields: string[] = [];
 
   if (!requestBody || typeof requestBody !== 'object' || Object.keys(requestBody).length === 0)
-    throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['body'] } });
+    throw new NotFound({ type: 'NotFound', code: 404, detail: 'body' });
 
   const requestBodyKeys = Object.keys(requestBody);
 
@@ -67,7 +76,7 @@ export async function getRequestBodyJSON<Body extends CommonBody>(
     throw new NotFound({
       type: 'NotFound',
       code: 404,
-      detail: { fields: notFoundFields },
+      detail: notFoundFields,
     });
 
   return requestBody as Body;
@@ -86,7 +95,7 @@ export function getRequestSearchPraramsJSON<SearchParams extends CommonSearchPar
   const notFoundFields: string[] = [];
 
   if (!searchParams || searchParams.toString().length === 0)
-    throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['searchParams'] } });
+    throw new NotFound({ type: 'NotFound', code: 404, detail: 'searchParams' });
 
   const searchParamsKeys = Array.from(searchParams.keys());
   const searchParamsObject: Record<string, string> = {};
@@ -102,7 +111,7 @@ export function getRequestSearchPraramsJSON<SearchParams extends CommonSearchPar
     throw new NotFound({
       type: 'NotFound',
       code: 404,
-      detail: { fields: notFoundFields },
+      detail: notFoundFields,
     });
 
   return searchParamsObject as SearchParamsParserReturn<SearchParams>;

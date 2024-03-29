@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 import { AuthPasswordResetRequestBody } from './type';
 
-import { Conflict, ErrorResponse, NotFound } from '@/(server)/error';
+import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
 import { getConnection, getHashedPassword } from '@/(server)/lib';
 import { UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON } from '@/(server)/util';
@@ -22,11 +22,16 @@ export const PATCH = async (request: NextRequest) => {
       'isVerified',
     ]);
 
-    if (!requestBodyJSON.isVerified) throw new Conflict({ type: 'Conflict', code: 409 });
+    if (!requestBodyJSON.isVerified)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: 'isVerified',
+      });
 
     const user = await UserModel.findOne({ email: requestBodyJSON.email }).exec();
 
-    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['user'] } });
+    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: 'user' });
 
     const hashedPassword = await getHashedPassword(requestBodyJSON.newPassword);
 

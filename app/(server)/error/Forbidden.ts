@@ -4,10 +4,7 @@ type ForbiddenType = 'Forbidden';
 
 type ForbiddenCode = 403;
 
-type ForbiddenDetail = {
-  error?: Error;
-  reason?: string;
-};
+type ForbiddenDetail = string;
 
 export class Forbidden extends BaseError {
   type!: ForbiddenType;

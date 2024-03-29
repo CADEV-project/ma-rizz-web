@@ -1,6 +1,5 @@
 /** NOTE: Back-end Part */
 export const API_URL = {
-  health: '/health',
   auth: {
     prefix: '/auth',
     delete: '/auth/delete',
@@ -25,6 +24,7 @@ export const API_URL = {
       status: '/auth/update/status',
     },
   },
+  health: '/health',
   user: {
     prefix: '/user',
     me: '/user/me',

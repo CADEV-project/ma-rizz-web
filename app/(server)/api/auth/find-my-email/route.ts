@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 import { AuthFindMyEmailRequestSearchParams, AuthFindMyEmailResponse } from './type';
 
-import { Conflict, ErrorResponse, NotFound } from '@/(server)/error';
+import { ErrorResponse, Forbidden, NotFound } from '@/(server)/error';
 import { getConnection } from '@/(server)/lib';
 import { UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestSearchPraramsJSON } from '@/(server)/util';
@@ -21,11 +21,16 @@ export const GET = async (request: NextRequest) => {
       'phoneNumber',
     ]);
 
-    if (searchParams.isVerified !== 'true') throw new Conflict({ type: 'Conflict', code: 409 });
+    if (searchParams.isVerified !== 'true')
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: 'isVerified',
+      });
 
     const user = await UserModel.findOne({ phoneNumber: searchParams.phoneNumber }).exec();
 
-    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['user'] } });
+    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: 'user' });
 
     return SuccessResponse<AuthFindMyEmailResponse>({ method: 'GET', data: { email: user.email } });
   } catch (error) {

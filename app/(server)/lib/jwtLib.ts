@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-import { NotFound } from '@/(server)/error';
+import { NotFound, Unauthorized } from '@/(server)/error';
 import { getNumericTime } from '@/(server)/util';
 
 import { SERVER_SETTINGS } from '@/setting';
@@ -13,12 +13,17 @@ const getSignedAccessToken = (payload: JwtPayload) => {
     throw new NotFound({
       type: 'NotFound',
       code: 404,
-      detail: { fields: ['ACCESS_TOKEN_JWT_SECRET'] },
+      detail: 'ACCESS_TOKEN_JWT_SECRET',
     });
 
-  return jwt.sign(payload, SERVER_SETTINGS.ACCESS_TOKEN_JWT_SECRET, {
-    expiresIn: ACCESS_TOKEN_EXPIRES_IN,
-  });
+  try {
+    return jwt.sign(payload, SERVER_SETTINGS.ACCESS_TOKEN_JWT_SECRET, {
+      expiresIn: ACCESS_TOKEN_EXPIRES_IN,
+    });
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    throw new Unauthorized({ type: 'Unauthorized', code: 401, detail: error as any });
+  }
 };
 
 /** NOTE: Expires in 30 day */
@@ -29,12 +34,17 @@ const getSignedRefreshToken = (payload: JwtPayload) => {
     throw new NotFound({
       type: 'NotFound',
       code: 404,
-      detail: { fields: ['REFRESH_TOKEN_JWT_SECRET'] },
+      detail: 'REFRESH_TOKEN_JWT_SECRET',
     });
 
-  return jwt.sign(payload, SERVER_SETTINGS.REFRESH_TOKEN_JWT_SECRET, {
-    expiresIn: REFRESH_TOKEN_EXPIRES_IN,
-  });
+  try {
+    return jwt.sign(payload, SERVER_SETTINGS.REFRESH_TOKEN_JWT_SECRET, {
+      expiresIn: REFRESH_TOKEN_EXPIRES_IN,
+    });
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    throw new Unauthorized({ type: 'Unauthorized', code: 401, detail: error as any });
+  }
 };
 
 export const getSignedTokens = (payload: JwtPayload) => {
@@ -49,10 +59,15 @@ export const getVerifiedAccessToken = (token: string) => {
     throw new NotFound({
       type: 'NotFound',
       code: 404,
-      detail: { fields: ['ACCESS_TOKEN_JWT_SECRET'] },
+      detail: 'ACCESS_TOKEN_JWT_SECRET',
     });
 
-  return jwt.verify(token, SERVER_SETTINGS.ACCESS_TOKEN_JWT_SECRET) as JwtPayload;
+  try {
+    return jwt.verify(token, SERVER_SETTINGS.ACCESS_TOKEN_JWT_SECRET) as JwtPayload;
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    throw new Unauthorized({ type: 'Unauthorized', code: 401, detail: error as any });
+  }
 };
 
 export const getVerifiedRefreshToken = (token: string) => {
@@ -60,8 +75,13 @@ export const getVerifiedRefreshToken = (token: string) => {
     throw new NotFound({
       type: 'NotFound',
       code: 404,
-      detail: { fields: ['REFRESH_TOKEN_JWT_SECRET'] },
+      detail: 'REFRESH_TOKEN_JWT_SECRET',
     });
 
-  return jwt.verify(token, SERVER_SETTINGS.REFRESH_TOKEN_JWT_SECRET) as JwtPayload;
+  try {
+    return jwt.verify(token, SERVER_SETTINGS.REFRESH_TOKEN_JWT_SECRET) as JwtPayload;
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    throw new Unauthorized({ type: 'Unauthorized', code: 401, detail: error as any });
+  }
 };

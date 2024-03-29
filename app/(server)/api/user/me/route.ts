@@ -23,16 +23,15 @@ export const GET = async (request: NextRequest) => {
     const user = await UserModel.findById(getObjectId(userId)).exec();
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
-    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['user'] } });
+    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: 'user' });
 
-    if (!account)
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['account'] } });
+    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
 
     if (account.status === 'withdrew')
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
-        detail: { reason: 'user status is withdrew.' },
+        detail: 'accountStatus',
       });
 
     return SuccessResponse<UserMeResponse>({

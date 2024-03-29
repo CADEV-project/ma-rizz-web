@@ -6,7 +6,7 @@ import { SERVER_SETTINGS } from '@/setting';
 
 export const getHashedPassword = (password: string) => {
   if (!SERVER_SETTINGS.CRYPTION_SALT_ROUND)
-    throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['CRYPTION_SECRET'] } });
+    throw new NotFound({ type: 'NotFound', code: 404, detail: 'CRYPTION_SECRET' });
 
   return bcrypt.hash(password, parseInt(SERVER_SETTINGS.CRYPTION_SALT_ROUND));
 };

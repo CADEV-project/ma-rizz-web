@@ -11,7 +11,7 @@ if (!cachedMongoose)
 
 export const getConnection = async () => {
   if (!SERVER_SETTINGS.DATABASE_URL)
-    throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['DATABASE_URL'] } });
+    throw new NotFound({ type: 'NotFound', code: 404, detail: 'DATABASE_URL' });
 
   if (cachedMongoose.connection) return cachedMongoose.connection;
 

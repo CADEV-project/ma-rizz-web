@@ -31,7 +31,11 @@ export const POST = async (request: NextRequest) => {
     }).exec();
 
     if (accountWithAccountTypeAndProductAccountId)
-      throw new Conflict({ type: 'Conflict', code: 409, detail: { fields: ['account'] } });
+      throw new Conflict({
+        type: 'Conflict',
+        code: 409,
+        detail: 'account',
+      });
 
     await AccountModel.create({
       type: requestBodyJSON.type,

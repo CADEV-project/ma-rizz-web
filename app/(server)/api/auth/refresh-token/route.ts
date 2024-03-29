@@ -37,8 +37,7 @@ export const POST = async (request: NextRequest) => {
       refreshToken,
     }).exec();
 
-    if (!account)
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['account'] } });
+    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
 
     const newSignedTokens = getSignedTokens({ accountId, userId });
 

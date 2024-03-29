@@ -34,19 +34,19 @@ export const POST = async (request: NextRequest) => {
     const user = await UserModel.findOne({ email: requestBodyJSON.email }).exec();
 
     if (!user) {
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['email'] } });
+      throw new NotFound({ type: 'NotFound', code: 404, detail: 'email' });
     }
 
     const isAuthorized = await comparePassword(requestBodyJSON.password, user.password);
 
     if (!isAuthorized) {
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['password'] } });
+      throw new NotFound({ type: 'NotFound', code: 404, detail: 'password' });
     }
 
     const account = await AccountModel.findOne({ userId: user._id }).exec();
 
     if (!account) {
-      throw new NotFound({ type: 'NotFound', code: 404, detail: { fields: ['account'] } });
+      throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
     }
 
     const isActive = account.status === 'active';
@@ -55,7 +55,7 @@ export const POST = async (request: NextRequest) => {
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
-        detail: { reason: account.status },
+        detail: 'accountStatus',
       });
     }
 
