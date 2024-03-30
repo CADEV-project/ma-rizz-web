@@ -14,11 +14,11 @@ import { Typography } from '@mui/material';
 
 import * as S from './SignInForm.styles';
 
-import { AuthSignInRequestBody, authSignInRequest } from '@/(client)/request';
+import { AuthSignInRequestProps, authSignInRequest } from '@/(client)/request';
 
 import { ROUTE_URL } from '@/constant';
 
-type SignInFormProps = Omit<AuthSignInRequestBody, 'autoSignIn'> & { autoSignIn?: boolean };
+type SignInFormProps = Omit<AuthSignInRequestProps, 'autoSignIn'> & { autoSignIn?: boolean };
 
 const SIGN_IN_FORM_DEFAULT_VALUES: SignInFormProps = {
   email: '',

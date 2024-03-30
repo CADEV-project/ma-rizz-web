@@ -14,11 +14,11 @@ import { Typography } from '@mui/material';
 
 import * as S from './SignUpForm.styles';
 
-import { AuthSignUpRequestBody, authSignUpRequest } from '@/(client)/request';
+import { AuthSignUpRequestProps, authSignUpRequest } from '@/(client)/request';
 
 import { ROUTE_URL } from '@/constant';
 
-type SignUpFormProps = AuthSignUpRequestBody & { passwordAccept: string };
+type SignUpFormProps = AuthSignUpRequestProps & { passwordAccept: string };
 
 const SIGN_UP_FORM_DEFAULT_VALUES: SignUpFormProps = {
   email: '',
@@ -28,7 +28,9 @@ const SIGN_UP_FORM_DEFAULT_VALUES: SignUpFormProps = {
   phoneNumber: '',
   age: '',
   gender: 'male',
+  postalCode: '',
   address: '',
+  addressDetail: '',
 };
 
 export const SignUpForm: React.FC = () => {
@@ -43,7 +45,9 @@ export const SignUpForm: React.FC = () => {
     phoneNumber,
     age,
     gender,
+    postalCode,
     address,
+    addressDetail,
   }: SignUpFormProps) => {
     try {
       if (password !== passwordAccept) {
@@ -59,7 +63,9 @@ export const SignUpForm: React.FC = () => {
         phoneNumber,
         age,
         gender,
+        postalCode,
         address,
+        addressDetail,
       });
 
       router.push(ROUTE_URL.auth.signIn);
@@ -108,7 +114,9 @@ export const SignUpForm: React.FC = () => {
             ]}
             row
           />
+          <TextFieldElement name='postalCode' label='우편번호' />
           <TextFieldElement name='address' label='주소' />
+          <TextFieldElement name='addressDetail' label='주소 상세' />
         </S.FormContainer>
         <S.SignUpButton type='submit'>함께하기</S.SignUpButton>
       </FormContainer>
