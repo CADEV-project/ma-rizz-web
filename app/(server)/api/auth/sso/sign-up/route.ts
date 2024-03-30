@@ -28,7 +28,9 @@ export const POST = async (request: NextRequest) => {
     const accountWithAccountTypeAndProductAccountId = await AccountModel.findOne({
       type: requestBodyJSON.type,
       accountId: requestBodyJSON.productAccountId,
-    }).exec();
+    })
+      .lean()
+      .exec();
 
     if (accountWithAccountTypeAndProductAccountId)
       throw new Conflict({

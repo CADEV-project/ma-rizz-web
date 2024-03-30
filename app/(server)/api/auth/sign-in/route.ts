@@ -31,7 +31,7 @@ export const POST = async (request: NextRequest) => {
 
     validate({ email: requestBodyJSON.email, password: requestBodyJSON.password });
 
-    const user = await UserModel.findOne({ email: requestBodyJSON.email }).exec();
+    const user = await UserModel.findOne({ email: requestBodyJSON.email }).lean().exec();
 
     if (!user) {
       throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'email' });

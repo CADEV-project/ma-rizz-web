@@ -28,7 +28,7 @@ export const GET = async (request: NextRequest) => {
         detail: 'isVerified',
       });
 
-    const user = await UserModel.findOne({ phoneNumber: searchParams.phoneNumber }).exec();
+    const user = await UserModel.findOne({ phoneNumber: searchParams.phoneNumber }).lean().exec();
 
     if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
 

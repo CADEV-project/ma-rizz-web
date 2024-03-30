@@ -4,7 +4,7 @@ import { AuthUpdateStatusRequestBody } from './type';
 
 import { ErrorResponse, Forbidden } from '@/(server)/error';
 import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
-import { AccountModel, UserModel } from '@/(server)/model';
+import { AccountModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(server)/util';
 
 /**
@@ -19,7 +19,7 @@ export const PATCH = async (request: NextRequest) => {
   try {
     const accessToken = getRequestAccessToken(request);
 
-    const { accountId, userId } = getVerifiedAccessToken(accessToken);
+    const { accountId } = getVerifiedAccessToken(accessToken);
 
     const requestBodyJSON = await getRequestBodyJSON<AuthUpdateStatusRequestBody>(request, [
       'status',
@@ -28,10 +28,6 @@ export const PATCH = async (request: NextRequest) => {
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
     if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
-
-    const user = await UserModel.findById(getObjectId(userId)).exec();
-
-    if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
 
     if (requestBodyJSON.status === 'pending' || requestBodyJSON.status === 'withdrew')
       throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'accountStatus' });

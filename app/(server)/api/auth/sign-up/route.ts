@@ -39,24 +39,17 @@ export const POST = async (request: NextRequest) => {
       gender: requestBodyJSON.gender,
     });
 
-    const userWithEmail = await UserModel.findOne({ email: requestBodyJSON.email }).exec();
+    const users = await UserModel.find({
+      $or: [{ email: requestBodyJSON.email }, { phoneNumber: requestBodyJSON.phoneNumber }],
+    })
+      .lean()
+      .exec();
 
-    if (userWithEmail)
+    if (users.length)
       throw new Conflict({
         type: 'Conflict',
         code: 409,
-        detail: 'email',
-      });
-
-    const userWithPhoneNumber = await UserModel.findOne({
-      phoneNumber: requestBodyJSON.phoneNumber,
-    }).exec();
-
-    if (userWithPhoneNumber)
-      throw new Conflict({
-        type: 'Conflict',
-        code: 409,
-        detail: 'phoneNumber',
+        detail: 'email and phoneNumber',
       });
 
     const hashedPassword = await getHashedPassword(requestBodyJSON.password);

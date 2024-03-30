@@ -29,7 +29,9 @@ export const GET = async (request: NextRequest) => {
     const account = await AccountModel.findOne({
       type: searchParams.type,
       productAccountId: searchParams.productAccountId,
-    }).exec();
+    })
+      .lean()
+      .exec();
 
     return SuccessResponse<AuthDuplicateAccountCheckResponse>({
       method: 'GET',

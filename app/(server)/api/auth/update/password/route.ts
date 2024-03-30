@@ -9,7 +9,7 @@ import {
   getObjectId,
   getVerifiedAccessToken,
 } from '@/(server)/lib';
-import { AccountModel, UserModel } from '@/(server)/model';
+import { UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(server)/util';
 
 /**
@@ -24,16 +24,12 @@ export const PATCH = async (request: NextRequest) => {
   try {
     const accessToken = getRequestAccessToken(request);
 
-    const { accountId, userId } = getVerifiedAccessToken(accessToken);
+    const { userId } = getVerifiedAccessToken(accessToken);
 
     const requestBody = await getRequestBodyJSON<AuthUpdatePasswordRequestBody>(request, [
       'currentPassword',
       'newPassword',
     ]);
-
-    const account = await AccountModel.findById(getObjectId(accountId)).exec();
-
-    if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
 
     const user = await UserModel.findById(getObjectId(userId)).exec();
 

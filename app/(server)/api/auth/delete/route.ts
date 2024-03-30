@@ -32,14 +32,14 @@ export const DELETE = async (request: NextRequest) => {
 
     const { accountId, userId } = getVerifiedAccessToken(accessToken);
 
-    const account = await AccountModel.findOne({
-      _id: getObjectId(accountId),
-      userId: getObjectId(userId),
-    }).exec();
+    const [account, user] = await Promise.all([
+      AccountModel.findById({ _id: getObjectId(accountId) }).exec(),
+      UserModel.findById({ _id: getObjectId(userId) })
+        .lean()
+        .exec(),
+    ]);
 
     if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
-
-    const user = await UserModel.findById(getObjectId(userId)).exec();
 
     if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
 

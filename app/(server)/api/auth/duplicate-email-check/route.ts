@@ -23,7 +23,7 @@ export const GET = async (request: NextRequest) => {
       ['email']
     );
 
-    const user = await UserModel.findOne({ email: searchParams.email }).exec();
+    const user = await UserModel.findOne({ email: searchParams.email }).lean().exec();
 
     return SuccessResponse<AuthDuplicateEmailCheckResponse>({
       method: 'GET',

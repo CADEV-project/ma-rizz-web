@@ -20,11 +20,12 @@ export const GET = async (request: NextRequest) => {
 
     const { accountId, userId } = getVerifiedAccessToken(accessToken);
 
-    const user = await UserModel.findById(getObjectId(userId)).exec();
+    const [account, user] = await Promise.all([
+      AccountModel.findById(getObjectId(accountId)).lean().exec(),
+      UserModel.findById(getObjectId(userId)).lean().exec(),
+    ]);
 
     if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
-
-    const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
     if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
 

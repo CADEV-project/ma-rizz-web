@@ -33,11 +33,7 @@ export const POST = async (request: NextRequest) => {
 
     const { accountId, userId } = getVerifiedRefreshToken(refreshToken);
 
-    const account = await AccountModel.findOne({
-      _id: getObjectId(accountId),
-      userId: getObjectId(userId),
-      refreshToken,
-    }).exec();
+    const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
     if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
 
