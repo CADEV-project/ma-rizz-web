@@ -17,6 +17,7 @@ export const getConnection = async () => {
 
   if (!cachedMongoose.createConnectionPromise) {
     const options: ConnectOptions = {
+      maxPoolSize: 10,
       bufferCommands: false,
     };
 

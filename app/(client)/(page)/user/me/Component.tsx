@@ -1,19 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import { UserMeResponse, userMeRequest } from '@/(client)/request/userRequest';
+import { healthRequest } from '@/(client)/request';
+
+import { userMeRequest } from '@/(client)/request/userRequest';
+import { API_URL } from '@/constant';
 
 export const Component: React.FC = () => {
-  const [user, setUser] = useState<UserMeResponse>();
+  const { data } = useQuery({ queryKey: [API_URL.user.me], queryFn: userMeRequest });
 
-  const getUser = async () => {
-    const user = await userMeRequest();
+  useQuery({ queryKey: [API_URL.health], queryFn: healthRequest });
 
-    setUser(user);
-  };
-  useEffect(() => {
-    getUser();
-  }, []);
-  return <>{JSON.stringify(user)}</>;
+  return <>{JSON.stringify(data)}</>;
 };

@@ -25,6 +25,12 @@ export const API_URL = {
     },
   },
   health: '/health',
+  post: {
+    prefix: '/post',
+    create: '/post/create',
+    update: '/post/update',
+    delete: '/post/delete',
+  },
   user: {
     prefix: '/user',
     me: '/user/me',

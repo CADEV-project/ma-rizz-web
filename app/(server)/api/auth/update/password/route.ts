@@ -14,9 +14,9 @@ import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(s
 
 /**
  * NOTE: /api/auth/update/password
- * @requires token
+ * @required accessToken
  * @body AuthUpdatePasswordRequestBody
- * @return void;
+ * @return void
  */
 export const PATCH = async (request: NextRequest) => {
   await getConnection();

@@ -39,6 +39,7 @@ export const middleware = async (request: NextRequest) => {
     }
   } else {
     if (isAuthPageRoute) {
+      // NOTE: Case of auth pages
       if (refreshTokenCookie) {
         // NOTE: When go to auth pages, if the refresh token is included in the request, redirect to home page.
 
@@ -61,21 +62,16 @@ export const middleware = async (request: NextRequest) => {
     }
 
     if (isProtectedPageRoute) {
-      const response = NextResponse.redirect(new URL(ROUTE_URL.auth.signIn, request.url));
-
-      if (!accessTokenCookie) {
-        // NOTE: When go to protected pages, if the access token is not in the request, redirect to sign-in page.
-
-        if (refreshTokenCookie) {
-          // NOTE: If refresh token is included in the request, the refresh token is deleted on the server side.
-
-          response.cookies.delete(COOKIE_KEY.refreshToken);
-        }
-
-        return response;
+      // NOTE: Case of protected pages
+      if (refreshTokenCookie) {
+        // NOTE: When go to protected pages, if the refresh token is included in the request, just pass the request
+        return NextResponse.next();
       } else {
-        if (!refreshTokenCookie) {
-          // NOTE: When go to protected pages, if the access token is included in the request but refresh token is not included, the access token is deleted on the server side.
+        // NOTE: When go to protected pages, if the refresh token is not included in the request but access token is included, redirect to sign in page.
+        if (accessTokenCookie) {
+          request.cookies.delete(COOKIE_KEY.accessToken);
+
+          const response = NextResponse.redirect(new URL(ROUTE_URL.auth.signIn, request.url));
 
           response.cookies.delete(COOKIE_KEY.accessToken);
 

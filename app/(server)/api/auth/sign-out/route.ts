@@ -9,7 +9,7 @@ import { COOKIE_KEY } from '@/constant';
 
 /**
  * NOTE: /api/auth/sign-out
- * @requires token
+ * @required accessToken
  * @return void
  */
 export const POST = async (request: NextRequest) => {

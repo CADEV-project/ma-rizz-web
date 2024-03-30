@@ -17,7 +17,9 @@ export type UserSchema = {
   phoneNumber: string;
   age: string;
   gender: Gender;
+  postalCode: string;
   address: string;
+  addressDetail?: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -37,7 +39,9 @@ const userSchema = new Schema<UserSchema>(
     phoneNumber: { type: String, required: true, validate: phoneNumberRegexValidate },
     age: { type: String, required: true, validate: ageRegexValidate },
     gender: { type: String, required: true, validate: genderRegexvalidate },
+    postalCode: { type: String, required: true },
     address: { type: String, required: true },
+    addressDetail: { type: String },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },
   },

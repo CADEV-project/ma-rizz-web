@@ -7,7 +7,7 @@ export const emailRegexValidate = (email: string) => {
     throw new ValidationFailed({
       type: 'ValidationFailed',
       code: 422,
-      detail: { field: 'email', reason: 'REGEX_NOT_MATCHED' },
+      detail: [{ field: 'email', reason: 'REGEX_NOT_MATCHED' }],
     });
   }
 };
@@ -19,7 +19,7 @@ export const passwordRegexValidate = (password: string) => {
     throw new ValidationFailed({
       type: 'ValidationFailed',
       code: 422,
-      detail: { field: 'password', reason: 'REGEX_NOT_MATCHED' },
+      detail: [{ field: 'password', reason: 'REGEX_NOT_MATCHED' }],
     });
   }
 };
@@ -31,7 +31,7 @@ export const phoneNumberRegexValidate = (phoneNumber: string) => {
     throw new ValidationFailed({
       type: 'ValidationFailed',
       code: 422,
-      detail: { field: 'phoneNumber', reason: 'REGEX_NOT_MATCHED' },
+      detail: [{ field: 'phoneNumber', reason: 'REGEX_NOT_MATCHED' }],
     });
   }
 };
@@ -43,7 +43,7 @@ export const ageRegexValidate = (age: string) => {
     throw new ValidationFailed({
       type: 'ValidationFailed',
       code: 422,
-      detail: { field: 'age', reason: 'REGEX_NOT_MATCHED' },
+      detail: [{ field: 'age', reason: 'REGEX_NOT_MATCHED' }],
     });
   }
 };
@@ -55,7 +55,7 @@ export const genderRegexvalidate = (gender: string) => {
     throw new ValidationFailed({
       type: 'ValidationFailed',
       code: 422,
-      detail: { field: 'gender', reason: 'REGEX_NOT_MATCHED' },
+      detail: [{ field: 'gender', reason: 'REGEX_NOT_MATCHED' }],
     });
   }
 };
@@ -67,7 +67,7 @@ export const accountStatusRegexValidate = (status: string) => {
     throw new ValidationFailed({
       type: 'ValidationFailed',
       code: 422,
-      detail: { field: 'accountStatus', reason: 'REGEX_NOT_MATCHED' },
+      detail: [{ field: 'accountStatus', reason: 'REGEX_NOT_MATCHED' }],
     });
   }
 };
@@ -79,7 +79,19 @@ export const accountTypeRegexValidate = (type: string) => {
     throw new ValidationFailed({
       type: 'ValidationFailed',
       code: 422,
-      detail: { field: 'accountType', reason: 'REGEX_NOT_MATCHED' },
+      detail: [{ field: 'accountType', reason: 'REGEX_NOT_MATCHED' }],
+    });
+  }
+};
+
+export const numberRegex = (value: string) => {
+  const NUMBER_REGEX = /^\d+$/;
+
+  if (!NUMBER_REGEX.test(value)) {
+    throw new ValidationFailed({
+      type: 'ValidationFailed',
+      code: 422,
+      detail: [{ field: 'number', reason: 'REGEX_NOT_MATCHED' }],
     });
   }
 };
@@ -92,6 +104,7 @@ type ValidateParams = {
   gender?: string;
   accountStatus?: string;
   accountType?: string;
+  numbers?: string[];
 };
 
 export const validate = ({
@@ -102,6 +115,7 @@ export const validate = ({
   gender,
   accountStatus,
   accountType,
+  numbers,
 }: ValidateParams) => {
   if (email) emailRegexValidate(email);
   if (password) passwordRegexValidate(password);
@@ -110,4 +124,5 @@ export const validate = ({
   if (gender) genderRegexvalidate(gender);
   if (accountStatus) accountStatusRegexValidate(accountStatus);
   if (accountType) accountTypeRegexValidate(accountType);
+  if (numbers && numbers.length) numbers.forEach(number => numberRegex(number));
 };

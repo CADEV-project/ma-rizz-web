@@ -21,7 +21,7 @@ import { COOKIE_KEY } from '@/constant';
 
 /**
  * NOTE: /api/auth/refresh-token
- * @requires token
+ * @required refreshToken
  * @return AuthRefreshTokenResponse
  */
 export const POST = async (request: NextRequest) => {

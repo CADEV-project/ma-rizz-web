@@ -20,8 +20,8 @@ import { COOKIE_KEY } from '@/constant';
 
 /**
  * NOTE: /api/auth/delete
- * @requires token
- * @params AuthDeleteRequestSearchParams
+ * @require accessToken
+ * @searchParams AuthDeleteRequestSearchParams
  * @return void
  */
 export const DELETE = async (request: NextRequest) => {

@@ -9,7 +9,7 @@ import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(s
 
 /**
  * NOTE: /api/auth/update/me
- * @requires token
+ * @required accessToken
  * @body AuthUpdateMeRequestBody
  * @return void
  */
@@ -26,7 +26,9 @@ export const PATCH = async (request: NextRequest) => {
       'phoneNumber',
       'age',
       'gender',
+      'postalCode',
       'address',
+      'addressDetail',
     ]);
 
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
@@ -41,7 +43,9 @@ export const PATCH = async (request: NextRequest) => {
     user.phoneNumber = requestBody.phoneNumber;
     user.age = requestBody.age;
     user.gender = requestBody.gender;
+    user.postalCode = requestBody.postalCode;
     user.address = requestBody.address;
+    user.addressDetail = requestBody.addressDetail;
 
     await user.save();
 

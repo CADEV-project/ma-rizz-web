@@ -14,10 +14,10 @@ type ValidationFailedDetail = {
 export class ValidationFailed extends BaseError {
   type!: ValidationFailedType;
   code!: ValidationFailedCode;
-  detail!: ValidationFailedDetail;
+  detail!: ValidationFailedDetail[];
 
   constructor(
-    payload: BaseErrorData<ValidationFailedType, ValidationFailedCode, ValidationFailedDetail>
+    payload: BaseErrorData<ValidationFailedType, ValidationFailedCode, ValidationFailedDetail[]>
   ) {
     super(payload);
   }

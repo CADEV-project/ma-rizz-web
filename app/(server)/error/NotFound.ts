@@ -4,7 +4,7 @@ type NotFoundType = 'NotFound';
 
 type NotFoundCode = 404;
 
-type NotFoundDetail = string | string[];
+type NotFoundDetail = string;
 
 export class NotFound extends BaseError {
   type!: NotFoundType;

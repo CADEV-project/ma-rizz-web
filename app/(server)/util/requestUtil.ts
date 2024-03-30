@@ -1,10 +1,14 @@
 import { NextRequest } from 'next/server';
 
-import { NotFound, Unauthorized } from '@/(server)/error';
+import { NotFound, Unauthorized, ValidationFailed } from '@/(server)/error';
 
 import { COOKIE_KEY } from '@/constant';
 
 type CommonBody = Record<string, unknown>;
+
+export const isAuthorizedRequest = (request: NextRequest) => {
+  return !!request.cookies.get(COOKIE_KEY.accessToken);
+};
 
 export const getRequestAccessToken = (request: NextRequest) => {
   const accessTokenCookie = request.cookies.get(COOKIE_KEY.accessToken);
@@ -60,7 +64,7 @@ export async function getRequestBodyJSON<Body extends CommonBody>(
 ): Promise<Body> {
   const requestBody = await request.json();
 
-  const notFoundFields: string[] = [];
+  const validationFailedDetails: { field: string; reason: 'REQUIRED' }[] = [];
 
   if (!requestBody || typeof requestBody !== 'object' || Object.keys(requestBody).length === 0)
     throw new NotFound({ type: 'NotFound', code: 404, detail: 'body' });
@@ -69,14 +73,14 @@ export async function getRequestBodyJSON<Body extends CommonBody>(
 
   fields.forEach(field => {
     if (typeof field !== 'string' || !requestBodyKeys.includes(field))
-      notFoundFields.push(field as string);
+      validationFailedDetails.push({ field: field as string, reason: 'REQUIRED' });
   });
 
-  if (notFoundFields.length > 0)
-    throw new NotFound({
-      type: 'NotFound',
-      code: 404,
-      detail: notFoundFields,
+  if (validationFailedDetails.length > 0)
+    throw new ValidationFailed({
+      type: 'ValidationFailed',
+      code: 422,
+      detail: validationFailedDetails,
     });
 
   return requestBody as Body;
@@ -92,7 +96,7 @@ export function getRequestSearchPraramsJSON<SearchParams extends CommonSearchPar
 ): SearchParamsParserReturn<SearchParams> {
   const searchParams = request.nextUrl.searchParams;
 
-  const notFoundFields: string[] = [];
+  const validationFailedDetails: { field: string; reason: 'REQUIRED' }[] = [];
 
   if (!searchParams || searchParams.toString().length === 0)
     throw new NotFound({ type: 'NotFound', code: 404, detail: 'searchParams' });
@@ -102,16 +106,16 @@ export function getRequestSearchPraramsJSON<SearchParams extends CommonSearchPar
 
   fields.forEach(field => {
     if (typeof field !== 'string' || !searchParamsKeys.includes(field))
-      return notFoundFields.push(field as string);
+      return validationFailedDetails.push({ field: field as string, reason: 'REQUIRED' });
 
     searchParamsObject[field as string] = searchParams.get(field as string) as string;
   });
 
-  if (notFoundFields.length > 0)
-    throw new NotFound({
-      type: 'NotFound',
-      code: 404,
-      detail: notFoundFields,
+  if (validationFailedDetails.length > 0)
+    throw new ValidationFailed({
+      type: 'ValidationFailed',
+      code: 422,
+      detail: validationFailedDetails,
     });
 
   return searchParamsObject as SearchParamsParserReturn<SearchParams>;

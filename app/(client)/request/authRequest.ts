@@ -25,9 +25,9 @@ import { AuthUpdatePasswordRequestBody } from '@/(server)/api/auth/update/passwo
 import { AuthUpdateStatusRequestBody } from '@/(server)/api/auth/update/status/type';
 import { API_URL } from '@/constant';
 
-export type { AuthDeleteRequestSearchParams };
+export type AuthDeleteRequestProps = AuthDeleteRequestSearchParams;
 
-export const authDeleteRequest = async ({ password }: AuthDeleteRequestSearchParams) => {
+export const authDeleteRequest = async ({ password }: AuthDeleteRequestProps) => {
   const response = await baseRequest<void>({
     method: 'delete',
     url: API_URL.auth.delete,
@@ -39,13 +39,15 @@ export const authDeleteRequest = async ({ password }: AuthDeleteRequestSearchPar
   return response.data;
 };
 
-export type { AuthDuplicateAccountCheckRequestSearchParams, AuthDuplicateAccountCheckResponse };
+export type AuthDuplicateAccountCheckRequestProps = AuthDuplicateAccountCheckRequestSearchParams;
+
+export type AuthDuplicateAccountCheckRequestReturn = AuthDuplicateAccountCheckResponse;
 
 export const authDuplicateAccountCheckRequest = async ({
   type,
   productAccountId,
-}: AuthDuplicateAccountCheckRequestSearchParams) => {
-  const response = await baseRequest<AuthDuplicateAccountCheckResponse>({
+}: AuthDuplicateAccountCheckRequestProps) => {
+  const response = await baseRequest<AuthDuplicateAccountCheckRequestReturn>({
     method: 'get',
     url: API_URL.auth.duplicateAccountCheck,
     params: { type, productAccountId },
@@ -54,12 +56,14 @@ export const authDuplicateAccountCheckRequest = async ({
   return response.data;
 };
 
-export type { AuthDuplicateEmailCheckRequestSearchParams, AuthDuplicateEmailCheckResponse };
+export type AuthDuplicateEmailCheckRequestProps = AuthDuplicateEmailCheckRequestSearchParams;
+
+export type AuthDuplicateEmailCheckRequestReturn = AuthDuplicateEmailCheckResponse;
 
 export const authDulicateEmailCheckRequest = async ({
   email,
-}: AuthDuplicateEmailCheckRequestSearchParams) => {
-  const response = await baseRequest<AuthDuplicateEmailCheckResponse>({
+}: AuthDuplicateEmailCheckRequestProps) => {
+  const response = await baseRequest<AuthDuplicateEmailCheckRequestReturn>({
     method: 'get',
     url: API_URL.auth.duplicateEmailCheck,
     params: { email },
@@ -68,13 +72,15 @@ export const authDulicateEmailCheckRequest = async ({
   return response.data;
 };
 
-export type { AuthFindMyEmailRequestSearchParams, AuthFindMyEmailResponse };
+export type AuthFindMyEmailRequestProps = AuthFindMyEmailRequestSearchParams;
+
+export type AuthFindMyEmailRequestReturn = AuthFindMyEmailResponse;
 
 export const authFindMyEmailRequest = async ({
   phoneNumber,
   isVerified,
-}: AuthFindMyEmailRequestSearchParams) => {
-  const response = await baseRequest<AuthFindMyEmailResponse>({
+}: AuthFindMyEmailRequestProps) => {
+  const response = await baseRequest<AuthFindMyEmailRequestReturn>({
     method: 'get',
     url: API_URL.auth.findMyEmail,
     params: {
@@ -86,13 +92,13 @@ export const authFindMyEmailRequest = async ({
   return response.data;
 };
 
-export type { AuthPasswordResetRequestBody };
+export type AuthPasswordResetRequestProps = AuthPasswordResetRequestBody;
 
 export const authPasswordResetRequest = async ({
   email,
   newPassword,
   isVerified,
-}: AuthPasswordResetRequestBody) => {
+}: AuthPasswordResetRequestProps) => {
   const response = await baseRequest<void>({
     method: 'patch',
     url: API_URL.auth.passwordReset,
@@ -106,10 +112,10 @@ export const authPasswordResetRequest = async ({
   return response.data;
 };
 
-export type { AuthRefreshTokenResponse };
+export type AuthRefreshTokenRequestReturn = AuthRefreshTokenResponse;
 
 export const authRefreshTokenRequest = async () => {
-  const response = await baseRequest<AuthRefreshTokenResponse>({
+  const response = await baseRequest<AuthRefreshTokenRequestReturn>({
     method: 'post',
     url: API_URL.auth.refreshToken,
   });
@@ -117,9 +123,13 @@ export const authRefreshTokenRequest = async () => {
   return response.data;
 };
 
-export type { AuthSignInRequestBody };
+export type AuthSignInRequestProps = AuthSignInRequestBody;
 
-export const authSignInRequest = async ({ email, password, autoSignIn }: AuthSignInRequestBody) => {
+export const authSignInRequest = async ({
+  email,
+  password,
+  autoSignIn,
+}: AuthSignInRequestProps) => {
   const response = await baseRequest<void>({
     method: 'post',
     url: API_URL.auth.signIn,
@@ -142,7 +152,7 @@ export const authSignOutRequest = async () => {
   return response.data;
 };
 
-export type { AuthSignUpRequestBody };
+export type AuthSignUpRequestProps = AuthSignUpRequestBody;
 
 export const authSignUpRequest = async ({
   email,
@@ -153,7 +163,7 @@ export const authSignUpRequest = async ({
   age,
   gender,
   address,
-}: AuthSignUpRequestBody) => {
+}: AuthSignUpRequestProps) => {
   const response = await baseRequest<void>({
     method: 'post',
     url: API_URL.auth.signUp,
@@ -172,9 +182,9 @@ export const authSignUpRequest = async ({
   return response.data;
 };
 
-export type { AuthSSORegisterRequestBody };
+export type AuthSSORegisterRequestProps = AuthSSORegisterRequestBody;
 
-export const authSSORegister = async ({
+export const authSSORegisterRequest = async ({
   email,
   name,
   image,
@@ -182,7 +192,7 @@ export const authSSORegister = async ({
   age,
   gender,
   address,
-}: AuthSSORegisterRequestBody) => {
+}: AuthSSORegisterRequestProps) => {
   const response = await baseRequest<void>({
     method: 'post',
     url: API_URL.auth.sso.register,
@@ -200,9 +210,9 @@ export const authSSORegister = async ({
   return response.data;
 };
 
-export type { AuthSSOSignUpRequestBody };
+export type AuthSSOSignUpRequestProps = AuthSSOSignUpRequestBody;
 
-export const authSSOSignUp = async ({ type, productAccountId }: AuthSSOSignUpRequestBody) => {
+export const authSSOSignUp = async ({ type, productAccountId }: AuthSSOSignUpRequestProps) => {
   const response = await baseRequest<void>({
     method: 'post',
     url: API_URL.auth.sso.signUp,
@@ -215,9 +225,9 @@ export const authSSOSignUp = async ({ type, productAccountId }: AuthSSOSignUpReq
   return response.data;
 };
 
-export type { AuthUpdateEmailRequestBody };
+export type AuthUpdateEmailRequestProps = AuthUpdateEmailRequestBody;
 
-export const authUpdateEmailRequest = async ({ newEmail }: AuthUpdateEmailRequestBody) => {
+export const authUpdateEmailRequest = async ({ newEmail }: AuthUpdateEmailRequestProps) => {
   const response = await baseRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.email,
@@ -229,7 +239,7 @@ export const authUpdateEmailRequest = async ({ newEmail }: AuthUpdateEmailReques
   return response.data;
 };
 
-export type { AuthUpdateMeRequestBody };
+export type AuthUpdateMeRequestProps = AuthUpdateMeRequestBody;
 
 export const authUpdateMeRequest = async ({
   name,
@@ -237,7 +247,7 @@ export const authUpdateMeRequest = async ({
   age,
   gender,
   address,
-}: AuthUpdateMeRequestBody) => {
+}: AuthUpdateMeRequestProps) => {
   const response = await baseRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.me,
@@ -253,12 +263,12 @@ export const authUpdateMeRequest = async ({
   return response.data;
 };
 
-export type { AuthUpdatePasswordRequestBody };
+export type AuthUpdatePasswordRequestProps = AuthUpdatePasswordRequestBody;
 
 export const authUpdatePasswordRequest = async ({
   currentPassword,
   newPassword,
-}: AuthUpdatePasswordRequestBody) => {
+}: AuthUpdatePasswordRequestProps) => {
   const response = await baseRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.password,
@@ -271,9 +281,9 @@ export const authUpdatePasswordRequest = async ({
   return response.data;
 };
 
-export type { AuthUpdateStatusRequestBody };
+export type AuthUpdateStatusRequestProps = AuthUpdateStatusRequestBody;
 
-export const authUpdateStatusRequest = async ({ status }: AuthUpdateStatusRequestBody) => {
+export const authUpdateStatusRequest = async ({ status }: AuthUpdateStatusRequestProps) => {
   const response = await baseRequest<void>({
     method: 'patch',
     url: API_URL.auth.update.status,

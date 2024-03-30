@@ -9,7 +9,7 @@ import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(s
 
 /**
  * NOTE: /api/auth/update/status
- * @requires token
+ * @required accessToken
  * @body AuthUpdateStatusRequestBody
  * @return void
  */

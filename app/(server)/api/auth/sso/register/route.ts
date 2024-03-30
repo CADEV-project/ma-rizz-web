@@ -33,7 +33,9 @@ export const POST = async (request: NextRequest) => {
       'phoneNumber',
       'age',
       'gender',
+      'postalCode',
       'address',
+      'addressDetail',
     ]);
 
     validate({

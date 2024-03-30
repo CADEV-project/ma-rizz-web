@@ -12,7 +12,7 @@ import { SuccessResponse, getRequestSearchPraramsJSON, validate } from '@/(serve
 
 /**
  * NOTE: /api/auth/duplicate-account-check
- * @params AuthDuplicateAccountCheckRequestSearchParams
+ * @searchParams AuthDuplicateAccountCheckRequestSearchParams
  * @return AuthDuplicateAccountCheckResponse
  */
 export const GET = async (request: NextRequest) => {
