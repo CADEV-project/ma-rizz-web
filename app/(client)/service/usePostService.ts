@@ -5,6 +5,7 @@ import {
   postDeleteRequest,
   postDetailRequest,
   postRequest,
+  postUpdateRequest,
 } from '@/(client)/request';
 
 import { PostListResponse } from '@/(server)/api/post/type';
@@ -49,6 +50,13 @@ export const usePostMutation = (hasAuth?: boolean) => {
     },
   });
 
+  const { mutateAsync: postUpdateMutation } = useMutation({
+    mutationFn: postUpdateRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: postQueryKeys.list(hasAuth) });
+    },
+  });
+
   const { mutateAsync: postDeleteMutation } = useMutation({
     mutationFn: postDeleteRequest,
     onSuccess: () => {
@@ -58,6 +66,7 @@ export const usePostMutation = (hasAuth?: boolean) => {
 
   return {
     postCreateMutation,
+    postUpdateMutation,
     postDeleteMutation,
   };
 };

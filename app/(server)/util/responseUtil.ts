@@ -7,12 +7,11 @@ type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 const successCode = (method?: Method) => {
   switch (method) {
     case 'GET':
+    case 'PUT':
+    case 'PATCH':
       return 200;
     case 'POST':
       return 201;
-    case 'PUT':
-    case 'PATCH':
-      return 204;
     case 'DELETE':
       return 202;
     default:

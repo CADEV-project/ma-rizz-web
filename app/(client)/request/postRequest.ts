@@ -52,7 +52,7 @@ export type PostUpdateRequestProps = PostUpdateRequestBody & PostUpdateRequestPa
 
 export const postUpdateRequest = async ({ postId, title, content }: PostUpdateRequestProps) => {
   const response = await baseRequest<void>({
-    method: 'put',
+    method: 'patch',
     url: `${API_URL.post.update}/${postId}`,
     data: { title, content },
   });

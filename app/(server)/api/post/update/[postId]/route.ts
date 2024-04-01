@@ -29,7 +29,7 @@ export const PATCH = async (request: NextRequest, { params }: PostUpdateRequestP
 
     const post = await PostModel.findOne({
       _id: getObjectId(postId),
-      userId: getObjectId(userId),
+      user: getObjectId(userId),
     }).exec();
 
     if (!post) throw new NotFound({ type: 'NotFound', code: 404, detail: 'post' });
