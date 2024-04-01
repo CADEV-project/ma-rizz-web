@@ -11,6 +11,7 @@ import { AccountModel } from '@/(server)/model';
 import {
   SuccessResponse,
   getAccessTokenCokie,
+  getAuthCookie,
   getAutoSignInCookie,
   getRefreshTokenCookie,
   getRequestAutoSignIn,
@@ -35,7 +36,12 @@ export const POST = async (request: NextRequest) => {
 
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
-    if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
+    if (!account)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'account', reason: 'NOT_EXIST' },
+      });
 
     const newSignedTokens = getSignedTokens({ accountId, userId });
 
@@ -51,13 +57,12 @@ export const POST = async (request: NextRequest) => {
       value: newSignedTokens.refreshToken,
       autoSignIn,
     });
-    const newAutoSignInCookie = autoSignIn ? getAutoSignInCookie(autoSignIn) : undefined;
+    const newAutoSignInCookie = getAutoSignInCookie(autoSignIn);
+    const newAuthCookie = getAuthCookie(autoSignIn);
 
     return SuccessResponse({
       method: 'POST',
-      cookies: newAutoSignInCookie
-        ? [newAccessTokenCookie, newRefreshTokenCookie, newAutoSignInCookie]
-        : [newAccessTokenCookie, newRefreshTokenCookie],
+      cookies: [newAccessTokenCookie, newRefreshTokenCookie, newAutoSignInCookie, newAuthCookie],
     });
   } catch (error) {
     const response = ErrorResponse(error);
@@ -65,6 +70,7 @@ export const POST = async (request: NextRequest) => {
     response.cookies.delete(COOKIE_KEY.accessToken);
     response.cookies.delete(COOKIE_KEY.refreshToken);
     response.cookies.delete(COOKIE_KEY.autoSignIn);
+    response.cookies.delete(COOKIE_KEY.auth);
 
     return response;
   }

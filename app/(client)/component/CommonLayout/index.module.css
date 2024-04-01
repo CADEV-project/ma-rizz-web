@@ -5,7 +5,7 @@
 
 .main {
   width: 100%;
-  height: calc(100% - 33.75rem);
+  min-height: calc(100% - 8.75rem);
 }
 
 .footer {

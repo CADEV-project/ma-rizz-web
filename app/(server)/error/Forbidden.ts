@@ -4,7 +4,10 @@ type ForbiddenType = 'Forbidden';
 
 type ForbiddenCode = 403;
 
-type ForbiddenDetail = string;
+type ForbiddenDetail = {
+  field: string;
+  reason: 'NOT_EXIST' | 'TIMEOUT' | 'INVALID' | 'UNAUTHORIZED';
+};
 
 export class Forbidden extends BaseError {
   type!: ForbiddenType;

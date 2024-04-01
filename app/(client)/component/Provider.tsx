@@ -28,7 +28,7 @@ export const Provider: React.FC<ProviderProps> = ({ children }) => {
         refetchOnReconnect: true,
       },
       mutations: {
-        retry: 1,
+        retry: 0,
         retryDelay: MILLISECOND_TIME_FORMAT.seconds(2),
       },
     },

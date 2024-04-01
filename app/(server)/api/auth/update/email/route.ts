@@ -21,13 +21,18 @@ export const PATCH = async (request: NextRequest) => {
 
     const { userId } = getVerifiedAccessToken(accessToken);
 
-    const requestBody = await getRequestBodyJSON<AuthUpdateEmailRequestBody>(await request.json(), [
-      'newEmail',
+    const requestBody = await getRequestBodyJSON<AuthUpdateEmailRequestBody>(request, [
+      { key: 'newEmail', required: true },
     ]);
 
     const user = await UserModel.findById(getObjectId(userId)).exec();
 
-    if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
+    if (!user)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'user', reason: 'NOT_EXIST' },
+      });
 
     user.email = requestBody.newEmail;
 

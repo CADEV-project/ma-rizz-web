@@ -2,7 +2,12 @@ import { baseRequest } from '.';
 
 import { PostDetailRequestParams, PostDetailResponse } from '@/(server)/api/post/[postId]/type';
 import { PostCreateRequestBody } from '@/(server)/api/post/create/type';
-import { PostListResponse } from '@/(server)/api/post/type';
+import { PostDeleteRequestParams } from '@/(server)/api/post/delete/[postId]/type';
+import { PostListResponse, PostRequestSearchParams } from '@/(server)/api/post/type';
+import {
+  PostUpdateRequestBody,
+  PostUpdateRequestParams,
+} from '@/(server)/api/post/update/[postId]/type';
 import { API_URL } from '@/constant';
 
 export type PostDetailRequestProps = PostDetailRequestParams['params'];
@@ -32,12 +37,38 @@ export const postCreateRequest = async ({ title, content }: PostCreateRequestPro
   return response.data;
 };
 
+export type PostDeleteRequestProps = PostDeleteRequestParams['params'];
+
+export const postDeleteRequest = async ({ postId }: PostDeleteRequestProps) => {
+  const response = await baseRequest<void>({
+    method: 'delete',
+    url: `${API_URL.post.delete}/${postId}`,
+  });
+
+  return response.data;
+};
+
+export type PostUpdateRequestProps = PostUpdateRequestBody & PostUpdateRequestParams['params'];
+
+export const postUpdateRequest = async ({ postId, title, content }: PostUpdateRequestProps) => {
+  const response = await baseRequest<void>({
+    method: 'put',
+    url: `${API_URL.post.update}/${postId}`,
+    data: { title, content },
+  });
+
+  return response.data;
+};
+
+export type PostRequestProps = PostRequestSearchParams;
+
 export type PostRequestReturn = PostListResponse;
 
-export const getPostRequest = async () => {
+export const postRequest = async ({ cursor, limit }: PostRequestProps) => {
   const response = await baseRequest<PostRequestReturn>({
     method: 'get',
     url: API_URL.post.prefix,
+    params: { cursor, limit },
   });
 
   return response.data;

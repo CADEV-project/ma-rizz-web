@@ -30,12 +30,15 @@ export const POST = async (request: NextRequest) => {
 
     if (!user) throw new Conflict({ type: 'Conflict', code: 409, detail: 'user' });
 
-    const requestBodyJSON = await getRequestBodyJSON<PostCreateRequestBody>(request, ['title']);
+    const requestBodyJSON = await getRequestBodyJSON<PostCreateRequestBody>(request, [
+      { key: 'title', required: true },
+      { key: 'content' },
+    ]);
 
     await PostModel.create({
-      userId: userId,
       title: requestBodyJSON.title,
       content: requestBodyJSON.content,
+      user: getObjectId(userId),
     });
 
     return SuccessResponse({ method: 'POST' });

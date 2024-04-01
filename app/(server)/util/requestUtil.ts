@@ -58,9 +58,11 @@ export const getRequestAutoSignIn = (request: NextRequest) => {
   return autoSignInCookie.value === 'true';
 };
 
+type BodyField<Body> = { key: keyof Body; required?: boolean };
+
 export async function getRequestBodyJSON<Body extends CommonBody>(
   request: NextRequest,
-  fields: (keyof Body)[]
+  fields: BodyField<Body>[]
 ): Promise<Body> {
   const requestBody = await request.json();
 
@@ -72,8 +74,11 @@ export async function getRequestBodyJSON<Body extends CommonBody>(
   const requestBodyKeys = Object.keys(requestBody);
 
   fields.forEach(field => {
-    if (typeof field !== 'string' || !requestBodyKeys.includes(field))
-      validationFailedDetails.push({ field: field as string, reason: 'REQUIRED' });
+    if (
+      (!requestBodyKeys.includes(field.key as string) || requestBody[field.key as string] === '') &&
+      field.required
+    )
+      validationFailedDetails.push({ field: field.key as string, reason: 'REQUIRED' });
   });
 
   if (validationFailedDetails.length > 0)
@@ -90,9 +95,14 @@ type CommonSearchParams = Record<string, unknown>;
 
 type SearchParamsParserReturn<T extends CommonSearchParams> = { [K in keyof T]: string };
 
+type SearchParamsField<SearchParams> = {
+  key: keyof SearchParams;
+  required?: boolean;
+};
+
 export function getRequestSearchPraramsJSON<SearchParams extends CommonSearchParams>(
   request: NextRequest,
-  fields: (keyof SearchParams)[]
+  fields: SearchParamsField<SearchParams>[]
 ): SearchParamsParserReturn<SearchParams> {
   const searchParams = request.nextUrl.searchParams;
 
@@ -105,10 +115,14 @@ export function getRequestSearchPraramsJSON<SearchParams extends CommonSearchPar
   const searchParamsObject: Record<string, string> = {};
 
   fields.forEach(field => {
-    if (typeof field !== 'string' || !searchParamsKeys.includes(field))
-      return validationFailedDetails.push({ field: field as string, reason: 'REQUIRED' });
+    if (
+      (!searchParamsKeys.includes(field.key as string) ||
+        searchParams.get(field.key as string) === '') &&
+      field.required
+    )
+      return validationFailedDetails.push({ field: field.key as string, reason: 'REQUIRED' });
 
-    searchParamsObject[field as string] = searchParams.get(field as string) as string;
+    searchParamsObject[field.key as string] = searchParams.get(field.key as string) as string;
   });
 
   if (validationFailedDetails.length > 0)

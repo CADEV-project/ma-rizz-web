@@ -28,7 +28,7 @@ const SIGN_IN_FORM_DEFAULT_VALUES: SignInFormProps = {
 
 export const SignInForm: React.FC = () => {
   const router = useRouter();
-  const signInForm = useForm<SignInFormProps>();
+  const signInForm = useForm<SignInFormProps>({ defaultValues: SIGN_IN_FORM_DEFAULT_VALUES });
 
   const onSignInFormSuccess = async ({ email, password, autoSignIn }: SignInFormProps) => {
     try {
@@ -65,7 +65,6 @@ export const SignInForm: React.FC = () => {
       </S.TitleContainer>
       <FormContainer
         formContext={signInForm}
-        defaultValues={SIGN_IN_FORM_DEFAULT_VALUES}
         onSuccess={onSignInFormSuccess}
         onError={onSignInFormError}>
         <S.FormContainer>

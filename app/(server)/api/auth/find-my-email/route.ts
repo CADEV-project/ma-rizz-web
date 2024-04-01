@@ -2,10 +2,12 @@ import { NextRequest } from 'next/server';
 
 import { AuthFindMyEmailRequestSearchParams, AuthFindMyEmailResponse } from './type';
 
-import { ErrorResponse, Forbidden } from '@/(server)/error';
+import { ErrorResponse, Forbidden, ValidationFailed } from '@/(server)/error';
 import { getConnection } from '@/(server)/lib';
-import { UserModel } from '@/(server)/model';
+import { UserModel, VerificationModel } from '@/(server)/model';
 import { SuccessResponse, getRequestSearchPraramsJSON } from '@/(server)/util';
+
+import { MILLISECOND_TIME_FORMAT } from '@/constant';
 
 /**
  * NOTE: /api/auth/find-my-email
@@ -17,20 +19,49 @@ export const GET = async (request: NextRequest) => {
     await getConnection();
 
     const searchParams = getRequestSearchPraramsJSON<AuthFindMyEmailRequestSearchParams>(request, [
-      'isVerified',
-      'phoneNumber',
+      { key: 'verificationCode', required: true },
+      { key: 'phoneNumber', required: true },
     ]);
 
-    if (searchParams.isVerified !== 'true')
+    const [user, verification] = await Promise.all([
+      UserModel.findOne({ phoneNumber: searchParams.phoneNumber }).lean().exec(),
+      VerificationModel.findOne({ phoneNumber: searchParams.phoneNumber }).exec(),
+    ]);
+
+    if (!verification)
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
-        detail: 'isVerified',
+        detail: { field: 'verification', reason: 'NOT_EXIST' },
       });
 
-    const user = await UserModel.findOne({ phoneNumber: searchParams.phoneNumber }).lean().exec();
+    if (verification.verificationCode !== searchParams.verificationCode)
+      throw new ValidationFailed({
+        type: 'ValidationFailed',
+        code: 422,
+        detail: [{ field: 'verificationCode', reason: 'NOT_MATCHED' }],
+      });
 
-    if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
+    if (
+      verification.updatedAt.getTime() + MILLISECOND_TIME_FORMAT.minutes(5) <
+      new Date().getTime()
+    )
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'verification', reason: 'TIMEOUT' },
+      });
+
+    if (!user)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'user', reason: 'NOT_EXIST' },
+      });
+
+    verification.verificationCode = '';
+
+    await verification.save();
 
     return SuccessResponse<AuthFindMyEmailResponse>({ method: 'GET', data: { email: user.email } });
   } catch (error) {

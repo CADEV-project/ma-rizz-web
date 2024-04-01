@@ -22,15 +22,24 @@ export const PATCH = async (request: NextRequest) => {
     const { accountId } = getVerifiedAccessToken(accessToken);
 
     const requestBodyJSON = await getRequestBodyJSON<AuthUpdateStatusRequestBody>(request, [
-      'status',
+      { key: 'status', required: true },
     ]);
 
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
-    if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
+    if (!account)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'account', reason: 'NOT_EXIST' },
+      });
 
     if (requestBodyJSON.status === 'pending' || requestBodyJSON.status === 'withdrew')
-      throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'accountStatus' });
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'accountStatus', reason: 'INVALID' },
+      });
 
     if (account.status !== requestBodyJSON.status) {
       account.status = requestBodyJSON.status;

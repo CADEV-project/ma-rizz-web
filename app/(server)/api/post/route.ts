@@ -10,10 +10,9 @@ import {
   getRequestAccessToken,
   getRequestSearchPraramsJSON,
   isAuthorizedRequest,
-  validate,
 } from '@/(server)/util';
 
-const DEFAULT_PAGE = 1;
+const DEFAULT_LIMIT = 10;
 
 /**
  * NOTE: /api/post
@@ -26,29 +25,30 @@ export const GET = async (request: NextRequest) => {
 
   try {
     const requestSearchParamsJSON = getRequestSearchPraramsJSON<PostRequestSearchParams>(request, [
-      'limit',
+      { key: 'cursor', required: true },
+      { key: 'limit' },
     ]);
 
-    validate({
-      numbers: requestSearchParamsJSON.page
-        ? [requestSearchParamsJSON.page, requestSearchParamsJSON.limit]
-        : [requestSearchParamsJSON.limit],
-    });
+    const cursor = parseInt(requestSearchParamsJSON.cursor);
+    const limit = requestSearchParamsJSON.limit
+      ? parseInt(requestSearchParamsJSON.limit)
+      : DEFAULT_LIMIT;
 
-    const page = requestSearchParamsJSON.page
-      ? parseInt(requestSearchParamsJSON.page)
-      : DEFAULT_PAGE;
-    const limit = parseInt(requestSearchParamsJSON.limit);
-
-    const startIndex = (page || DEFAULT_PAGE) * limit - limit;
-
-    const posts = await PostModel.find()
-      .sort({ createdAt: -1 })
-      .skip(startIndex)
-      .limit(limit)
-      .populate<{ user: UserSchema }>('userId', 'name image')
-      .lean()
-      .exec();
+    const [posts, nextPost] = await Promise.all([
+      PostModel.find()
+        .sort({ createdAt: -1 })
+        .skip(cursor)
+        .limit(limit)
+        .populate<{ user: UserSchema }>('user', 'name image')
+        .lean()
+        .exec(),
+      PostModel.find()
+        .sort({ createdAt: -1 })
+        .skip(cursor + limit)
+        .limit(1)
+        .lean()
+        .exec(),
+    ]);
 
     const isAuthorized = isAuthorizedRequest(request);
 
@@ -62,6 +62,10 @@ export const GET = async (request: NextRequest) => {
       authorizedUserId = userId;
     }
 
+    const nextCursor = nextPost.length ? cursor + limit : undefined;
+
+    const prevCursor = cursor - limit < 0 ? undefined : cursor - limit;
+
     const responseData = posts.map<PostResponse>(post => ({
       _id: post._id.toHexString(),
       title: post.title,
@@ -71,12 +75,20 @@ export const GET = async (request: NextRequest) => {
       user: {
         _id: post.user._id.toHexString(),
         name: post.user.name,
+        email: post.user.email,
         image: post.user.image,
-        isMe: post.userId.toHexString() === authorizedUserId,
+        isMe: post.user._id.toHexString() === authorizedUserId,
       },
     }));
 
-    return SuccessResponse<PostListResponse>({ method: 'GET', data: responseData });
+    return SuccessResponse<PostListResponse>({
+      method: 'GET',
+      data: {
+        data: responseData,
+        nextCursor: nextCursor,
+        prevCursor: prevCursor,
+      },
+    });
   } catch (error) {
     return ErrorResponse(error);
   }

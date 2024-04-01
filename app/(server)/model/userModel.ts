@@ -15,6 +15,7 @@ export type UserSchema = {
   name: string;
   image?: string;
   phoneNumber: string;
+  verificationCode?: string;
   age: string;
   gender: Gender;
   postalCode: string;

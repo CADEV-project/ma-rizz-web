@@ -25,7 +25,7 @@ export const DELETE = async (request: NextRequest, { params }: PostDeleteRequest
 
     await PostModel.deleteOne({
       _id: getObjectId(postId),
-      userId: getObjectId(userId),
+      user: getObjectId(userId),
     })
       .lean()
       .exec();

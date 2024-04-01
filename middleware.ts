@@ -34,6 +34,8 @@ export const middleware = async (request: NextRequest) => {
       });
 
       response.cookies.delete(COOKIE_KEY.accessToken);
+      response.cookies.delete(COOKIE_KEY.autoSignIn);
+      response.cookies.delete(COOKIE_KEY.auth);
 
       return response;
     }
@@ -55,6 +57,8 @@ export const middleware = async (request: NextRequest) => {
           const response = NextResponse.next({ request: { headers: requestHeaders } });
 
           response.cookies.delete(COOKIE_KEY.accessToken);
+          response.cookies.delete(COOKIE_KEY.autoSignIn);
+          response.cookies.delete(COOKIE_KEY.auth);
 
           return response;
         }
@@ -74,6 +78,8 @@ export const middleware = async (request: NextRequest) => {
           const response = NextResponse.redirect(new URL(ROUTE_URL.auth.signIn, request.url));
 
           response.cookies.delete(COOKIE_KEY.accessToken);
+          response.cookies.delete(COOKIE_KEY.autoSignIn);
+          response.cookies.delete(COOKIE_KEY.auth);
 
           return response;
         }

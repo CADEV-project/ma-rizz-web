@@ -39,25 +39,40 @@ export const DELETE = async (request: NextRequest) => {
         .exec(),
     ]);
 
-    if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
+    if (!account)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'account', reason: 'NOT_EXIST' },
+      });
 
-    if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
+    if (!user)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'user', reason: 'NOT_EXIST' },
+      });
 
     if (account.status === 'withdrew')
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
-        detail: 'accountStatus',
+        detail: { field: 'accountStatus', reason: 'INVALID' },
       });
 
     if (account.type === 'credentials') {
       const searchParams = getRequestSearchPraramsJSON<AuthDeleteRequestSearchParams>(request, [
-        'password',
+        { key: 'password', required: true },
       ]);
 
       const isAuthorized = comparePassword(searchParams.password, user.password);
 
-      if (!isAuthorized) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'password' });
+      if (!isAuthorized)
+        throw new Forbidden({
+          type: 'Forbidden',
+          code: 403,
+          detail: { field: 'password', reason: 'UNAUTHORIZED' },
+        });
     }
 
     account.status = 'withdrew';

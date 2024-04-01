@@ -21,7 +21,10 @@ export const GET = async (request: NextRequest) => {
   try {
     const searchParams = getRequestSearchPraramsJSON<AuthDuplicateAccountCheckRequestSearchParams>(
       request,
-      ['type', 'productAccountId']
+      [
+        { key: 'type', required: true },
+        { key: 'productAccountId', required: true },
+      ]
     );
 
     validate({ accountType: searchParams.type });

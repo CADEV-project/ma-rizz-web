@@ -22,6 +22,17 @@ export const getCookie = (
   };
 };
 
+export const getAuthCookie = (autoSignIn: boolean): Cookie => {
+  const AUTH_COOKIE_MAX_AGE = getNumericTime({ type: 'minute', day: 30 });
+
+  return getCookie(COOKIE_KEY.auth, 'live', {
+    sameSite: 'strict',
+    secure: true,
+    maxAge: autoSignIn ? AUTH_COOKIE_MAX_AGE : undefined,
+    path: '/',
+  });
+};
+
 export const getAutoSignInCookie = (autoSignIn: boolean): Cookie => {
   const AUTO_SIGN_IN_COOKIE_MAX_AGE = getNumericTime({ type: 'minute', day: 30 });
 

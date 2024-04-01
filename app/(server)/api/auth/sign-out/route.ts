@@ -22,7 +22,12 @@ export const POST = async (request: NextRequest) => {
 
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
-    if (!account) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
+    if (!account)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'account', reason: 'NOT_EXIST' },
+      });
 
     account.refreshToken = '';
 
@@ -33,6 +38,7 @@ export const POST = async (request: NextRequest) => {
     response.cookies.delete(COOKIE_KEY.accessToken);
     response.cookies.delete(COOKIE_KEY.refreshToken);
     response.cookies.delete(COOKIE_KEY.autoSignIn);
+    response.cookies.delete(COOKIE_KEY.auth);
 
     return response;
   } catch (error) {

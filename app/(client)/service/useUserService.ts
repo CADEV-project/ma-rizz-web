@@ -2,16 +2,16 @@ import { useQuery } from '@tanstack/react-query';
 
 import { userMeRequest } from '@/(client)/request';
 
-const queryKeys = {
+const userQueryKeys = {
   default: ['user'] as const,
-  me: () => [...queryKeys.default, 'me'],
+  me: () => [...userQueryKeys.default, 'me'],
 };
 
-const queryOptions = {
+const userQueryOptions = {
   me: () => ({
-    queryKey: queryKeys.me(),
+    queryKey: userQueryKeys.me(),
     queryFn: () => userMeRequest(),
   }),
 };
 
-export const useUserMe = () => useQuery(queryOptions.me());
+export const useUserMe = () => useQuery(userQueryOptions.me());

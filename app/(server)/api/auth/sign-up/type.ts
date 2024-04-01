@@ -1,3 +1,4 @@
-import { UserSchema } from '@/(server)/model';
+import { UserSchema, VerificationSchema } from '@/(server)/model';
 
-export type AuthSignUpRequestBody = Omit<UserSchema, '_id' | 'createdAt' | 'updatedAt'>;
+export type AuthSignUpRequestBody = Omit<UserSchema, '_id' | 'createdAt' | 'updatedAt'> &
+  Pick<VerificationSchema, 'verificationCode'>;

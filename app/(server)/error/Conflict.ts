@@ -4,7 +4,7 @@ type ConflictType = 'Conflict';
 
 type ConflictCode = 409;
 
-type ConflictDetail = string;
+type ConflictDetail = string | string[];
 
 export class Conflict extends BaseError {
   type!: ConflictType;

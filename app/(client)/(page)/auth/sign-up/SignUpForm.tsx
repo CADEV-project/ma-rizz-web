@@ -31,11 +31,12 @@ const SIGN_UP_FORM_DEFAULT_VALUES: SignUpFormProps = {
   postalCode: '',
   address: '',
   addressDetail: '',
+  verificationCode: '',
 };
 
 export const SignUpForm: React.FC = () => {
   const router = useRouter();
-  const signUpForm = useForm<SignUpFormProps>();
+  const signUpForm = useForm<SignUpFormProps>({ defaultValues: SIGN_UP_FORM_DEFAULT_VALUES });
 
   const onSignUpFormSuccess = async ({
     email,
@@ -48,6 +49,7 @@ export const SignUpForm: React.FC = () => {
     postalCode,
     address,
     addressDetail,
+    verificationCode,
   }: SignUpFormProps) => {
     try {
       if (password !== passwordAccept) {
@@ -66,6 +68,7 @@ export const SignUpForm: React.FC = () => {
         postalCode,
         address,
         addressDetail,
+        verificationCode,
       });
 
       router.push(ROUTE_URL.auth.signIn);
@@ -76,10 +79,6 @@ export const SignUpForm: React.FC = () => {
 
   const onSignUpFormError = async (field: FieldErrors<SignUpFormProps>) => {
     console.error('Sign Up Form Error', field);
-  };
-
-  const onGoToSignInPageButtonClick = () => {
-    router.push(ROUTE_URL.auth.signIn);
   };
 
   return (
@@ -94,7 +93,6 @@ export const SignUpForm: React.FC = () => {
       </S.TitleContainer>
       <FormContainer
         formContext={signUpForm}
-        defaultValues={SIGN_UP_FORM_DEFAULT_VALUES}
         onSuccess={onSignUpFormSuccess}
         onError={onSignUpFormError}>
         <S.FormContainer>
@@ -117,6 +115,7 @@ export const SignUpForm: React.FC = () => {
           <TextFieldElement name='postalCode' label='우편번호' />
           <TextFieldElement name='address' label='주소' />
           <TextFieldElement name='addressDetail' label='주소 상세' />
+          <TextFieldElement name='verificationCode' label='인증코드' />
         </S.FormContainer>
         <S.SignUpButton type='submit'>함께하기</S.SignUpButton>
       </FormContainer>
@@ -124,7 +123,7 @@ export const SignUpForm: React.FC = () => {
         <S.Divider />
         <S.DividerText>OR</S.DividerText>
       </S.DividerContainer>
-      <S.GoToSignInPageButton onClick={onGoToSignInPageButtonClick}>
+      <S.GoToSignInPageButton href={ROUTE_URL.auth.signUp}>
         계정이 기억났어요!
       </S.GoToSignInPageButton>
     </S.Container>

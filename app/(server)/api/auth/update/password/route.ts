@@ -27,17 +27,27 @@ export const PATCH = async (request: NextRequest) => {
     const { userId } = getVerifiedAccessToken(accessToken);
 
     const requestBody = await getRequestBodyJSON<AuthUpdatePasswordRequestBody>(request, [
-      'currentPassword',
-      'newPassword',
+      { key: 'currentPassword', required: true },
+      { key: 'newPassword', required: true },
     ]);
 
     const user = await UserModel.findById(getObjectId(userId)).exec();
 
-    if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
+    if (!user)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'user', reason: 'NOT_EXIST' },
+      });
 
     const isAuthorized = comparePassword(requestBody.currentPassword, user.password);
 
-    if (!isAuthorized) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'password' });
+    if (!isAuthorized)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'password', reason: 'UNAUTHORIZED' },
+      });
 
     user.password = requestBody.newPassword;
 

@@ -1,29 +1,63 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const queryKeys = {
+import {
+  postCreateRequest,
+  postDeleteRequest,
+  postDetailRequest,
+  postRequest,
+} from '@/(client)/request';
+
+import { PostListResponse } from '@/(server)/api/post/type';
+
+const postQueryKeys = {
   default: ['post'] as const,
-  list: () => [...queryKeys.default, 'list'],
-  detail: (postId: string) => [...queryKeys.default, postId],
+  list: (hasAuth?: boolean) => [...postQueryKeys.default, 'list', { hasAuth: !!hasAuth }],
+  detail: (postId: string, hasAuth?: boolean) => [
+    ...postQueryKeys.default,
+    postId,
+    { hasAuth: !!hasAuth },
+  ],
 };
 
-const queryOptions = {
-  list: () => ({
-    queryKey: queryKeys.list(),
-    // TODO: Implement this.
-    queryFn: ({ pageParam }: { pageParam: number }) =>
-      new Promise(resolve => resolve(pageParam)) as any,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage: number) => lastPage + 1,
-    getPreviousPageParam: (firstPage: number) => firstPage - 1,
+export const postQueryOptions = {
+  list: (hasAuth?: boolean) => ({
+    queryKey: postQueryKeys.list(hasAuth),
+    queryFn: ({ pageParam = 0 }) => postRequest({ cursor: pageParam }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: PostListResponse) => lastPage.nextCursor,
+    enabled: hasAuth !== undefined,
   }),
-  detail: (postId: string) => ({
-    queryKey: queryKeys.detail(postId),
-    queryFn: () => {
-      /** TODO: Implement this */
+  detail: (postId: string, hasAuth?: boolean) => ({
+    queryKey: postQueryKeys.detail(postId, hasAuth),
+    queryFn: () => postDetailRequest({ postId }),
+    enabled: hasAuth !== undefined,
+  }),
+};
+
+export const usePostList = (hasAuth?: boolean) => useInfiniteQuery(postQueryOptions.list(hasAuth));
+
+export const usePostDetail = (postId: string, hasAuth?: boolean) =>
+  useQuery(postQueryOptions.detail(postId, hasAuth));
+
+export const usePostMutation = (hasAuth?: boolean) => {
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: postCreateMutation } = useMutation({
+    mutationFn: postCreateRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: postQueryKeys.list(hasAuth) });
     },
-  }),
+  });
+
+  const { mutateAsync: postDeleteMutation } = useMutation({
+    mutationFn: postDeleteRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: postQueryKeys.list(hasAuth) });
+    },
+  });
+
+  return {
+    postCreateMutation,
+    postDeleteMutation,
+  };
 };
-
-export const usePostList = () => useInfiniteQuery(queryOptions.list());
-
-export const usePostDetail = (postId: string) => useQuery(queryOptions.detail(postId));

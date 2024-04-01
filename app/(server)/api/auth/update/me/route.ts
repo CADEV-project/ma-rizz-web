@@ -22,18 +22,24 @@ export const PATCH = async (request: NextRequest) => {
     const { userId } = getVerifiedAccessToken(accessToken);
 
     const requestBody = await getRequestBodyJSON<AuthUpdateMeRequestBody>(request, [
-      'name',
-      'phoneNumber',
-      'age',
-      'gender',
-      'postalCode',
-      'address',
-      'addressDetail',
+      { key: 'name', required: true },
+      { key: 'image' },
+      { key: 'phoneNumber', required: true },
+      { key: 'age', required: true },
+      { key: 'gender', required: true },
+      { key: 'postalCode', required: true },
+      { key: 'address', required: true },
+      { key: 'addressDetail' },
     ]);
 
     const user = await UserModel.findById(getObjectId(userId)).exec();
 
-    if (!user) throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'user' });
+    if (!user)
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'user', reason: 'NOT_EXIST' },
+      });
 
     user.name = requestBody.name;
     user.phoneNumber = requestBody.phoneNumber;

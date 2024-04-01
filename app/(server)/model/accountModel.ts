@@ -8,7 +8,7 @@ export type AccountSchema = {
   type: AccountType;
   productAccountId?: string;
   status: AccountStatus;
-  userId: Types.ObjectId;
+  user: Types.ObjectId;
   refreshToken: string;
   createdAt: Date;
   updatedAt: Date;
@@ -20,7 +20,7 @@ export const accountSchema = new Schema<AccountSchema>(
     type: { type: String, required: true, validate: accountTypeRegexValidate },
     productAccountId: { type: String },
     status: { type: String, required: true, validate: accountStatusRegexValidate },
-    userId: { type: Schema.Types.ObjectId, ref: 'Users' },
+    user: { type: Schema.Types.ObjectId, ref: 'Users' },
     refreshToken: { type: String },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },

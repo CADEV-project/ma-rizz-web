@@ -22,7 +22,10 @@ export const PATCH = async (request: NextRequest, { params }: PostUpdateRequestP
 
     const postId = params.postId;
 
-    const requestBodyJSON = await getRequestBodyJSON<PostUpdateRequestBody>(request, ['title']);
+    const requestBodyJSON = await getRequestBodyJSON<PostUpdateRequestBody>(request, [
+      { key: 'title', required: true },
+      { key: 'content' },
+    ]);
 
     const post = await PostModel.findOne({
       _id: getObjectId(postId),

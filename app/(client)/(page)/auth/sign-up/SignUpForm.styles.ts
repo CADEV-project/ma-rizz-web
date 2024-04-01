@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Button, styled } from '@mui/material';
 
 import { COLOR } from '@/constant';
@@ -69,11 +71,17 @@ export const DividerText = styled('div')({
   whiteSpace: 'nowrap',
 });
 
-export const GoToSignInPageButton = styled(Button)({
+export const GoToSignInPageButton = styled(Link)({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   width: '100%',
   height: '3.75rem',
   backgroundColor: COLOR.themePurple,
+  borderRadius: '.25rem',
   color: COLOR.white,
+  textDecoration: 'none',
+  fontSize: '.875rem',
   fontWeight: 700,
   '&:hover': {
     backgroundColor: COLOR.themePink,

@@ -4,7 +4,7 @@ type ValidationFailedType = 'ValidationFailed';
 
 type ValidationFailedCode = 422;
 
-type ValidationFailedReason = 'REQUIRED' | 'REGEX_NOT_MATCHED';
+type ValidationFailedReason = 'REQUIRED' | 'REGEX_NOT_MATCHED' | 'NOT_MATCHED';
 
 type ValidationFailedDetail = {
   field: string;

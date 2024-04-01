@@ -1,13 +1,23 @@
 'use server';
 
+import Link from 'next/link';
+
+import { ROUTE_URL } from './constant';
+import styles from './page.module.css';
+
 import { CommonLayout } from '@/(client)/component';
 
 const Page: React.FC = async () => {
   return (
     <CommonLayout>
-      <h1>/</h1>
-      <h3>Home Page</h3>
-      <h5>홈 페이지</h5>
+      <div className={styles.container}>
+        <section className={styles.box}>
+          <h1 className={styles.title}>Welcome to StarWalkin&apos;3D</h1>
+          <Link className={styles.goToPostButton} href={ROUTE_URL.post.prefix}>
+            글 보러가기
+          </Link>
+        </section>
+      </div>
     </CommonLayout>
   );
 };

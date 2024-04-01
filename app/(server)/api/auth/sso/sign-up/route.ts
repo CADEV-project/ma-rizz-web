@@ -17,8 +17,8 @@ export const POST = async (request: NextRequest) => {
 
   try {
     const requestBodyJSON = await getRequestBodyJSON<AuthSSOSignUpRequestBody>(request, [
-      'type',
-      'productAccountId',
+      { key: 'type', required: true },
+      { key: 'productAccountId', required: true },
     ]);
 
     validate({

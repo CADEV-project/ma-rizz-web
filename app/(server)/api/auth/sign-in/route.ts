@@ -12,6 +12,7 @@ import {
   getRefreshTokenCookie,
   validate,
   getAutoSignInCookie,
+  getAuthCookie,
 } from '@/(server)/util';
 
 /**
@@ -24,9 +25,9 @@ export const POST = async (request: NextRequest) => {
 
   try {
     const requestBodyJSON = await getRequestBodyJSON<AuthSignInRequestBody>(request, [
-      'email',
-      'password',
-      'autoSignIn',
+      { key: 'email', required: true },
+      { key: 'password', required: true },
+      { key: 'autoSignIn', required: true },
     ]);
 
     validate({ email: requestBodyJSON.email, password: requestBodyJSON.password });
@@ -34,19 +35,31 @@ export const POST = async (request: NextRequest) => {
     const user = await UserModel.findOne({ email: requestBodyJSON.email }).lean().exec();
 
     if (!user) {
-      throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'email' });
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'user', reason: 'NOT_EXIST' },
+      });
     }
 
     const isAuthorized = await comparePassword(requestBodyJSON.password, user.password);
 
     if (!isAuthorized) {
-      throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'password' });
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'password', reason: 'UNAUTHORIZED' },
+      });
     }
 
-    const account = await AccountModel.findOne({ userId: user._id }).exec();
+    const account = await AccountModel.findOne({ user: user._id }).exec();
 
     if (!account) {
-      throw new Forbidden({ type: 'Forbidden', code: 403, detail: 'account' });
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'account', reason: 'NOT_EXIST' },
+      });
     }
 
     const isActive = account.status === 'active';
@@ -55,7 +68,7 @@ export const POST = async (request: NextRequest) => {
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
-        detail: 'accountStatus',
+        detail: { field: 'accountStatus', reason: 'INVALID' },
       });
     }
 
@@ -77,10 +90,11 @@ export const POST = async (request: NextRequest) => {
       autoSignIn: requestBodyJSON.autoSignIn,
     });
     const autoSignInCookie = getAutoSignInCookie(requestBodyJSON.autoSignIn);
+    const authCookie = getAuthCookie(requestBodyJSON.autoSignIn);
 
     return SuccessResponse({
       method: 'POST',
-      cookies: [accessTokenCookie, refreshTokenCookie, autoSignInCookie],
+      cookies: [accessTokenCookie, refreshTokenCookie, autoSignInCookie, authCookie],
     });
   } catch (error) {
     return ErrorResponse(error);

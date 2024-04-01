@@ -49,8 +49,6 @@ export const GET = async (request: NextRequest, { params }: PostDetailRequestPar
         name: post.user.name,
         email: post.user.email,
         image: post.user.image,
-        createdAt: post.user.createdAt,
-        updatedAt: post.user.updatedAt,
         isMe: authorizedUserId === post.user._id.toHexString(),
       },
     };

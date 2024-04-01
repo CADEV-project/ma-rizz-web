@@ -1,6 +1,6 @@
 export type AuthFindMyEmailRequestSearchParams = {
   phoneNumber: string;
-  isVerified: boolean;
+  verificationCode: string;
 };
 
 export type AuthFindMyEmailResponse = {

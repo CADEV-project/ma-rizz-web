@@ -53,6 +53,12 @@ export const ROUTE_URL = {
     prefix: '/user',
     me: '/user/me',
   },
+  post: {
+    prefix: '/post',
+    create: '/post/create',
+    update: '/post/update',
+    delete: '/post/delete',
+  },
 } as const;
 
 export const MILLISECOND_TIME_FORMAT = {
@@ -70,6 +76,10 @@ export const COLOR = {
   themePink: '#d53a9d',
   kakao: '#FFEB00',
   kakaoHover: '#C6A200',
+  button: '#0070f3',
+  buttonHover: '#0053b3',
+  error: '#ff0000',
+  errorHover: '#cc0000',
   blackAlpha: (opacity: number) => `rgba(0, 0, 0, ${opacity})`,
   whiteAlpha: (opacity: number) => `rgba(255, 255, 255, ${opacity})`,
 } as const;
@@ -79,4 +89,5 @@ export const COOKIE_KEY = {
   accessToken: 'nextjs_template-secure-access_token',
   refreshToken: 'nextje_template-secure-refresh_token',
   autoSignIn: 'nextjs_template-secure-auto_sign_in',
+  auth: 'nextjs_template-auth',
 } as const;

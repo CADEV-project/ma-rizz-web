@@ -20,7 +20,7 @@ export const GET = async (request: NextRequest) => {
   try {
     const searchParams = getRequestSearchPraramsJSON<AuthDuplicateEmailCheckRequestSearchParams>(
       request,
-      ['email']
+      [{ key: 'email', required: true }]
     );
 
     const user = await UserModel.findOne({ email: searchParams.email }).lean().exec();

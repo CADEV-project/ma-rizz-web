@@ -1,4 +1,4 @@
-import { PostSchema, UserSchema } from '@/(server)/model';
+import { PostResponse } from '../type';
 
 export type PostDetailRequestParams = {
   params: {
@@ -6,10 +6,4 @@ export type PostDetailRequestParams = {
   };
 };
 
-export type PostDetailResponse = Omit<PostSchema, '_id' | 'userId'> & {
-  _id: string;
-  user: Pick<UserSchema, 'name' | 'email' | 'image' | 'createdAt' | 'updatedAt'> & {
-    _id: string;
-    isMe: boolean;
-  };
-};
+export type PostDetailResponse = PostResponse;
