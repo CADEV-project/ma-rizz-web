@@ -20,7 +20,7 @@ export const Provider: React.FC<ProviderProps> = ({ children }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        retry: 1,
+        retry: 0,
         retryDelay: MILLISECOND_TIME_FORMAT.seconds(2),
         staleTime: MILLISECOND_TIME_FORMAT.seconds(5),
         refetchOnWindowFocus: false,

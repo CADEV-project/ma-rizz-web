@@ -102,12 +102,8 @@ axios.interceptors.response.use(
 
     config.sent = true;
 
-    try {
-      await getMemorisedRefreshToken();
+    await getMemorisedRefreshToken();
 
-      return axios(config);
-    } catch (error) {
-      return Promise.reject(error);
-    }
+    return axios(config);
   }
 );
