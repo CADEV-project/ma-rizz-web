@@ -78,13 +78,13 @@ export type AuthFindMyEmailRequestReturn = AuthFindMyEmailResponse;
 
 export const authFindMyEmailRequest = async ({
   phoneNumber,
-  isVerified,
+  verificationCode,
 }: AuthFindMyEmailRequestProps) => {
   const response = await baseRequest<AuthFindMyEmailRequestReturn>({
     method: 'get',
     url: API_URL.auth.findMyEmail,
     params: {
-      isVerified,
+      verificationCode,
       phoneNumber,
     },
   });
@@ -97,7 +97,7 @@ export type AuthPasswordResetRequestProps = AuthPasswordResetRequestBody;
 export const authPasswordResetRequest = async ({
   email,
   newPassword,
-  isVerified,
+  verificationCode,
 }: AuthPasswordResetRequestProps) => {
   const response = await baseRequest<void>({
     method: 'patch',
@@ -105,7 +105,7 @@ export const authPasswordResetRequest = async ({
     data: {
       email,
       newPassword,
-      isVerified,
+      verificationCode,
     },
   });
 
