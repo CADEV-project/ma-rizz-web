@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { NotFound } from '@/(error)';
+
 import { COOKIE_KEY, ROUTE_URL } from '@/constant';
 import { SERVER_SETTINGS } from '@/setting';
 
+const ACCESS_ALLOWED_ORIGINS = [SERVER_SETTINGS.ACCESS_ALLOWED_ORIGIN];
+
+const CORS_OPTIONS = {
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 // NOTE: On middleware part, access token and refresh token must set in cookies.
 export const middleware = async (request: NextRequest) => {
-  const PROTECTED_PAGE_ROUTE = /^(\/user\/)/;
+  const PROTECTED_PAGE_ROUTE = /^(\/user\/|\/post\/create)/;
 
   const isAPIRoute = request.nextUrl.pathname.startsWith(SERVER_SETTINGS.API_PREFIX);
   const isAuthAPIRoute = request.nextUrl.pathname.startsWith(
@@ -19,6 +28,41 @@ export const middleware = async (request: NextRequest) => {
 
   if (isAPIRoute) {
     // NOTE: Case of API routes
+
+    const origin = request.headers.get('origin');
+
+    if (!SERVER_SETTINGS.DOMAIN)
+      throw new NotFound({ type: 'NotFound', code: 404, detail: 'DOMAIN' });
+
+    if (origin && origin !== SERVER_SETTINGS.DOMAIN) {
+      // NOTE: Handle CORS
+
+      const isPreflight = request.method === 'OPTIONS';
+
+      const isAccessAllowedOrigin = ACCESS_ALLOWED_ORIGINS.includes(origin);
+
+      if (isPreflight) {
+        const preflightHeaders = {
+          ...(isAccessAllowedOrigin && { 'Access-Control-Allow-Origin': origin }),
+          ...CORS_OPTIONS,
+        };
+
+        return NextResponse.json({}, { headers: preflightHeaders });
+      }
+
+      if (isAccessAllowedOrigin) {
+        const response = NextResponse.next();
+
+        response.headers.set('Access-Control-Allow-Origin', origin);
+        response.headers.set('Access-Control-Allow-Credentials', 'true');
+
+        Object.entries(CORS_OPTIONS).forEach(([key, value]) => {
+          response.headers.set(key, value);
+        });
+
+        return response;
+      }
+    }
 
     if (!isAuthAPIRoute && !refreshTokenCookie && accessTokenCookie) {
       // NOTE: When go to api route handlers and if the access token is not included but refresh token is included in the request, the refresh token is deleted on the server side.
@@ -72,17 +116,18 @@ export const middleware = async (request: NextRequest) => {
         return NextResponse.next();
       } else {
         // NOTE: When go to protected pages, if the refresh token is not included in the request but access token is included, redirect to sign in page.
+
+        const response = NextResponse.redirect(new URL(ROUTE_URL.auth.signIn, request.url));
+
         if (accessTokenCookie) {
           request.cookies.delete(COOKIE_KEY.accessToken);
-
-          const response = NextResponse.redirect(new URL(ROUTE_URL.auth.signIn, request.url));
 
           response.cookies.delete(COOKIE_KEY.accessToken);
           response.cookies.delete(COOKIE_KEY.autoSignIn);
           response.cookies.delete(COOKIE_KEY.auth);
-
-          return response;
         }
+
+        return response;
       }
     }
   }
