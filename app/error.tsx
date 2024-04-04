@@ -4,7 +4,7 @@ import { Typography } from '@mui/material';
 
 import * as S from './error.styles';
 
-import { BaseError } from '@/error';
+import { BaseError } from '@/(error)';
 
 type ErrorProps = {
   error: BaseError & { digest?: string };
