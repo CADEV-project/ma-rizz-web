@@ -4,6 +4,9 @@ import { SuccessResponse } from '@/(server)/util';
 
 import { ErrorResponse } from '@/(error)';
 
+import { SOCKET_SERVER_API_URL } from '@/constant';
+import { SERVER_SETTINGS } from '@/setting';
+
 /**
  * NOTE: /api/health
  * @return void
@@ -19,5 +22,7 @@ export const GET = async () => {
 };
 
 const sendRequestToSocketServer = async () => {
-  await axios.get('http://localhost:8000/api/socket');
+  await axios.get(
+    `${SERVER_SETTINGS.SOCKET_SERVER_DOMAIN}${SERVER_SETTINGS.API_PREFIX}${SOCKET_SERVER_API_URL.socket}`
+  );
 };
