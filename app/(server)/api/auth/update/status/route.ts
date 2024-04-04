@@ -6,7 +6,7 @@ import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/l
 import { AccountModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(server)/util';
 
-import { ErrorResponse, Forbidden } from '@/(error)';
+import { ErrorResponse, Forbidden, NotFound } from '@/(error)';
 
 /**
  * NOTE: /api/auth/update/status
@@ -29,10 +29,10 @@ export const PATCH = async (request: NextRequest) => {
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
     if (!account)
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'account', reason: 'NOT_EXIST' },
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'account',
       });
 
     if (requestBodyJSON.status === 'pending' || requestBodyJSON.status === 'withdrew')

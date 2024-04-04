@@ -6,7 +6,7 @@ import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/l
 import { UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(server)/util';
 
-import { ErrorResponse, Forbidden } from '@/(error)';
+import { ErrorResponse, NotFound } from '@/(error)';
 
 /**
  * NOTE: /api/auth/update/email
@@ -29,10 +29,10 @@ export const PATCH = async (request: NextRequest) => {
     const user = await UserModel.findById(getObjectId(userId)).exec();
 
     if (!user)
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'user', reason: 'NOT_EXIST' },
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'user',
       });
 
     user.email = requestBody.newEmail;

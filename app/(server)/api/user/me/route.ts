@@ -6,7 +6,7 @@ import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/l
 import { AccountModel, UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestAccessToken } from '@/(server)/util';
 
-import { ErrorResponse, Forbidden } from '@/(error)';
+import { ErrorResponse, Forbidden, NotFound } from '@/(error)';
 
 /**
  * NOTE: /api/user/me
@@ -27,17 +27,17 @@ export const GET = async (request: NextRequest) => {
     ]);
 
     if (!user)
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'user', reason: 'NOT_EXIST' },
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'user',
       });
 
     if (!account)
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'account', reason: 'NOT_EXIST' },
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'account',
       });
 
     if (account.status === 'withdrew')

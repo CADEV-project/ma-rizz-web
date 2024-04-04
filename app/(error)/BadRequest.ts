@@ -1,20 +1,22 @@
 import { BaseErrorData, BaseError } from './BaseError';
 
-type BadRequestType = 'BabRequest';
+type BadRequestType = 'BadRequest';
 
 type BadRequestCode = 400;
 
+type BadRequestDetailReason = 'REQUIRED';
+
 type BadRequestDetail = {
   field: string;
-  reason: 'INVALID_FORMAT' | 'INVALID_VALUE';
+  reason: BadRequestDetailReason;
 };
 
 export class BadRequest extends BaseError {
   type!: BadRequestType;
   code!: BadRequestCode;
-  detail!: BadRequestDetail;
+  detail!: BadRequestDetail[];
 
-  constructor(payload: BaseErrorData<BadRequestType, BadRequestCode, BadRequestDetail>) {
+  constructor(payload: BaseErrorData<BadRequestType, BadRequestCode, BadRequestDetail[]>) {
     super(payload);
   }
 }

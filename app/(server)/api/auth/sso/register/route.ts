@@ -11,7 +11,7 @@ import {
   getRequestAccessToken,
 } from '@/(server)/util';
 
-import { ErrorResponse, Forbidden, ValidationFailed } from '@/(error)';
+import { ErrorResponse, Forbidden, NotFound } from '@/(error)';
 
 import { MILLISECOND_TIME_FORMAT } from '@/constant';
 
@@ -56,30 +56,31 @@ export const POST = async (request: NextRequest) => {
     ]);
 
     if (!account)
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'account', reason: 'NOT_EXIST' },
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'account',
       });
 
     if (!verification)
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'verification', reason: 'NOT_EXIST' },
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'verification',
       });
 
     if (verification.verificationCode !== requestBodyJSON.verificationCode)
-      throw new ValidationFailed({
-        type: 'ValidationFailed',
-        code: 422,
-        detail: [{ field: 'verificationCode', reason: 'NOT_MATCHED' }],
+      throw new Forbidden({
+        type: 'Forbidden',
+        code: 403,
+        detail: { field: 'verificationCode', reason: 'INVALID' },
       });
 
-    if (
-      verification.updatedAt.getTime() + MILLISECOND_TIME_FORMAT.minutes(5) <
-      new Date().getTime()
-    )
+    const limitTime =
+      new Date(verification.updatedAt).getTime() + MILLISECOND_TIME_FORMAT.minutes(5);
+    const currentTime = Date.now();
+
+    if (limitTime < currentTime)
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
@@ -100,9 +101,7 @@ export const POST = async (request: NextRequest) => {
 
       await account.save({ session });
 
-      verification.verificationCode = '';
-
-      await verification.save({ session });
+      await verification.deleteOne({ session });
     });
 
     return SuccessResponse({ method: 'POST' });

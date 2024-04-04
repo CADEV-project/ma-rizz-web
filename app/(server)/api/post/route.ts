@@ -40,7 +40,7 @@ export const GET = async (request: NextRequest) => {
         .sort({ createdAt: -1 })
         .skip(cursor)
         .limit(limit)
-        .populate<{ user: UserSchema }>('user', 'name image')
+        .populate<{ user: UserSchema }>('user', 'name email image')
         .lean()
         .exec(),
       PostModel.find()

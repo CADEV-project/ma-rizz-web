@@ -7,7 +7,7 @@ import { AccountModel, UserModel, VerificationModel } from '@/(server)/model';
 import { ACCOUNT_STATUS, ACCOUNT_TYPE } from '@/(server)/union';
 import { getRequestBodyJSON, SuccessResponse, validate } from '@/(server)/util';
 
-import { Conflict, ErrorResponse, Forbidden, ValidationFailed } from '@/(error)';
+import { Conflict, ErrorResponse, Forbidden, NotFound } from '@/(error)';
 
 import { MILLISECOND_TIME_FORMAT } from '@/constant';
 
@@ -60,16 +60,16 @@ export const POST = async (request: NextRequest) => {
         detail: ['email', 'phoneNumber'],
       });
     if (!verification)
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'verification',
+      });
+    if (verification.verificationCode !== requestBodyJSON.verificationCode)
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
-        detail: { field: 'verification', reason: 'NOT_EXIST' },
-      });
-    if (verification.verificationCode !== requestBodyJSON.verificationCode)
-      throw new ValidationFailed({
-        type: 'ValidationFailed',
-        code: 422,
-        detail: [{ field: 'verificationCode', reason: 'NOT_MATCHED' }],
+        detail: { field: 'verificationCode', reason: 'INVALID' },
       });
 
     const limitTime =

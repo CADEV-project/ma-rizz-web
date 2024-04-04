@@ -4,7 +4,7 @@ type ValidationFailedType = 'ValidationFailed';
 
 type ValidationFailedCode = 422;
 
-export type ValidationFailedReason = 'REQUIRED' | 'REGEX_NOT_MATCHED' | 'NOT_MATCHED';
+type ValidationFailedReason = 'REGEX_NOT_MATCHED' | 'TYPE_MISMATCHED';
 
 type ValidationFailedDetail = {
   field: string;

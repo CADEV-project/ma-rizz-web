@@ -17,7 +17,7 @@ import {
   getRequestRefreshToken,
 } from '@/(server)/util';
 
-import { ErrorResponse, Forbidden } from '@/(error)';
+import { ErrorResponse, NotFound } from '@/(error)';
 
 import { COOKIE_KEY } from '@/constant';
 
@@ -38,10 +38,10 @@ export const POST = async (request: NextRequest) => {
     const account = await AccountModel.findById(getObjectId(accountId)).exec();
 
     if (!account)
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'account', reason: 'NOT_EXIST' },
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'account',
       });
 
     const newSignedTokens = getSignedTokens({ accountId, userId });

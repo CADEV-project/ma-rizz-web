@@ -14,7 +14,7 @@ import {
   getAuthCookie,
 } from '@/(server)/util';
 
-import { ErrorResponse, Forbidden } from '@/(error)';
+import { ErrorResponse, Forbidden, NotFound } from '@/(error)';
 
 /**
  * NOTE: /api/auth/sign-in
@@ -35,13 +35,12 @@ export const POST = async (request: NextRequest) => {
 
     const user = await UserModel.findOne({ email: requestBodyJSON.email }).lean().exec();
 
-    if (!user) {
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'user', reason: 'NOT_EXIST' },
+    if (!user)
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'user',
       });
-    }
 
     const isAuthorized = await comparePassword(requestBodyJSON.password, user.password);
 
@@ -55,13 +54,12 @@ export const POST = async (request: NextRequest) => {
 
     const account = await AccountModel.findOne({ user: user._id }).exec();
 
-    if (!account) {
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'account', reason: 'NOT_EXIST' },
+    if (!account)
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'account',
       });
-    }
 
     const isActive = account.status === 'active';
 

@@ -11,7 +11,7 @@ import {
 import { UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(server)/util';
 
-import { ErrorResponse, Forbidden } from '@/(error)';
+import { ErrorResponse, Forbidden, NotFound } from '@/(error)';
 
 /**
  * NOTE: /api/auth/update/password
@@ -35,10 +35,10 @@ export const PATCH = async (request: NextRequest) => {
     const user = await UserModel.findById(getObjectId(userId)).exec();
 
     if (!user)
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'user', reason: 'NOT_EXIST' },
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'user',
       });
 
     const isAuthorized = comparePassword(requestBody.currentPassword, user.password);

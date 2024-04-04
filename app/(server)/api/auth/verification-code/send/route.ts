@@ -74,6 +74,7 @@ export const POST = async (request: NextRequest) => {
         await sendSMSVerificationCode(requestBodyJSON.phoneNumber, verificationCode);
       }
     }
+
     await session.commitTransaction();
 
     return SuccessResponse({ method: 'POST' });

@@ -15,7 +15,7 @@ import {
   getRequestSearchPraramsJSON,
 } from '@/(server)/util';
 
-import { ErrorResponse, Forbidden } from '@/(error)';
+import { ErrorResponse, Forbidden, NotFound } from '@/(error)';
 
 import { COOKIE_KEY } from '@/constant';
 
@@ -41,17 +41,17 @@ export const DELETE = async (request: NextRequest) => {
     ]);
 
     if (!account)
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'account', reason: 'NOT_EXIST' },
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'account',
       });
 
     if (!user)
-      throw new Forbidden({
-        type: 'Forbidden',
-        code: 403,
-        detail: { field: 'user', reason: 'NOT_EXIST' },
+      throw new NotFound({
+        type: 'NotFound',
+        code: 404,
+        detail: 'user',
       });
 
     if (account.status === 'withdrew')
@@ -74,6 +74,8 @@ export const DELETE = async (request: NextRequest) => {
           code: 403,
           detail: { field: 'password', reason: 'UNAUTHORIZED' },
         });
+    } else {
+      // TODO: Implement SSO After v1.0.0
     }
 
     account.status = 'withdrew';
@@ -85,6 +87,7 @@ export const DELETE = async (request: NextRequest) => {
     response.cookies.delete(COOKIE_KEY.accessToken);
     response.cookies.delete(COOKIE_KEY.refreshToken);
     response.cookies.delete(COOKIE_KEY.autoSignIn);
+    response.cookies.delete(COOKIE_KEY.auth);
 
     return response;
   } catch (error) {

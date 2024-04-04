@@ -18,6 +18,7 @@ import { ErrorResponse } from '@/(error)';
  */
 export const GET = async (request: NextRequest) => {
   await getConnection();
+
   try {
     const searchParams = getRequestSearchPraramsJSON<AuthDuplicateEmailCheckRequestSearchParams>(
       request,

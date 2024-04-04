@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { NotFound, Unauthorized, ValidationFailed } from '@/(error)';
+import { BadRequest, Unauthorized } from '@/(error)';
 
 import { COOKIE_KEY } from '@/constant';
 
@@ -66,10 +66,14 @@ export async function getRequestBodyJSON<Body extends CommonBody>(
 ): Promise<Body> {
   const requestBody = await request.json();
 
-  const validationFailedDetails: { field: string; reason: 'REQUIRED' }[] = [];
+  const badRequestDetails: { field: string; reason: 'REQUIRED' }[] = [];
 
   if (!requestBody || typeof requestBody !== 'object' || Object.keys(requestBody).length === 0)
-    throw new NotFound({ type: 'NotFound', code: 404, detail: 'body' });
+    throw new BadRequest({
+      type: 'BadRequest',
+      code: 400,
+      detail: [{ field: 'requestBody', reason: 'REQUIRED' }],
+    });
 
   const requestBodyKeys = Object.keys(requestBody);
 
@@ -78,14 +82,14 @@ export async function getRequestBodyJSON<Body extends CommonBody>(
       (!requestBodyKeys.includes(field.key as string) || requestBody[field.key as string] === '') &&
       field.required
     )
-      validationFailedDetails.push({ field: field.key as string, reason: 'REQUIRED' });
+      badRequestDetails.push({ field: field.key as string, reason: 'REQUIRED' });
   });
 
-  if (validationFailedDetails.length > 0)
-    throw new ValidationFailed({
-      type: 'ValidationFailed',
-      code: 422,
-      detail: validationFailedDetails,
+  if (badRequestDetails.length > 0)
+    throw new BadRequest({
+      type: 'BadRequest',
+      code: 400,
+      detail: badRequestDetails,
     });
 
   return requestBody as Body;
@@ -106,10 +110,14 @@ export function getRequestSearchPraramsJSON<SearchParams extends CommonSearchPar
 ): SearchParamsParserReturn<SearchParams> {
   const searchParams = request.nextUrl.searchParams;
 
-  const validationFailedDetails: { field: string; reason: 'REQUIRED' }[] = [];
+  const badRequestDetails: { field: string; reason: 'REQUIRED' }[] = [];
 
   if (!searchParams || searchParams.toString().length === 0)
-    throw new NotFound({ type: 'NotFound', code: 404, detail: 'searchParams' });
+    throw new BadRequest({
+      type: 'BadRequest',
+      code: 400,
+      detail: [{ field: 'searchParams', reason: 'REQUIRED' }],
+    });
 
   const searchParamsKeys = Array.from(searchParams.keys());
   const searchParamsObject: Record<string, string> = {};
@@ -120,16 +128,16 @@ export function getRequestSearchPraramsJSON<SearchParams extends CommonSearchPar
         searchParams.get(field.key as string) === '') &&
       field.required
     )
-      return validationFailedDetails.push({ field: field.key as string, reason: 'REQUIRED' });
+      return badRequestDetails.push({ field: field.key as string, reason: 'REQUIRED' });
 
     searchParamsObject[field.key as string] = searchParams.get(field.key as string) as string;
   });
 
-  if (validationFailedDetails.length > 0)
-    throw new ValidationFailed({
-      type: 'ValidationFailed',
-      code: 422,
-      detail: validationFailedDetails,
+  if (badRequestDetails.length > 0)
+    throw new BadRequest({
+      type: 'BadRequest',
+      code: 400,
+      detail: badRequestDetails,
     });
 
   return searchParamsObject as SearchParamsParserReturn<SearchParams>;

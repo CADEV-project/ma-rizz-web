@@ -24,12 +24,7 @@ import {
   authVerificationCodeSendRequest,
 } from '@/(client)/request';
 
-import {
-  ValidationFailedReason,
-  isForbidden,
-  isTooManyRequests,
-  isValidationFailed,
-} from '@/(error)';
+import { isBadRequest, isForbidden, isTooManyRequests, isValidationFailed } from '@/(error)';
 
 import { COLOR, ROUTE_URL } from '@/constant';
 
@@ -101,24 +96,26 @@ export const SignUpForm: React.FC = () => {
 
       router.push(ROUTE_URL.auth.signIn);
     } catch (error) {
-      const errorReasonFormatToMessage = (reason: ValidationFailedReason) => {
-        switch (reason) {
-          case 'REQUIRED':
-            return '필수 항목입니다.';
-          case 'REGEX_NOT_MATCHED':
-            return '형식이 맞지 않습니다.';
-          case 'NOT_MATCHED':
-            return '일치하지 않습니다.';
-          default:
-            return reason;
-        }
-      };
+      if (isBadRequest(error)) {
+        error.detail.forEach(({ field }) => {
+          return signUpForm.setError(field as keyof SignUpFormProps, {
+            message: '필수 입력 사항입니다.',
+          });
+        });
+      }
 
       if (isValidationFailed(error)) {
         error.detail.forEach(({ field, reason }) => {
-          signUpForm.setError(field as keyof SignUpFormProps, {
-            message: errorReasonFormatToMessage(reason),
-          });
+          switch (reason) {
+            case 'REGEX_NOT_MATCHED':
+              return signUpForm.setError(field as keyof SignUpFormProps, {
+                message: '형식이 맞지 않습니다.',
+              });
+            default:
+              return signUpForm.setError(field as keyof SignUpFormProps, {
+                message: reason,
+              });
+          }
         });
       }
 
