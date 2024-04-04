@@ -15,7 +15,7 @@ export const SocketComponent: React.FC = () => {
   const onButtonClick = async () => {
     try {
       await axios.get(
-        `${CLIENT_SETTINGS.SOCKET_SERVER_URL ?? 'http://localhost:8000'}${SOCKET_SERVER_API_URL.socket}`
+        `${CLIENT_SETTINGS.SOCKER_SERVER_DOMAIN}${CLIENT_SETTINGS.API_PREFIX}${SOCKET_SERVER_API_URL.socket}`
       );
     } catch (error) {
       console.info(error);
@@ -23,7 +23,7 @@ export const SocketComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    const socket = connect(CLIENT_SETTINGS.SOCKET_SERVER_URL ?? 'http://localhost:8000');
+    const socket = connect(CLIENT_SETTINGS.SOCKER_SERVER_DOMAIN);
 
     socket.on('getNewUser', (userCount: number) => {
       console.info('getNewUser', userCount);
