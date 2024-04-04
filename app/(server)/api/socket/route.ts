@@ -2,14 +2,20 @@ import axios from 'axios';
 
 import { SuccessResponse } from '@/(server)/util';
 
+import { ErrorResponse } from '@/(error)';
+
 /**
  * NOTE: /api/health
  * @return void
  */
 export const GET = async () => {
-  await sendRequestToSocketServer();
+  try {
+    await sendRequestToSocketServer();
 
-  return SuccessResponse({ method: 'GET' });
+    return SuccessResponse({ method: 'GET' });
+  } catch (error) {
+    return ErrorResponse({ method: 'GET' });
+  }
 };
 
 const sendRequestToSocketServer = async () => {
