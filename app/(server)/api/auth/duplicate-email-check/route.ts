@@ -5,10 +5,11 @@ import {
   AuthDuplicateEmailCheckResponse,
 } from './type';
 
-import { ErrorResponse } from '@/(server)/error';
 import { getConnection } from '@/(server)/lib';
 import { UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestSearchPraramsJSON } from '@/(server)/util';
+
+import { ErrorResponse } from '@/(error)';
 
 /**
  * NOTE: /api/auth/duplicate-email-check

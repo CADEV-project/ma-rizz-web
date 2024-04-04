@@ -15,3 +15,7 @@ export class NotImplemented extends BaseError {
     super(payload);
   }
 }
+
+export const isNotImplemented = (error: unknown): error is NotImplemented => {
+  return error instanceof NotImplemented;
+};

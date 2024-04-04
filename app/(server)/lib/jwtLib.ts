@@ -1,7 +1,8 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-import { NotFound, Unauthorized } from '@/(server)/error';
 import { getNumericTime } from '@/(server)/util';
+
+import { NotFound, Unauthorized } from '@/(error)';
 
 import { SERVER_SETTINGS } from '@/setting';
 

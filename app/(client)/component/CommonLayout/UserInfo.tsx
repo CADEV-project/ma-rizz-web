@@ -6,8 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import * as S from './UserInfo.styles';
 
 import { SmartImage } from '@/(client)/component';
+import { userMeRequest } from '@/(client)/request';
 
-import { userMeRequest } from '@/(client)/request/userRequest';
 import { API_URL, ROUTE_URL } from '@/constant';
 
 export const UserInfo: React.FC = () => {

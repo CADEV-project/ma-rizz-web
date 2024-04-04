@@ -2,10 +2,11 @@ import { NextRequest } from 'next/server';
 
 import { PostUpdateRequestBody, PostUpdateRequestParams } from './type';
 
-import { ErrorResponse, NotFound } from '@/(server)/error';
 import { getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { PostModel } from '@/(server)/model';
 import { SuccessResponse, getRequestAccessToken, getRequestBodyJSON } from '@/(server)/util';
+
+import { ErrorResponse, NotFound } from '@/(error)';
 
 /**
  * NOTE: /api/post/update/[postId]

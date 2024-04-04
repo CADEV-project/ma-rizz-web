@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import type { Metadata } from 'next/types';
 
 import './global.css';
@@ -23,6 +24,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Provider>{children}</Provider>
         </div>
       </body>
+      <Script src='//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js' />
     </html>
   );
 };

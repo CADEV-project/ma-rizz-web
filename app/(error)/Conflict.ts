@@ -15,3 +15,7 @@ export class Conflict extends BaseError {
     super(payload);
   }
 }
+
+export const isConflict = (error: unknown): error is Conflict => {
+  return error instanceof Conflict;
+};

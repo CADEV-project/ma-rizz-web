@@ -24,3 +24,7 @@ export class UnsupportedMediaType extends BaseError {
     super(payload);
   }
 }
+
+export const isUnsupportedMediaType = (error: unknown): error is UnsupportedMediaType => {
+  return error instanceof UnsupportedMediaType;
+};

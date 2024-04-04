@@ -1,20 +1,24 @@
 import { NextResponse } from 'next/server';
 
+import { BadRequest } from './BadRequest';
 import { BaseError, DatabaseError } from './BaseError';
 import { Conflict } from './Conflict';
 import { Forbidden } from './Forbidden';
 import { InternalServerError } from './InternalServerError';
 import { NotFound } from './NotFound';
 import { NotImplemented } from './NotImplemented';
+import { TooManyRequests } from './TooManyRequests';
 import { Unauthorized } from './Unauthorized';
 import { UnsupportedMediaType } from './UnsupportedMediaType';
 import { ValidationFailed } from './ValidationFailed';
 
-const BASE_ERROR: Record<string, typeof BaseError> = {
+export const BASE_ERROR: Record<string, typeof BaseError> = {
+  BadRequest,
   Conflict,
   Forbidden,
   NotFound,
   NotImplemented,
+  TooManyRequests,
   Unauthorized,
   UnsupportedMediaType,
   ValidationFailed,
@@ -81,13 +85,13 @@ export const ErrorResponse = (error: unknown): NextResponse<BaseError> => {
 };
 
 export * from './BaseError';
-export {
-  Conflict,
-  Forbidden,
-  InternalServerError,
-  NotFound,
-  NotImplemented,
-  Unauthorized,
-  UnsupportedMediaType,
-  ValidationFailed,
-};
+export * from './BadRequest';
+export * from './Conflict';
+export * from './Forbidden';
+export * from './InternalServerError';
+export * from './NotFound';
+export * from './NotImplemented';
+export * from './TooManyRequests';
+export * from './Unauthorized';
+export * from './UnsupportedMediaType';
+export * from './ValidationFailed';

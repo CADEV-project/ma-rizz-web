@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 
 import { AuthUpdatePasswordRequestBody } from './type';
 
-import { ErrorResponse, Forbidden } from '@/(server)/error';
 import {
   comparePassword,
   getConnection,
@@ -11,6 +10,8 @@ import {
 } from '@/(server)/lib';
 import { UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON, getRequestAccessToken } from '@/(server)/util';
+
+import { ErrorResponse, Forbidden } from '@/(error)';
 
 /**
  * NOTE: /api/auth/update/password

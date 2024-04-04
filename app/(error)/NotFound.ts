@@ -15,3 +15,7 @@ export class NotFound extends BaseError {
     super(payload);
   }
 }
+
+export const isNotFound = (error: unknown): error is NotFound => {
+  return error instanceof NotFound;
+};

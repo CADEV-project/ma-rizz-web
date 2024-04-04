@@ -2,11 +2,12 @@ import { NextRequest } from 'next/server';
 
 import { AuthSignUpRequestBody } from './type';
 
-import { Conflict, ErrorResponse, Forbidden, ValidationFailed } from '@/(server)/error';
 import { getConnection, getHashedPassword } from '@/(server)/lib';
 import { AccountModel, UserModel, VerificationModel } from '@/(server)/model';
 import { ACCOUNT_STATUS, ACCOUNT_TYPE } from '@/(server)/union';
 import { getRequestBodyJSON, SuccessResponse, validate } from '@/(server)/util';
+
+import { Conflict, ErrorResponse, Forbidden, ValidationFailed } from '@/(error)';
 
 import { MILLISECOND_TIME_FORMAT } from '@/constant';
 
@@ -58,14 +59,12 @@ export const POST = async (request: NextRequest) => {
         code: 409,
         detail: ['email', 'phoneNumber'],
       });
-
     if (!verification)
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
         detail: { field: 'verification', reason: 'NOT_EXIST' },
       });
-
     if (verification.verificationCode !== requestBodyJSON.verificationCode)
       throw new ValidationFailed({
         type: 'ValidationFailed',
@@ -73,10 +72,11 @@ export const POST = async (request: NextRequest) => {
         detail: [{ field: 'verificationCode', reason: 'NOT_MATCHED' }],
       });
 
-    if (
-      verification.updatedAt.getTime() + MILLISECOND_TIME_FORMAT.minutes(5) <
-      new Date().getTime()
-    )
+    const limitTime =
+      new Date(verification.updatedAt).getTime() + MILLISECOND_TIME_FORMAT.minutes(5);
+    const currentTime = Date.now();
+
+    if (limitTime < currentTime)
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
@@ -101,15 +101,13 @@ export const POST = async (request: NextRequest) => {
           {
             type: ACCOUNT_TYPE.credentials,
             status: ACCOUNT_STATUS.active,
-            userId: newUser._id,
+            user: newUser._id,
           },
         ],
         { session }
       );
 
-      verification.verificationCode = '';
-
-      await verification.save({ session });
+      await verification.deleteOne({ session });
     });
 
     return SuccessResponse({ method: 'POST' });

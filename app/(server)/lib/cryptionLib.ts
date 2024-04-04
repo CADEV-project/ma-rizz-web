@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 
-import { NotFound } from '@/(server)/error';
+import { NotFound } from '@/(error)';
 
 import { SERVER_SETTINGS } from '@/setting';
 

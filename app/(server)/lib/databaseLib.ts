@@ -1,6 +1,6 @@
 import { ConnectOptions, Types, connect } from 'mongoose';
 
-import { InternalServerError, NotFound } from '@/(server)/error';
+import { InternalServerError, NotFound } from '@/(error)';
 
 import { SERVER_SETTINGS } from '@/setting';
 
@@ -23,11 +23,10 @@ export const getConnection = async () => {
 
     cachedMongoose.createConnectionPromise = connect(SERVER_SETTINGS.DATABASE_URL, options)
       .then(mongoose => mongoose)
-      .catch(error => {
+      .catch(() => {
         throw new InternalServerError({
           type: 'InternalServerError',
           code: 500,
-          detail: { error: error as Error },
         });
       });
   }

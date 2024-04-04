@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 
 import { PostListResponse, PostRequestSearchParams, PostResponse } from './type';
 
-import { ErrorResponse } from '@/(server)/error';
 import { getConnection, getVerifiedAccessToken } from '@/(server)/lib';
 import { PostModel, UserSchema } from '@/(server)/model';
 import {
@@ -11,6 +10,8 @@ import {
   getRequestSearchPraramsJSON,
   isAuthorizedRequest,
 } from '@/(server)/util';
+
+import { ErrorResponse } from '@/(error)';
 
 const DEFAULT_LIMIT = 10;
 

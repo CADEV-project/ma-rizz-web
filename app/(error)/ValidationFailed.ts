@@ -4,7 +4,7 @@ type ValidationFailedType = 'ValidationFailed';
 
 type ValidationFailedCode = 422;
 
-type ValidationFailedReason = 'REQUIRED' | 'REGEX_NOT_MATCHED' | 'NOT_MATCHED';
+export type ValidationFailedReason = 'REQUIRED' | 'REGEX_NOT_MATCHED' | 'NOT_MATCHED';
 
 type ValidationFailedDetail = {
   field: string;
@@ -22,3 +22,7 @@ export class ValidationFailed extends BaseError {
     super(payload);
   }
 }
+
+export const isValidationFailed = (error: unknown): error is ValidationFailed => {
+  return error instanceof ValidationFailed;
+};

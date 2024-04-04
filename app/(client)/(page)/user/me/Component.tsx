@@ -2,9 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 
-import { healthRequest } from '@/(client)/request';
+import { healthRequest, userMeRequest } from '@/(client)/request';
 
-import { userMeRequest } from '@/(client)/request/userRequest';
 import { API_URL } from '@/constant';
 
 export const Component: React.FC = () => {

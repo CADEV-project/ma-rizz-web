@@ -2,10 +2,11 @@ import { NextRequest } from 'next/server';
 
 import { AuthSSOSignUpRequestBody } from './type';
 
-import { Conflict, ErrorResponse } from '@/(server)/error';
 import { getConnection } from '@/(server)/lib';
 import { AccountModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON, validate } from '@/(server)/util';
+
+import { Conflict, ErrorResponse } from '@/(error)';
 
 /**
  * NOTE: /api/auth/sso/sign-up

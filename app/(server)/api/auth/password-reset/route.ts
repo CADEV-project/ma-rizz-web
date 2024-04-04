@@ -2,10 +2,11 @@ import { NextRequest } from 'next/server';
 
 import { AuthPasswordResetRequestBody } from './type';
 
-import { ErrorResponse, Forbidden, ValidationFailed } from '@/(server)/error';
 import { getConnection, getHashedPassword } from '@/(server)/lib';
 import { UserModel, VerificationModel } from '@/(server)/model';
 import { SuccessResponse, getRequestBodyJSON } from '@/(server)/util';
+
+import { ErrorResponse, Forbidden, ValidationFailed } from '@/(error)';
 
 import { MILLISECOND_TIME_FORMAT } from '@/constant';
 

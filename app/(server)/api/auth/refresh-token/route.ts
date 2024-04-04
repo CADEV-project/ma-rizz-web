@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
 
-import { ErrorResponse, Forbidden } from '@/(server)/error';
 import {
   getConnection,
   getObjectId,
@@ -17,6 +16,8 @@ import {
   getRequestAutoSignIn,
   getRequestRefreshToken,
 } from '@/(server)/util';
+
+import { ErrorResponse, Forbidden } from '@/(error)';
 
 import { COOKIE_KEY } from '@/constant';
 

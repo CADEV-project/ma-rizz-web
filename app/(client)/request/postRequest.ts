@@ -8,6 +8,7 @@ import {
   PostUpdateRequestBody,
   PostUpdateRequestParams,
 } from '@/(server)/api/post/update/[postId]/type';
+
 import { API_URL } from '@/constant';
 
 export type PostDetailRequestProps = PostDetailRequestParams['params'];

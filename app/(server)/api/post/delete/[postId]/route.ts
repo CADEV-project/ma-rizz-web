@@ -2,10 +2,11 @@ import { NextRequest } from 'next/server';
 
 import { PostDeleteRequestParams } from './type';
 
-import { ErrorResponse } from '@/(server)/error';
 import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { PostModel } from '@/(server)/model';
 import { SuccessResponse, getRequestAccessToken } from '@/(server)/util';
+
+import { ErrorResponse } from '@/(error)';
 
 /**
  * NOTE: /api/post/delete

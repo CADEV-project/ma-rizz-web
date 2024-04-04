@@ -2,10 +2,11 @@ import { NextRequest } from 'next/server';
 
 import { PostCreateRequestBody } from './type';
 
-import { Conflict, ErrorResponse } from '@/(server)/error';
 import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { AccountModel, PostModel, UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestAccessToken, getRequestBodyJSON } from '@/(server)/util';
+
+import { NotFound, ErrorResponse } from '@/(error)';
 
 /**
  * NOTE: /api/post/create
@@ -26,9 +27,9 @@ export const POST = async (request: NextRequest) => {
       UserModel.findById(getObjectId(userId)).lean().exec(),
     ]);
 
-    if (!account) throw new Conflict({ type: 'Conflict', code: 409, detail: 'account' });
+    if (!account) throw new NotFound({ type: 'NotFound', code: 404, detail: 'account' });
 
-    if (!user) throw new Conflict({ type: 'Conflict', code: 409, detail: 'user' });
+    if (!user) throw new NotFound({ type: 'NotFound', code: 404, detail: 'user' });
 
     const requestBodyJSON = await getRequestBodyJSON<PostCreateRequestBody>(request, [
       { key: 'title', required: true },

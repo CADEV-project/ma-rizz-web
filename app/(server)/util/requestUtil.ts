@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { NotFound, Unauthorized, ValidationFailed } from '@/(server)/error';
+import { NotFound, Unauthorized, ValidationFailed } from '@/(error)';
 
 import { COOKIE_KEY } from '@/constant';
 

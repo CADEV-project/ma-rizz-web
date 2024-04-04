@@ -4,7 +4,7 @@ import { Typography } from '@mui/material';
 
 import * as S from './global-error.styles';
 
-import { BaseError } from '@/(server)/error';
+import { BaseError } from '@/error';
 
 type GlobalErrorProps = {
   error: BaseError & { digest?: string };

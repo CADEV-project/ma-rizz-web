@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ROUTE_URL } from './constant';
 import styles from './page.module.css';
 
-import { CommonLayout } from '@/(client)/component';
+import { CommonLayout, SocketComponent } from '@/(client)/component';
 
 const Page: React.FC = async () => {
   return (
@@ -16,6 +16,7 @@ const Page: React.FC = async () => {
           <Link className={styles.goToPostButton} href={ROUTE_URL.post.prefix}>
             글 보러가기
           </Link>
+          <SocketComponent />
         </section>
       </div>
     </CommonLayout>

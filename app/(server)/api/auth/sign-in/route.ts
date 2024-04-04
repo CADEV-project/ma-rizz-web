@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 
 import { AuthSignInRequestBody } from './type';
 
-import { ErrorResponse, Forbidden } from '@/(server)/error';
 import { comparePassword, getConnection, getSignedTokens } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
 import {
@@ -14,6 +13,8 @@ import {
   getAutoSignInCookie,
   getAuthCookie,
 } from '@/(server)/util';
+
+import { ErrorResponse, Forbidden } from '@/(error)';
 
 /**
  * NOTE: /api/auth/sign-in

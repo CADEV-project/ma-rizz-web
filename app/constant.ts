@@ -23,6 +23,10 @@ export const API_URL = {
       password: '/auth/update/password',
       status: '/auth/update/status',
     },
+    verificationCode: {
+      prefix: '/verification-code',
+      send: '/auth/verification-code/send',
+    },
   },
   health: '/health',
   post: {

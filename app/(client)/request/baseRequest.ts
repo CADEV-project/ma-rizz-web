@@ -3,6 +3,8 @@ import mem from 'mem';
 
 import { authRefreshTokenRequest } from '@/(client)/request';
 
+import { BASE_ERROR } from '@/(error)';
+
 import { API_URL } from '@/constant';
 import { CLIENT_SETTINGS } from '@/setting';
 
@@ -47,10 +49,10 @@ export async function baseRequest<TData>({
       },
     });
   } catch (error) {
-    if (error instanceof AxiosError && error.isAxiosError) {
-      if (error.response) {
-        throw error.response.data;
-      }
+    if (error instanceof AxiosError && error.isAxiosError && error.response) {
+      const errorData = error.response.data;
+
+      throw new BASE_ERROR[errorData.type](errorData);
     }
 
     throw error;

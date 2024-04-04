@@ -1,3 +1,4 @@
+import Daum from '@types/daum-postcode';
 import _mongoose, { connect } from 'mongoose';
 
 declare global {
@@ -6,4 +7,8 @@ declare global {
     createConnectionPromise: ReturnType<typeof connect> | null;
     connection: typeof _mongoose | null;
   };
+
+  interface Window {
+    daum: Daum;
+  }
 }

@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 
 import { AuthDeleteRequestSearchParams } from './type';
 
-import { ErrorResponse, Forbidden } from '@/(server)/error';
 import {
   comparePassword,
   getConnection,
@@ -15,6 +14,8 @@ import {
   getRequestAccessToken,
   getRequestSearchPraramsJSON,
 } from '@/(server)/util';
+
+import { ErrorResponse, Forbidden } from '@/(error)';
 
 import { COOKIE_KEY } from '@/constant';
 

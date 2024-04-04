@@ -5,10 +5,11 @@ import {
   AuthDuplicateAccountCheckResponse,
 } from './type';
 
-import { ErrorResponse } from '@/(server)/error';
 import { getConnection } from '@/(server)/lib';
 import { AccountModel } from '@/(server)/model';
 import { SuccessResponse, getRequestSearchPraramsJSON, validate } from '@/(server)/util';
+
+import { ErrorResponse } from '@/(error)';
 
 /**
  * NOTE: /api/auth/duplicate-account-check

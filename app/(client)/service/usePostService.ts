@@ -1,5 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { PostListResponse } from '@/(server)/api/post/type';
+
 import {
   postCreateRequest,
   postDeleteRequest,
@@ -7,8 +9,6 @@ import {
   postRequest,
   postUpdateRequest,
 } from '@/(client)/request';
-
-import { PostListResponse } from '@/(server)/api/post/type';
 
 const postQueryKeys = {
   default: ['post'] as const,

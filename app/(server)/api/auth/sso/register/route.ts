@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 
 import { AuthSSORegisterRequestBody } from './type';
 
-import { ErrorResponse, Forbidden, ValidationFailed } from '@/(server)/error';
 import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { AccountModel, UserModel, VerificationModel } from '@/(server)/model';
 import {
@@ -11,6 +10,8 @@ import {
   validate,
   getRequestAccessToken,
 } from '@/(server)/util';
+
+import { ErrorResponse, Forbidden, ValidationFailed } from '@/(error)';
 
 import { MILLISECOND_TIME_FORMAT } from '@/constant';
 

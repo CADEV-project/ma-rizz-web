@@ -1,6 +1,7 @@
 import { baseRequest } from '.';
 
 import { UserMeResponse } from '@/(server)/api/user/me/type';
+
 import { API_URL } from '@/constant';
 
 export type UserMeRequestReturn = UserMeResponse;

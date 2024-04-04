@@ -45,3 +45,7 @@ export class Unauthorized extends BaseError {
     super(payload);
   }
 }
+
+export const isUnauthorized = (error: unknown): error is Unauthorized => {
+  return error instanceof Unauthorized;
+};

@@ -2,10 +2,11 @@ import { NextRequest } from 'next/server';
 
 import { UserMeResponse } from './type';
 
-import { ErrorResponse, Forbidden } from '@/(server)/error';
 import { getConnection, getObjectId, getVerifiedAccessToken } from '@/(server)/lib';
 import { AccountModel, UserModel } from '@/(server)/model';
 import { SuccessResponse, getRequestAccessToken } from '@/(server)/util';
+
+import { ErrorResponse, Forbidden } from '@/(error)';
 
 /**
  * NOTE: /api/user/me

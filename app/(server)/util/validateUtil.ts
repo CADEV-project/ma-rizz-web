@@ -1,4 +1,4 @@
-import { ValidationFailed } from '../error';
+import { ValidationFailed } from '@/(error)';
 
 export const emailRegexValidate = (email: string) => {
   const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;

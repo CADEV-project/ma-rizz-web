@@ -41,12 +41,47 @@
             "position": "before"
           },
           {
+            "pattern": "@/(server)",
+            "group": "internal",
+            "position": "after"
+          },
+          {
             "pattern": "@/(server)/*",
             "group": "internal",
             "position": "after"
           },
           {
+            "pattern": "@/(server)/**/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@/(client)",
+            "group": "internal",
+            "position": "after"
+          },
+          {
             "pattern": "@/(client)/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@/(client)/**/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@/(error)",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@/(error)/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@/*",
             "group": "internal",
             "position": "after"
           },

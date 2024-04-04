@@ -9,7 +9,7 @@ export const Container = styled('div')({
   flexDirection: 'column',
   gap: '1rem',
   width: '40rem',
-  padding: '15rem 0 5rem',
+  padding: '25rem 0 5rem',
   boxSizing: 'border-box',
 });
 
@@ -25,6 +25,88 @@ export const FormContainer = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   gap: '1rem',
+});
+
+export const EmailFormContainer = styled('div')({
+  display: 'flex',
+  gap: '1rem',
+  width: '100%',
+});
+
+export const EmailInputContainer = styled('div')({
+  width: '80%',
+});
+
+export const DuplicateCheckButton = styled(Button)({
+  width: 'calc(20% - 1rem)',
+  backgroundColor: COLOR.button,
+  color: COLOR.white,
+  fontWeight: 700,
+  '&:hover': {
+    backgroundColor: COLOR.buttonHover,
+  },
+});
+
+export const PhoneNumberFormContainer = styled('div')({
+  display: 'flex',
+  gap: '1rem',
+  width: '100%',
+});
+
+export const PhoneNumberInputContainer = styled('div')({
+  width: '80%',
+});
+
+export const SendVerificationCodeButton = styled(Button)({
+  width: 'calc(20% - 1rem)',
+  backgroundColor: COLOR.button,
+  color: COLOR.white,
+  fontWeight: 700,
+  '&:hover': {
+    backgroundColor: COLOR.buttonHover,
+  },
+});
+
+export const VerificationCodeFormContainer = styled('div')({
+  position: 'relative',
+  width: '100%',
+});
+
+export const VerificationCodeInputContainer = styled('div')({
+  width: '100%',
+});
+
+export const VerificationTimerContainer = styled('div')({
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  width: '20%',
+  height: '100%',
+  paddingRight: '1rem',
+  color: COLOR.error,
+});
+
+export const AddressFormContainer = styled('div')({
+  display: 'flex',
+  gap: '1rem',
+  width: '100%',
+});
+
+export const AddressInputContainer = styled('div')({
+  width: '80%',
+});
+
+export const AddressSearchButton = styled(Button)({
+  width: 'calc(20% - 1rem)',
+  backgroundColor: COLOR.button,
+  color: COLOR.white,
+  fontWeight: 700,
+  '&:hover': {
+    backgroundColor: COLOR.buttonHover,
+  },
 });
 
 export const SignUpButton = styled(Button)({
@@ -86,4 +168,31 @@ export const GoToSignInPageButton = styled(Link)({
   '&:hover': {
     backgroundColor: COLOR.themePink,
   },
+});
+
+export const DaumAddressSearchOverlay = styled('div')({
+  display: 'none',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  backgroundColor: COLOR.blackAlpha(0.5),
+  zIndex: 999,
+});
+
+export const DaumAddressSearchWrapper = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '37.5rem',
+  padding: '1rem',
+  boxSizing: 'border-box',
+  backgroundColor: COLOR.white,
+});
+
+export const DaumAddressSearchContainer = styled('div')({
+  width: '100%',
 });

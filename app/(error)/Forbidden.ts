@@ -18,3 +18,7 @@ export class Forbidden extends BaseError {
     super(payload);
   }
 }
+
+export const isForbidden = (error: unknown): error is Forbidden => {
+  return error instanceof Forbidden;
+};

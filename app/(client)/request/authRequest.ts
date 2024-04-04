@@ -23,6 +23,8 @@ import { AuthUpdateEmailRequestBody } from '@/(server)/api/auth/update/email/typ
 import { AuthUpdateMeRequestBody } from '@/(server)/api/auth/update/me/type';
 import { AuthUpdatePasswordRequestBody } from '@/(server)/api/auth/update/password/type';
 import { AuthUpdateStatusRequestBody } from '@/(server)/api/auth/update/status/type';
+import { AuthVerificationCodeSendRequestBody } from '@/(server)/api/auth/verification-code/send/type';
+
 import { API_URL } from '@/constant';
 
 export type AuthDeleteRequestProps = AuthDeleteRequestSearchParams;
@@ -60,7 +62,7 @@ export type AuthDuplicateEmailCheckRequestProps = AuthDuplicateEmailCheckRequest
 
 export type AuthDuplicateEmailCheckRequestReturn = AuthDuplicateEmailCheckResponse;
 
-export const authDulicateEmailCheckRequest = async ({
+export const authDuplicateEmailCheckRequest = async ({
   email,
 }: AuthDuplicateEmailCheckRequestProps) => {
   const response = await baseRequest<AuthDuplicateEmailCheckRequestReturn>({
@@ -160,9 +162,12 @@ export const authSignUpRequest = async ({
   name,
   image,
   phoneNumber,
+  verificationCode,
   age,
   gender,
+  postalCode,
   address,
+  addressDetail,
 }: AuthSignUpRequestProps) => {
   const response = await baseRequest<void>({
     method: 'post',
@@ -173,9 +178,12 @@ export const authSignUpRequest = async ({
       name,
       image,
       phoneNumber,
+      verificationCode,
       age,
       gender,
+      postalCode,
       address,
+      addressDetail,
     },
   });
 
@@ -290,6 +298,20 @@ export const authUpdateStatusRequest = async ({ status }: AuthUpdateStatusReques
     data: {
       status,
     },
+  });
+
+  return response.data;
+};
+
+export type AuthVerificationCodeSendRequestProps = AuthVerificationCodeSendRequestBody;
+
+export const authVerificationCodeSendRequest = async ({
+  phoneNumber,
+}: AuthVerificationCodeSendRequestBody) => {
+  const response = await baseRequest<void>({
+    method: 'post',
+    url: API_URL.auth.verificationCode.send,
+    data: { phoneNumber },
   });
 
   return response.data;
