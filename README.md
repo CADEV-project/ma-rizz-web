@@ -37,9 +37,12 @@ But, in this case, you should request some env variables from other team member 
 
 <div style="display: flex; gap: 2rem;">
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white" />
   <img src="https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white" />
   <img src="https://img.shields.io/badge/axios-671ddf?style=for-the-badge&&logo=axios&logoColor=white" />
   <img src="https://img.shields.io/badge/Z-zustand-FFFFFF.svg?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/kakaotalk-ffcd00.svg?style=for-the-badge&logo=kakaotalk&logoColor=000000" />
+  <img src="https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens" />
 </div>
 
 ### Frameworks
