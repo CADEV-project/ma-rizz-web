@@ -41,6 +41,10 @@ export const API_URL = {
   },
 } as const;
 
+export const SOCKET_SERVER_API_URL = {
+  socket: '/socket',
+} as const;
+
 /** NOTE: Front-end Part */
 export const ROUTE_URL = {
   home: '/',
