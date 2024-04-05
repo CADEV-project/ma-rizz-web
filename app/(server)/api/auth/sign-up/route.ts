@@ -85,7 +85,9 @@ export const POST = async (request: NextRequest) => {
 
     const hashedPassword = await getHashedPassword(formDataJSON.password);
 
-    const imageURL = await uploadImageToS3(formDataJSON.image, 'profile');
+    const imageURL = formDataJSON.image
+      ? await uploadImageToS3(formDataJSON.image, 'profile')
+      : undefined;
 
     const today = new Date();
 

@@ -111,6 +111,7 @@ export const SignUpForm: React.FC = () => {
             maxSizeMB: 5,
             maxWidthOrHeight: 2 * DIGITAL_FORMAT.kiloByte,
             useWebWorker: true,
+            fileType: 'image/jpeg',
           });
 
           data.append('image', compressedImageFile);
