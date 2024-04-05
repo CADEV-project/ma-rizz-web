@@ -7,6 +7,7 @@ import { Forbidden } from './Forbidden';
 import { InternalServerError } from './InternalServerError';
 import { NotFound } from './NotFound';
 import { NotImplemented } from './NotImplemented';
+import { ResourceError } from './ResourceError';
 import { TooManyRequests } from './TooManyRequests';
 import { Unauthorized } from './Unauthorized';
 import { UnsupportedMediaType } from './UnsupportedMediaType';
@@ -18,6 +19,7 @@ export const BASE_ERROR: Record<string, typeof BaseError> = {
   Forbidden,
   NotFound,
   NotImplemented,
+  ResourceError,
   TooManyRequests,
   Unauthorized,
   UnsupportedMediaType,
@@ -91,6 +93,7 @@ export * from './Forbidden';
 export * from './InternalServerError';
 export * from './NotFound';
 export * from './NotImplemented';
+export * from './ResourceError';
 export * from './TooManyRequests';
 export * from './Unauthorized';
 export * from './UnsupportedMediaType';

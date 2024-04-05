@@ -154,37 +154,18 @@ export const authSignOutRequest = async () => {
   return response.data;
 };
 
-export type AuthSignUpRequestProps = AuthSignUpRequestBody;
+export type AuthSignUpRequestProps = {
+  data: FormData;
+};
 
-export const authSignUpRequest = async ({
-  email,
-  password,
-  name,
-  image,
-  phoneNumber,
-  verificationCode,
-  age,
-  gender,
-  postalCode,
-  address,
-  addressDetail,
-}: AuthSignUpRequestProps) => {
+export type { AuthSignUpRequestBody };
+
+export const authSignUpRequest = async ({ data }: AuthSignUpRequestProps) => {
   const response = await baseRequest<void>({
     method: 'post',
     url: API_URL.auth.signUp,
-    data: {
-      email,
-      password,
-      name,
-      image,
-      phoneNumber,
-      verificationCode,
-      age,
-      gender,
-      postalCode,
-      address,
-      addressDetail,
-    },
+    contentType: 'multipart',
+    data,
   });
 
   return response.data;

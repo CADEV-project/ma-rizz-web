@@ -60,7 +60,6 @@ export const useTimer = ({ time }: UseTimerProps): UseTimerReturn => {
 
   const reset = () => {
     initialize();
-    stopTimer();
   };
 
   const stopTimer = () => {

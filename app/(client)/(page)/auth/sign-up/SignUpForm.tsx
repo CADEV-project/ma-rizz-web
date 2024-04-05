@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   FieldErrors,
   FormContainer,
@@ -16,19 +16,17 @@ import { useSnackbar } from 'notistack';
 
 import * as S from './SignUpForm.styles';
 
+import { ImageCropModal, SmartImage } from '@/(client)/component';
 import { useTimer } from '@/(client)/hook';
-import {
-  AuthSignUpRequestProps,
-  authDuplicateEmailCheckRequest,
-  authSignUpRequest,
-  authVerificationCodeSendRequest,
-} from '@/(client)/request';
+import { AuthSignUpRequestBody } from '@/(client)/request';
+import { useAuthMutation } from '@/(client)/service';
+import { getCompressedImageFile } from '@/(client)/util';
 
 import { isBadRequest, isForbidden, isTooManyRequests, isValidationFailed } from '@/(error)';
 
-import { COLOR, ROUTE_URL } from '@/constant';
+import { COLOR, DIGITAL_FORMAT, ROUTE_URL } from '@/constant';
 
-type SignUpFormProps = AuthSignUpRequestProps & { passwordAccept: string };
+type SignUpFormProps = Omit<AuthSignUpRequestBody, 'image'> & { passwordAccept: string };
 
 const SIGN_UP_FORM_DEFAULT_VALUES: SignUpFormProps = {
   email: '',
@@ -44,14 +42,26 @@ const SIGN_UP_FORM_DEFAULT_VALUES: SignUpFormProps = {
   verificationCode: '',
 };
 
+type UserImageProps = {
+  originalImageFile?: File;
+  croppedImageBlob?: Blob;
+  imageURL?: string;
+};
+
 export const SignUpForm: React.FC = () => {
   const router = useRouter();
   const signUpForm = useForm<SignUpFormProps>({ defaultValues: SIGN_UP_FORM_DEFAULT_VALUES });
+  const userImageInputRef = useRef<HTMLInputElement>(null);
+  const [userImage, setUserImage] = useState<UserImageProps>();
+  const [imageCropModalOpen, setImageCropModalOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const daumAddressSearchOverlayRef = useRef<HTMLDivElement>(null);
   const daumAddressSearchWrapperRef = useRef<HTMLDivElement>(null);
   const daumAddressSearchContainerRef = useRef<HTMLDivElement>(null);
-  const { run, timerStatus, leftTime } = useTimer({ time: { minutes: 5 } });
+  const { run, reset, timerStatus, leftTime } = useTimer({ time: { minutes: 5 } });
+  const { authSignUpMutation, authDuplicateEmailCheckMutation, authVerificationCodeSendMutation } =
+    useAuthMutation();
+
   const leftTimeString = useMemo(() => {
     if (!timerStatus || timerStatus === 'initialized') return;
 
@@ -81,18 +91,41 @@ export const SignUpForm: React.FC = () => {
         return;
       }
 
-      await authSignUpRequest({
-        email,
-        password,
-        name,
-        phoneNumber,
-        age,
-        gender,
-        postalCode,
-        address,
-        addressDetail,
-        verificationCode,
-      });
+      const data = new FormData();
+
+      data.append('email', email);
+      data.append('password', password);
+      data.append('name', name);
+
+      if (userImage) {
+        const imageFile = userImage.croppedImageBlob
+          ? new File(
+              [userImage.croppedImageBlob],
+              userImage.originalImageFile?.name ?? 'default-name',
+              { type: userImage.originalImageFile?.type }
+            )
+          : userImage?.originalImageFile;
+
+        if (imageFile) {
+          const compressedImageFile = await getCompressedImageFile(imageFile, {
+            maxSizeMB: 5,
+            maxWidthOrHeight: 2 * DIGITAL_FORMAT.kiloByte,
+            useWebWorker: true,
+          });
+
+          data.append('image', compressedImageFile);
+        }
+      }
+
+      data.append('phoneNumber', phoneNumber);
+      data.append('age', age);
+      data.append('gender', gender);
+      data.append('postalCode', postalCode);
+      data.append('address', address);
+      addressDetail && data.append('addressDetail', addressDetail);
+      data.append('verificationCode', verificationCode);
+
+      await authSignUpMutation({ data });
 
       router.push(ROUTE_URL.auth.signIn);
     } catch (error) {
@@ -140,7 +173,7 @@ export const SignUpForm: React.FC = () => {
 
     signUpForm.clearErrors('email');
 
-    const { isDuplicate } = await authDuplicateEmailCheckRequest({ email });
+    const { isDuplicate } = await authDuplicateEmailCheckMutation({ email });
 
     if (isDuplicate) {
       signUpForm.setError('email', { message: '중복된 이메일입니다.' });
@@ -149,6 +182,41 @@ export const SignUpForm: React.FC = () => {
     }
 
     enqueueSnackbar('사용 가능한 이메일입니다.');
+  };
+
+  const onInvisibleImageInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    setUserImage({
+      originalImageFile: file,
+      imageURL: URL.createObjectURL(file),
+    });
+
+    event.target.value = '';
+  };
+
+  const onImageSelectButtonClick = () => {
+    if (userImageInputRef.current === null) return;
+
+    userImageInputRef.current.click();
+  };
+
+  const onImageCropButtonClick = () => {
+    setImageCropModalOpen(true);
+  };
+
+  const onImageCropped = (blob: Blob, imageURL: string) => {
+    setUserImage(prev => ({
+      ...prev,
+      croppedImageBlob: blob,
+      imageURL: imageURL,
+    }));
+  };
+
+  const onImageDeleteButtonClick = () => {
+    setUserImage(undefined);
   };
 
   const onVerificationRequestButtonClick = async () => {
@@ -163,8 +231,9 @@ export const SignUpForm: React.FC = () => {
     signUpForm.clearErrors('phoneNumber');
 
     try {
-      await authVerificationCodeSendRequest({ phoneNumber: signUpForm.getValues('phoneNumber') });
+      await authVerificationCodeSendMutation({ phoneNumber: signUpForm.getValues('phoneNumber') });
 
+      reset();
       run();
 
       enqueueSnackbar('인증번호가 발송되었습니다.');
@@ -282,6 +351,43 @@ export const SignUpForm: React.FC = () => {
           />
           <PasswordElement name='passwordAccept' label='비밀번호 확인' required />
           <TextFieldElement name='name' label='이름' required />
+          <S.ImageFormContainer>
+            <S.ImageInputContainer>
+              <S.InvisibleImageInput
+                name='image'
+                ref={userImageInputRef}
+                onChange={onInvisibleImageInputChange}
+                type='file'
+                accept='.jpg, .jpeg, .png'
+              />
+              <S.ImagePreviewContainer>
+                {userImage?.imageURL && (
+                  <SmartImage
+                    src={userImage.imageURL}
+                    alt='preview-user-image'
+                    objectFit={['contain']}
+                  />
+                )}
+              </S.ImagePreviewContainer>
+            </S.ImageInputContainer>
+            <S.ImageButtonContainer>
+              <S.ImageSelectButton type='button' onClick={onImageSelectButtonClick}>
+                이미지 선택
+              </S.ImageSelectButton>
+              <S.ImageCropButton
+                type='button'
+                disabled={!userImage}
+                onClick={onImageCropButtonClick}>
+                이미지 자르기
+              </S.ImageCropButton>
+              <S.ImageDeleteButton
+                type='button'
+                disabled={!userImage}
+                onClick={onImageDeleteButtonClick}>
+                이미지 삭제
+              </S.ImageDeleteButton>
+            </S.ImageButtonContainer>
+          </S.ImageFormContainer>
           <S.PhoneNumberFormContainer>
             <S.PhoneNumberInputContainer>
               <TextFieldElement
@@ -354,6 +460,12 @@ export const SignUpForm: React.FC = () => {
           <S.DaumAddressSearchContainer ref={daumAddressSearchContainerRef} />
         </S.DaumAddressSearchWrapper>
       </S.DaumAddressSearchOverlay>
+      <ImageCropModal
+        open={imageCropModalOpen}
+        originalImageFile={userImage?.originalImageFile}
+        onClose={() => setImageCropModalOpen(false)}
+        onImageCropped={onImageCropped}
+      />
     </S.Container>
   );
 };

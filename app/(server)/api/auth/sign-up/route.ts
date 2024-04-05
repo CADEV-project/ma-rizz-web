@@ -2,10 +2,10 @@ import { NextRequest } from 'next/server';
 
 import { AuthSignUpRequestBody } from './type';
 
-import { getConnection, getHashedPassword } from '@/(server)/lib';
+import { getConnection, getHashedPassword, uploadImageToS3 } from '@/(server)/lib';
 import { AccountModel, UserModel, VerificationModel } from '@/(server)/model';
 import { ACCOUNT_STATUS, ACCOUNT_TYPE } from '@/(server)/union';
-import { getRequestBodyJSON, SuccessResponse, validate } from '@/(server)/util';
+import { getRequestFormDataJSON, SuccessResponse, validate } from '@/(server)/util';
 
 import { Conflict, ErrorResponse, Forbidden, NotFound } from '@/(error)';
 
@@ -22,7 +22,7 @@ export const POST = async (request: NextRequest) => {
   const session = await db.startSession();
 
   try {
-    const requestBodyJSON = await getRequestBodyJSON<AuthSignUpRequestBody>(request, [
+    const formDataJSON = await getRequestFormDataJSON<AuthSignUpRequestBody>(request, [
       { key: 'email', required: true },
       { key: 'password', required: true },
       { key: 'name', required: true },
@@ -37,20 +37,20 @@ export const POST = async (request: NextRequest) => {
     ]);
 
     validate({
-      email: requestBodyJSON.email,
-      password: requestBodyJSON.password,
-      phoneNumber: requestBodyJSON.phoneNumber,
-      age: requestBodyJSON.age,
-      gender: requestBodyJSON.gender,
+      email: formDataJSON.email,
+      password: formDataJSON.password,
+      phoneNumber: formDataJSON.phoneNumber,
+      age: formDataJSON.age,
+      gender: formDataJSON.gender,
     });
 
     const [users, verification] = await Promise.all([
       UserModel.find({
-        $or: [{ email: requestBodyJSON.email }, { phoneNumber: requestBodyJSON.phoneNumber }],
+        $or: [{ email: formDataJSON.email }, { phoneNumber: formDataJSON.phoneNumber }],
       })
         .lean()
         .exec(),
-      VerificationModel.findOne({ phoneNumber: requestBodyJSON.phoneNumber }).exec(),
+      VerificationModel.findOne({ phoneNumber: formDataJSON.phoneNumber }).exec(),
     ]);
 
     if (users.length)
@@ -65,7 +65,7 @@ export const POST = async (request: NextRequest) => {
         code: 404,
         detail: 'verification',
       });
-    if (verification.verificationCode !== requestBodyJSON.verificationCode)
+    if (verification.verificationCode !== formDataJSON.verificationCode)
       throw new Forbidden({
         type: 'Forbidden',
         code: 403,
@@ -83,13 +83,16 @@ export const POST = async (request: NextRequest) => {
         detail: { field: 'verification', reason: 'TIMEOUT' },
       });
 
-    const hashedPassword = await getHashedPassword(requestBodyJSON.password);
+    const hashedPassword = await getHashedPassword(formDataJSON.password);
+
+    const imageURL = await uploadImageToS3(formDataJSON.image, 'profile');
 
     await session.withTransaction(async () => {
       const [newUser] = await UserModel.create(
         [
           {
-            ...requestBodyJSON,
+            ...formDataJSON,
+            image: imageURL,
             password: hashedPassword,
           },
         ],
@@ -112,6 +115,8 @@ export const POST = async (request: NextRequest) => {
 
     return SuccessResponse({ method: 'POST' });
   } catch (error) {
+    console.info(error);
+
     return ErrorResponse(error);
   } finally {
     await session.endSession();

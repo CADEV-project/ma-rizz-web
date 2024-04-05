@@ -99,3 +99,8 @@ export const COOKIE_KEY = {
   autoSignIn: 'nextjs_template-secure-auto_sign_in',
   auth: 'nextjs_template-auth',
 } as const;
+
+export const DIGITAL_FORMAT = {
+  kiloByte: 1024,
+  megaByte: (megaByte: number) => Math.pow(DIGITAL_FORMAT.kiloByte, 2) * megaByte,
+} as const;

@@ -23,6 +23,6 @@ export const GET = async () => {
 
 const sendRequestToSocketServer = async () => {
   await axios.get(
-    `${SERVER_SETTINGS.SOCKET_SERVER_DOMAIN}${SERVER_SETTINGS.API_PREFIX}${SOCKET_SERVER_API_URL.socket}`
+    `${SERVER_SETTINGS.SOCKET_SERVER_DOMAIN}${SERVER_SETTINGS.SOKCET_SERVER_API_PREFIX}${SOCKET_SERVER_API_URL.socket}`
   );
 };

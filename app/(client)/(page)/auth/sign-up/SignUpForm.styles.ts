@@ -9,7 +9,7 @@ export const Container = styled('div')({
   flexDirection: 'column',
   gap: '1rem',
   width: '40rem',
-  padding: '25rem 0 5rem',
+  padding: '50rem 0 5rem',
   boxSizing: 'border-box',
 });
 
@@ -45,6 +45,73 @@ export const DuplicateCheckButton = styled(Button)({
   '&:hover': {
     backgroundColor: COLOR.buttonHover,
   },
+});
+
+export const ImageFormContainer = styled('div')({
+  display: 'flex',
+  gap: '1rem',
+  width: '100%',
+});
+
+export const ImageInputContainer = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '80%',
+  aspectRatio: '1/1',
+  border: `2px dashed ${COLOR.whiteAlpha(0.2)}`,
+});
+
+export const ImagePreviewContainer = styled('div')({
+  position: 'relative',
+  width: '94%',
+  aspectRatio: '1/1',
+  border: `2px solid ${COLOR.whiteAlpha(0.2)}`,
+  backgroundColor: COLOR.whiteAlpha(0.1),
+});
+
+export const ImageButtonContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem',
+  width: 'calc(20% - 1rem)',
+});
+
+export const ImageSelectButton = styled(Button)({
+  width: '100%',
+  height: '3.75rem',
+  backgroundColor: COLOR.button,
+  color: COLOR.white,
+  fontWeight: 700,
+  '&:hover': {
+    backgroundColor: COLOR.buttonHover,
+  },
+});
+
+export const ImageCropButton = styled(Button)({
+  width: '100%',
+  height: '3.75rem',
+  backgroundColor: COLOR.button,
+  color: COLOR.white,
+  fontWeight: 700,
+  '&:hover': {
+    backgroundColor: COLOR.buttonHover,
+  },
+});
+
+export const ImageDeleteButton = styled(Button)({
+  width: '100%',
+  height: '3.75rem',
+  backgroundColor: COLOR.error,
+  color: COLOR.white,
+  fontWeight: 700,
+  '&:hover': {
+    backgroundColor: COLOR.errorHover,
+  },
+});
+
+export const InvisibleImageInput = styled('input')({
+  display: 'none',
 });
 
 export const PhoneNumberFormContainer = styled('div')({
