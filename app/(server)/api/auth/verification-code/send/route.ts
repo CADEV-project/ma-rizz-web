@@ -40,12 +40,16 @@ export const POST = async (request: NextRequest) => {
 
     session.startTransaction();
 
+    const today = new Date();
+
     if (!verification) {
       await VerificationModel.create(
         [
           {
             phoneNumber: requestBodyJSON.phoneNumber,
             verificationCode,
+            createdAt: today,
+            updatedAt: today,
           },
         ],
         { session }

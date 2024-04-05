@@ -87,11 +87,15 @@ export const POST = async (request: NextRequest) => {
         detail: { field: 'verification', reason: 'TIMEOUT' },
       });
 
+    const today = new Date();
+
     await session.withTransaction(async () => {
       const [user] = await UserModel.create(
         [
           {
             ...requestBodyJSON,
+            createdAt: today,
+            updatedAt: today,
           },
         ],
         { session }

@@ -87,6 +87,8 @@ export const POST = async (request: NextRequest) => {
 
     const imageURL = await uploadImageToS3(formDataJSON.image, 'profile');
 
+    const today = new Date();
+
     await session.withTransaction(async () => {
       const [newUser] = await UserModel.create(
         [
@@ -94,6 +96,8 @@ export const POST = async (request: NextRequest) => {
             ...formDataJSON,
             image: imageURL,
             password: hashedPassword,
+            createdAt: today,
+            updatedAt: today,
           },
         ],
         { session }
@@ -105,6 +109,8 @@ export const POST = async (request: NextRequest) => {
             type: ACCOUNT_TYPE.credentials,
             status: ACCOUNT_STATUS.active,
             user: newUser._id,
+            createdAt: today,
+            updatedAt: today,
           },
         ],
         { session }

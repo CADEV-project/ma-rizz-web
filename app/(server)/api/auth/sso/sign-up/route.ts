@@ -40,10 +40,14 @@ export const POST = async (request: NextRequest) => {
         detail: 'account',
       });
 
+    const today = new Date();
+
     await AccountModel.create({
       type: requestBodyJSON.type,
       accountId: requestBodyJSON.productAccountId,
       status: 'pending',
+      createdAt: today,
+      updatedAt: today,
     });
 
     return SuccessResponse({ method: 'POST' });

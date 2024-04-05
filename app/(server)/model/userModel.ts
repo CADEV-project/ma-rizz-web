@@ -43,8 +43,8 @@ const userSchema = new Schema<UserSchema>(
     postalCode: { type: String, required: true },
     address: { type: String, required: true },
     addressDetail: { type: String },
-    createdAt: { type: Date, default: Date.now() },
-    updatedAt: { type: Date, default: Date.now() },
+    createdAt: { type: Date, required: true },
+    updatedAt: { type: Date, required: true },
   },
   { timestamps: true }
 );

@@ -15,6 +15,8 @@ export const postSchema = new Schema<PostSchema>(
     title: { type: String, required: true },
     content: { type: String },
     user: { type: Schema.Types.ObjectId, required: true, ref: 'Users' },
+    createdAt: { type: Date, required: true },
+    updatedAt: { type: Date, required: true },
   },
   { timestamps: true }
 );

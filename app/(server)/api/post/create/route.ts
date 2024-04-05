@@ -36,10 +36,14 @@ export const POST = async (request: NextRequest) => {
       { key: 'content' },
     ]);
 
+    const today = new Date();
+
     await PostModel.create({
       title: requestBodyJSON.title,
       content: requestBodyJSON.content,
       user: getObjectId(userId),
+      createdAt: today,
+      updatedAt: today,
     });
 
     return SuccessResponse({ method: 'POST' });

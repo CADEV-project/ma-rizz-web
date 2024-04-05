@@ -22,8 +22,8 @@ export const accountSchema = new Schema<AccountSchema>(
     status: { type: String, required: true, validate: accountStatusRegexValidate },
     user: { type: Schema.Types.ObjectId, ref: 'Users' },
     refreshToken: { type: String },
-    createdAt: { type: Date, default: Date.now() },
-    updatedAt: { type: Date, default: Date.now() },
+    createdAt: { type: Date, required: true },
+    updatedAt: { type: Date, required: true },
   },
   { timestamps: true }
 );
