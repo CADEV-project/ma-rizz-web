@@ -1,4 +1,4 @@
-# [Star Walkin] Next.js Project Template
+# [Star Walkin] Next.js Template
 
 Project template made by Next.js
 
