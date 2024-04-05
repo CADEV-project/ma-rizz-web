@@ -35,9 +35,12 @@ export const uploadImageToS3 = async (file: File, targetDirectory: string) => {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
+  const fileName = `${file.name}-${randomKey}`;
+  const fileExtension = file.type.split('/')[1];
+
   const putObjectCommand = new PutObjectCommand({
     Bucket: SERVER_SETTINGS.AWS_BUCKET_NAME,
-    Key: `${targetDirectory}/${file.name}-${randomKey}.${file.type.split('/')[1]}`,
+    Key: `${targetDirectory}/${fileName}.${fileExtension}`,
     Body: buffer,
     ContentType: file.type,
     ACL: 'public-read',
@@ -45,5 +48,5 @@ export const uploadImageToS3 = async (file: File, targetDirectory: string) => {
 
   await s3Client.send(putObjectCommand);
 
-  return `https://${SERVER_SETTINGS.AWS_BUCKET_NAME}.s3.${SERVER_SETTINGS.AWS_REGION}.amazonaws.com/${targetDirectory}/${file.name}-${randomKey}.${file.type.split('/')[1]}`;
+  return `https://${SERVER_SETTINGS.AWS_BUCKET_NAME}.s3.${SERVER_SETTINGS.AWS_REGION}.amazonaws.com/${targetDirectory}/${fileName}.${fileExtension}`;
 };
