@@ -4,11 +4,11 @@ import { userMeRequest } from '@/(client)/request';
 
 const userQueryKeys = {
   default: ['user'] as const,
-  me: (hasAuth: boolean) => [...userQueryKeys.default, 'me', { hasAuth: !!hasAuth }],
+  me: (hasAuth?: boolean) => [...userQueryKeys.default, 'me', { hasAuth: !!hasAuth }],
 };
 
 const userQueryOptions = {
-  me: (hasAuth: boolean) => ({
+  me: (hasAuth?: boolean) => ({
     queryKey: userQueryKeys.me(hasAuth),
     queryFn: () => userMeRequest(),
     enabled: hasAuth,

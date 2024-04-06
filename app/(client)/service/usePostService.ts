@@ -12,8 +12,8 @@ import {
 
 const postQueryKeys = {
   default: ['post'] as const,
-  list: (hasAuth: boolean) => [...postQueryKeys.default, 'list', { hasAuth: hasAuth }],
-  detail: (postId: string, hasAuth: boolean) => [
+  list: (hasAuth?: boolean) => [...postQueryKeys.default, 'list', { hasAuth: hasAuth }],
+  detail: (postId: string, hasAuth?: boolean) => [
     ...postQueryKeys.default,
     postId,
     { hasAuth: hasAuth },
@@ -21,26 +21,26 @@ const postQueryKeys = {
 };
 
 export const postQueryOptions = {
-  list: (hasAuth: boolean) => ({
+  list: (hasAuth?: boolean) => ({
     queryKey: postQueryKeys.list(hasAuth),
     queryFn: ({ pageParam = 0 }) => postRequest({ cursor: pageParam }),
     initialPageParam: 0,
     getNextPageParam: (lastPage: PostListResponse) => lastPage.nextCursor,
     enabled: hasAuth !== undefined,
   }),
-  detail: (postId: string, hasAuth: boolean) => ({
+  detail: (postId: string, hasAuth?: boolean) => ({
     queryKey: postQueryKeys.detail(postId, hasAuth),
     queryFn: () => postDetailRequest({ postId }),
     enabled: hasAuth !== undefined,
   }),
 };
 
-export const usePostList = (hasAuth: boolean) => useInfiniteQuery(postQueryOptions.list(hasAuth));
+export const usePostList = (hasAuth?: boolean) => useInfiniteQuery(postQueryOptions.list(hasAuth));
 
-export const usePostDetail = (postId: string, hasAuth: boolean) =>
+export const usePostDetail = (postId: string, hasAuth?: boolean) =>
   useQuery(postQueryOptions.detail(postId, hasAuth));
 
-export const usePostMutation = (hasAuth: boolean) => {
+export const usePostMutation = (hasAuth?: boolean) => {
   const queryClient = useQueryClient();
 
   const { mutateAsync: postCreateMutation } = useMutation({
