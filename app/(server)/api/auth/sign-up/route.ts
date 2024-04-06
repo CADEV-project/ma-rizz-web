@@ -123,8 +123,6 @@ export const POST = async (request: NextRequest) => {
 
     return SuccessResponse({ method: 'POST' });
   } catch (error) {
-    console.info(error);
-
     return ErrorResponse(error);
   } finally {
     await session.endSession();

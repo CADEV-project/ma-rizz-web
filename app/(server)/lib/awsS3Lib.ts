@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 
 import { NotFound } from '@/(error)';
@@ -24,6 +24,16 @@ const getS3Client = () => {
   });
 };
 
+const getAmazonS3URL = () => {
+  if (!SERVER_SETTINGS.AWS_BUCKET_NAME)
+    throw new NotFound({ type: 'NotFound', code: 404, detail: 'AWS_BUCKET_NAME' });
+
+  if (!SERVER_SETTINGS.AWS_REGION)
+    throw new NotFound({ type: 'NotFound', code: 404, detail: 'AWS_REGION' });
+
+  return `https://${SERVER_SETTINGS.AWS_BUCKET_NAME}.s3.${SERVER_SETTINGS.AWS_REGION}.amazonaws.com/`;
+};
+
 export const uploadImageToS3 = async (file: File, targetDirectory: string) => {
   if (!SERVER_SETTINGS.AWS_BUCKET_NAME)
     throw new NotFound({ type: 'NotFound', code: 404, detail: 'AWS_BUCKET_NAME' });
@@ -35,6 +45,7 @@ export const uploadImageToS3 = async (file: File, targetDirectory: string) => {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
+  const amaonS3URL = getAmazonS3URL();
   const fileName = `${file.name}-${randomKey}`;
   const fileExtension = file.type.split('/')[1];
 
@@ -48,5 +59,23 @@ export const uploadImageToS3 = async (file: File, targetDirectory: string) => {
 
   await s3Client.send(putObjectCommand);
 
-  return `https://${SERVER_SETTINGS.AWS_BUCKET_NAME}.s3.${SERVER_SETTINGS.AWS_REGION}.amazonaws.com/${targetDirectory}/${fileName}.${fileExtension}`;
+  return `${amaonS3URL}${targetDirectory}/${fileName}.${fileExtension}`;
+};
+
+export const deleteImageFromS3 = async (imageURL: string) => {
+  if (!SERVER_SETTINGS.AWS_BUCKET_NAME)
+    throw new NotFound({ type: 'NotFound', code: 404, detail: 'AWS_BUCKET_NAME' });
+
+  const s3Client = getS3Client();
+
+  const amazonS3URL = getAmazonS3URL();
+
+  const fileName = imageURL.replace(amazonS3URL, '');
+
+  const deleteObjectCommand = new DeleteObjectCommand({
+    Bucket: SERVER_SETTINGS.AWS_BUCKET_NAME,
+    Key: fileName,
+  });
+
+  await s3Client.send(deleteObjectCommand);
 };
