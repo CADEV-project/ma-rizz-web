@@ -7,12 +7,17 @@ import { getCookie } from 'cookies-next';
 import { COOKIE_KEY } from '@/constant';
 
 export const useAuth = () => {
-  const [hasAuth, setHasAuth] = useState<boolean>();
+  const [hasAuth, setHasAuth] = useState<boolean>(false);
 
   useEffect(() => {
-    const auth = getCookie(COOKIE_KEY.auth);
+    const authCookie = getCookie(COOKIE_KEY.auth);
+    const hasAuth = !!authCookie && authCookie === 'live';
 
-    setHasAuth(!!auth && auth === 'live');
+    setHasAuth(prev => {
+      if (prev === hasAuth) return prev;
+
+      return hasAuth;
+    });
   }, []);
 
   return { hasAuth };

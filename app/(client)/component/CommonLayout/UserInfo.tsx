@@ -1,17 +1,18 @@
 'use client';
 
 import { Skeleton, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 
 import * as S from './UserInfo.styles';
 
 import { SmartImage } from '@/(client)/component';
-import { userMeRequest } from '@/(client)/request';
+import { useAuth } from '@/(client)/hook';
+import { useUserMe } from '@/(client)/service';
 
-import { API_URL, ROUTE_URL } from '@/constant';
+import { ROUTE_URL } from '@/constant';
 
 export const UserInfo: React.FC = () => {
-  const { data, isLoading } = useQuery({ queryKey: [API_URL.user.me], queryFn: userMeRequest });
+  const { hasAuth } = useAuth();
+  const { data, isLoading } = useUserMe(hasAuth);
 
   if (isLoading) return <Skeleton variant='rounded' width={100} height={40} />;
 
