@@ -1,28 +1,11 @@
-# [Star Walkin] Next.js Template
+# [CADEV] Rizz Life
 
-Project template made by Next.js
+본인의 삶을 Rizz하게 바꿔줄 수 있는 파트너
 
-This settings are useful when make SSR project for apply SEO.
-
-## Getting Started
-
-We are using 'Vercel' for CI / CD and hosting.
-
-### Command for Run
-
-If you have authorization of vercel, you can run project by vercel.
-
-```
-vercel dev
-```
-
-If you don't have authorization of vercel, you can run project by general command
-
-```
-yarn dev
-```
-
-But, in this case, you should request some env variables from other team member or documentations.
+- TODOList
+- The Eisenhower Matrix
+- Google Calendar API
+- More......
 
 ## Specifications
 
@@ -51,22 +34,22 @@ But, in this case, you should request some env variables from other team member 
   <img src="https://img.shields.io/badge/next%20js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
 </div>
 
-### CI/CD
-
-<div style="display: flex; gap: 2rem;">
-  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
-</div>
-
 ### Database
 
 <div style="display: flex; gap: 2rem;">
   <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white" />
 </div>
 
+### CI/CD
+
+<div style="display: flex; gap: 2rem;">
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+</div>
+
 ### Hosting
 
 <div style="display: flex; gap: 2rem;">
-  <img src="https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
 </div>
 
 ### Linters
