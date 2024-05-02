@@ -5,16 +5,14 @@ export const API_URL = {
     delete: '/auth/delete',
     duplicateAccountCheck: '/auth/duplicate-account-check',
     duplicateEmailCheck: '/auth/duplicate-email-check',
-    findMyEmail: '/auth/find-my-email',
+    findMyAccount: '/auth/find-my-account',
     passwordReset: '/auth/password-reset',
     refreshToken: '/auth/refresh-token',
     signIn: '/auth/sign-in',
     signOut: '/auth/sign-out',
-    signUp: '/auth/sign-up',
-    sso: {
-      prefix: '/sso',
-      signUp: '/auth/sso/sign-up',
-      register: '/auth/sso/register',
+    signUp: {
+      prefix: '/auth/sign-up',
+      information: '/auth/sign-up/information',
     },
     update: {
       prefix: '/update',
@@ -28,26 +26,10 @@ export const API_URL = {
       send: '/auth/verification-code/send',
     },
   },
-  health: '/health',
-  image: {
-    prefix: '/image',
-    upload: '/image/upload',
-    delete: '/image/delete',
-  },
-  post: {
-    prefix: '/post',
-    create: '/post/create',
-    update: '/post/update',
-    delete: '/post/delete',
-  },
   user: {
     prefix: '/user',
     me: '/user/me',
   },
-} as const;
-
-export const SOCKET_SERVER_API_URL = {
-  socket: '/socket',
 } as const;
 
 /** NOTE: Front-end Part */
@@ -57,23 +39,47 @@ export const ROUTE_URL = {
     prefix: '/auth',
     signUp: '/auth/sign-up',
     signIn: '/auth/sign-in',
-    findMyEmail: '/auth/find-my-email',
-    passwordReset: '/auth/password-reset',
+    findMyAccount: '/auth/find-my-account',
+    passwordReset: {
+      prefix: '/auth/password-reset',
+      result: '/auth/password-reset/result',
+    },
     new: '/auth/new',
-    error: '/auth/error',
   },
   user: {
     prefix: '/user',
     me: '/user/me',
   },
-  post: {
-    prefix: '/post',
-    create: '/post/create',
-    update: '/post/update',
-    delete: '/post/delete',
-  },
 } as const;
 
+export const UNAUTH_PROTECTED_PAGE_ROUTE: string[] = [] as const;
+
+export const AUTH_PROTECTED_PAGE_ROUTE: string[] = [ROUTE_URL.user.me] as const;
+
+export const SESSION_STORAGE_KEY = {
+  authStore: 'auth-store',
+} as const;
+
+export const OUTER_LINK = {
+  termOfUse: 'https://www.naver.com',
+  privacyPolicy: 'https://www.naver.com',
+  inquiry: 'https://www.naver.com',
+} as const;
+
+export const COLOR = {
+  black: '#000000',
+  white: '#ffffff',
+  success: '',
+  successHover: '',
+  info: '',
+  infoHover: '',
+  error: '#ff0000',
+  errorHover: '#cc0000',
+  blackAlpha: (opacity: number) => `rgba(0, 0, 0, ${opacity})`,
+  whiteAlpha: (opacity: number) => `rgba(255, 255, 255, ${opacity})`,
+} as const;
+
+/** NOTE: General Part */
 export const MILLISECOND_TIME_FORMAT = {
   millisecond: 1,
   seconds: (second: number) => MILLISECOND_TIME_FORMAT.millisecond * 1000 * second,
@@ -82,27 +88,9 @@ export const MILLISECOND_TIME_FORMAT = {
   days: (day: number) => MILLISECOND_TIME_FORMAT.hours(24) * day,
 } as const;
 
-export const COLOR = {
-  black: '#000000',
-  white: '#ffffff',
-  themePurple: '#743ad5',
-  themePink: '#d53a9d',
-  kakao: '#FFEB00',
-  kakaoHover: '#C6A200',
-  button: '#0070f3',
-  buttonHover: '#0053b3',
-  error: '#ff0000',
-  errorHover: '#cc0000',
-  blackAlpha: (opacity: number) => `rgba(0, 0, 0, ${opacity})`,
-  whiteAlpha: (opacity: number) => `rgba(255, 255, 255, ${opacity})`,
-} as const;
-
-/** NOTE: General Part */
 export const COOKIE_KEY = {
-  accessToken: 'nextjs_template-secure-access_token',
-  refreshToken: 'nextje_template-secure-refresh_token',
-  autoSignIn: 'nextjs_template-secure-auto_sign_in',
-  auth: 'nextjs_template-auth',
+  refreshToken: 'rizz-life-secure-refresh_token',
+  autoSignIn: 'rizz-life-secure-auto_sign_in',
 } as const;
 
 export const DIGITAL_FORMAT = {
