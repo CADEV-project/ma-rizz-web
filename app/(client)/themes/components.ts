@@ -27,8 +27,8 @@ interface BaseTheme extends Theme {
 }
 
 export const getComponents = (
-  breakpoints: Required<BreakpointsOptions>,
-  palette: Required<PaletteOptions>
+  breakpoints: BreakpointsOptions,
+  palette: PaletteOptions
 ): BaseComponents<BaseTheme> => ({
   MuiCssBaseline: {
     styleOverrides: {
@@ -36,7 +36,7 @@ export const getComponents = (
         fontFamily: combinedFontFamily,
         fontSize: '1rem',
         fontWeight: '400',
-        color: palette.text.primary,
+        color: palette.text!.primary,
         fontSynthesis: 'none',
         textRendering: 'optimizeLegibility',
         WebkitFontSmoothing: 'antialiased',
@@ -60,7 +60,7 @@ export const getComponents = (
         overflowY: 'auto',
         color: COLOR.white,
         backgroundColor: COLOR.black,
-        [breakpoints.down('md')]: {
+        [breakpoints.down!('lg')]: {
           position: 'fixed',
           top: 0,
           left: 0,
@@ -112,7 +112,7 @@ export const getComponents = (
         '&.Mui-error': {
           borderColor: `${COLOR.error} !important`,
         },
-        [breakpoints.down('lg')]: {
+        [breakpoints.down!('lg')]: {
           fontSize: '0.75rem',
           '& > input': {
             padding: '0.9rem 0.9rem',
