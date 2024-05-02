@@ -27,8 +27,8 @@ interface BaseTheme extends Theme {
 }
 
 export const getComponents = (
-  breakpoints: BreakpointsOptions,
-  palette: PaletteOptions
+  breakpoints: Required<BreakpointsOptions>,
+  palette: Required<PaletteOptions>
 ): BaseComponents<BaseTheme> => ({
   MuiCssBaseline: {
     styleOverrides: {
@@ -36,6 +36,7 @@ export const getComponents = (
         fontFamily: combinedFontFamily,
         fontSize: '1rem',
         fontWeight: '400',
+        color: palette.text.primary,
         fontSynthesis: 'none',
         textRendering: 'optimizeLegibility',
         WebkitFontSmoothing: 'antialiased',
@@ -59,13 +60,13 @@ export const getComponents = (
         overflowY: 'auto',
         color: COLOR.white,
         backgroundColor: COLOR.black,
-        // [breakpoints.down('lg')]: {
-        //   position: 'fixed',
-        //   top: 0,
-        //   left: 0,
-        //   bottom: 0,
-        //   right: 0,
-        // },
+        [breakpoints.down('md')]: {
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+        },
       },
     },
   },
@@ -111,15 +112,15 @@ export const getComponents = (
         '&.Mui-error': {
           borderColor: `${COLOR.error} !important`,
         },
-        // [theme.breakpoints.down('lg')]: {
-        //   fontSize: '0.75rem',
-        //   '& > input': {
-        //     padding: '0.9rem 0.9rem',
-        //   },
-        //   '& > .MuiSelect-select': {
-        //     padding: '0.9rem 0.9rem !important',
-        //   },
-        // },
+        [breakpoints.down('lg')]: {
+          fontSize: '0.75rem',
+          '& > input': {
+            padding: '0.9rem 0.9rem',
+          },
+          '& > .MuiSelect-select': {
+            padding: '0.9rem 0.9rem !important',
+          },
+        },
       },
     },
   },
