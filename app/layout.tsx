@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import type { Metadata, Viewport } from 'next/types';
 
-import './global.css';
+import './global.scss';
 import styles from './layout.module.scss';
 
 import { Provider } from '@/(client)/components';
@@ -30,11 +30,7 @@ const getThemeMode = () => {
 
   const themeModeCookie = cookieStore.get(COOKIE_KEY.themeMode);
 
-  if (!themeModeCookie) {
-    cookieStore.set(COOKIE_KEY.themeMode, DEFAULT_THEME_MODE);
-  }
-
-  const themeMode = (themeModeCookie!.value || DEFAULT_THEME_MODE) as ThemeMode;
+  const themeMode = (themeModeCookie?.value ?? DEFAULT_THEME_MODE) as ThemeMode;
 
   const { initialize } = themeModeStore.getState();
 
