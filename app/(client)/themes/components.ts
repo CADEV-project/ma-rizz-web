@@ -5,13 +5,15 @@ import { combinedFontFamily } from '@/(client)/utils';
 import { COLOR } from '@/constant';
 
 import type {
-  Components,
+  Components as BaseComponents,
   Mixins,
   Palette,
   Shadows,
   Theme,
   Transitions,
   ZIndex,
+  BreakpointsOptions,
+  PaletteOptions,
 } from '@mui/material';
 
 interface BaseTheme extends Theme {
@@ -24,7 +26,10 @@ interface BaseTheme extends Theme {
   unstable_strictMode?: boolean;
 }
 
-export const components: Components<BaseTheme> = {
+export const getComponents = (
+  breakpoints: BreakpointsOptions,
+  palette: PaletteOptions
+): BaseComponents<BaseTheme> => ({
   MuiCssBaseline: {
     styleOverrides: {
       ':root': {
@@ -160,4 +165,4 @@ export const components: Components<BaseTheme> = {
       },
     },
   },
-};
+});

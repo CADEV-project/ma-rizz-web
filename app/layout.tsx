@@ -5,7 +5,6 @@ import './global.scss';
 import styles from './layout.module.scss';
 
 import { Provider } from '@/(client)/components';
-import { themeModeStore } from '@/(client)/stores';
 import { combinedFontFamily } from '@/(client)/utils';
 
 import { COOKIE_KEY, DEFAULT_THEME_MODE, ThemeMode } from '@/constant';
@@ -25,18 +24,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(SERVER_SETTINGS.DOMAIN),
 };
 
-const getThemeMode = () => {
+const getCookieValues = () => {
   const cookieStore = cookies();
 
   const themeModeCookie = cookieStore.get(COOKIE_KEY.themeMode);
 
   const themeMode = (themeModeCookie?.value ?? DEFAULT_THEME_MODE) as ThemeMode;
 
-  const { initialize } = themeModeStore.getState();
-
-  initialize(themeMode);
-
-  return themeMode;
+  return { themeMode };
 };
 
 type LayoutProps = {
@@ -44,13 +39,13 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const themeMode = getThemeMode();
+  const { themeMode } = getCookieValues();
 
   return (
-    <html lang='en' data-theme={themeMode}>
+    <html lang='ko' data-theme={themeMode}>
       <link rel='icon' href='/favicons/favicon.ico' sizes='any' />
       <body style={{ fontFamily: combinedFontFamily }}>
-        <Provider>
+        <Provider themeMode={themeMode}>
           <div className={styles.scrollableLayout}>
             <div className={styles.maxWidthLayout}>
               <div className={styles.backgroundLayout}>

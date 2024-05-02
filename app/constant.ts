@@ -43,9 +43,9 @@ export const COOKIE_KEY = {
   themeMode: 'ma-rizz-theme-mode',
 } as const;
 
-export const LOCAL_STORAGE_KEY = {
-  themeMode: 'ma-rizz-theme-mode',
-} as const;
+export const DATASET_KEY = {
+  themeMode: 'theme',
+};
 
 export const SESSION_STORAGE_KEY = {} as const;
 

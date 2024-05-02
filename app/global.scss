@@ -1,4 +1,5 @@
 @import '@/_mixin.scss';
+@import '@/_variable.scss';
 
 * {
   margin: 0;
@@ -13,6 +14,16 @@ html {
   overflow: hidden;
   margin: 0;
   padding: 0;
+}
+
+html[data-theme='light'] {
+  --background-color: #{$white};
+  --font-color: #{$black};
+}
+
+html[data-theme='dark'] {
+  --background-color: #{$black};
+  --font-color: #{$white};
 }
 
 body {

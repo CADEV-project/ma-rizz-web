@@ -1,5 +1,4 @@
-import { createTheme } from '@mui/material';
-
-import { breakpoints } from './breakpoints';
-
-export const theme = createTheme({ breakpoints });
+export * from './breakpoints';
+export * from './components';
+export * from './palettes';
+export * from './typography';
