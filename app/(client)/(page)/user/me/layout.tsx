@@ -1,3 +1,3 @@
-import { CommonLayout } from '@/(client)/component';
+import { CommonLayout } from '@/(client)/components';
 
 export default CommonLayout;

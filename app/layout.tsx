@@ -1,11 +1,14 @@
-import Script from 'next/script';
+import { cookies } from 'next/headers';
 import type { Metadata, Viewport } from 'next/types';
 
 import './global.css';
+import styles from './layout.module.scss';
 
-import { Provider } from '@/(client)/component';
-import { combinedFontFamily } from '@/(client)/util';
+import { Provider } from '@/(client)/components';
+import { themeModeStore } from '@/(client)/stores';
+import { combinedFontFamily } from '@/(client)/utils';
 
+import { COOKIE_KEY, DEFAULT_THEME_MODE, ThemeMode } from '@/constant';
 import { SERVER_SETTINGS } from '@/setting';
 
 export const viewport: Viewport = {
@@ -17,9 +20,27 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: '두루두루 | Duruduru',
-  description: '두루두루, 친환경 배변봉투를 무료로 드립니다!',
+  title: 'MaRizz | 마리즈',
+  description: '더 매력적인 나를 위한 마리즈',
   metadataBase: new URL(SERVER_SETTINGS.DOMAIN),
+};
+
+const getThemeMode = () => {
+  const cookieStore = cookies();
+
+  const themeModeCookie = cookieStore.get(COOKIE_KEY.themeMode);
+
+  if (!themeModeCookie) {
+    cookieStore.set(COOKIE_KEY.themeMode, DEFAULT_THEME_MODE);
+  }
+
+  const themeMode = (themeModeCookie!.value || DEFAULT_THEME_MODE) as ThemeMode;
+
+  const { initialize } = themeModeStore.getState();
+
+  initialize(themeMode);
+
+  return themeMode;
 };
 
 type LayoutProps = {
@@ -27,15 +48,24 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const themeMode = getThemeMode();
+
   return (
-    <html lang='en'>
+    <html lang='en' data-theme={themeMode}>
+      <link rel='icon' href='/favicons/favicon.ico' sizes='any' />
       <body style={{ fontFamily: combinedFontFamily }}>
-        <link rel='icon' href='/favicons/favicon.ico' sizes='any' />
-        <div id='global-layout'>
-          <Provider>{children}</Provider>
-        </div>
+        <Provider>
+          <div className={styles.scrollableLayout}>
+            <div className={styles.maxWidthLayout}>
+              <div className={styles.backgroundLayout}>
+                {/* <Header /> */}
+                <main className={styles.main}>{children}</main>
+                {/* <Footer /> */}
+              </div>
+            </div>
+          </div>
+        </Provider>
       </body>
-      <Script src='//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js' />
     </html>
   );
 };

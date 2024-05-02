@@ -2,8 +2,8 @@ import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 import { Component } from './Component';
 
-import { healthRequest } from '@/(client)/request';
-import { getQueryClient } from '@/(client)/service';
+import { healthRequest } from '@/(client)/requests';
+import { getQueryClient } from '@/(client)/services';
 
 import { API_URL } from '@/constant';
 

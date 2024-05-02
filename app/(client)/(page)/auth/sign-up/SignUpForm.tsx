@@ -16,11 +16,11 @@ import { useSnackbar } from 'notistack';
 
 import * as S from './SignUpForm.styles';
 
-import { ImageCropModal, SmartImage } from '@/(client)/component';
-import { useTimer } from '@/(client)/hook';
-import { AuthSignUpRequestBody } from '@/(client)/request';
-import { useAuthMutation } from '@/(client)/service';
-import { getCompressedImageFile } from '@/(client)/util';
+import { ImageCropModal, SmartImage } from '@/(client)/components';
+import { useTimer } from '@/(client)/hooks';
+import { AuthSignUpRequestBody } from '@/(client)/requests';
+import { useAuthMutation } from '@/(client)/services';
+import { getCompressedImageFile } from '@/(client)/utils';
 
 import { isBadRequest, isForbidden, isTooManyRequests, isValidationFailed } from '@/(error)';
 

@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@/(client)/hook';
-import { useUserMe } from '@/(client)/service';
+import { useAuth } from '@/(client)/hooks';
+import { useUserMe } from '@/(client)/services';
 
 export const Component: React.FC = () => {
   const { hasAuth } = useAuth();

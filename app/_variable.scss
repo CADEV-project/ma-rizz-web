@@ -1,0 +1,26 @@
+// Breakpoints
+$breakpoint-xl: 120rem;
+$breakpoint-lg: 90rem;
+$breakpoint-md: 64rem;
+$breakpoint-sm: 48rem;
+$breakpoint-xs: 0;
+
+// Colors
+$black: #000000;
+$white: #ffffff;
+$success: #00c851;
+$successHover: #007e33;
+$info: #33b5e5;
+$infoHover: #0099cc;
+$warning: #ffbb33;
+$warningHover: #ff8800;
+$error: #ff4444;
+$errorHover: #cc0000;
+
+@function blackAlpha($alpha) {
+  @return rgba(255, 255, 255, $alpha);
+}
+
+@function whiteAlpha($alpha) {
+  @return rgba(0, 0, 0, $alpha);
+}

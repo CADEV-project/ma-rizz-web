@@ -4,15 +4,29 @@ type UnauthorizedType = 'Unauthorized';
 
 type UnauthorizedCode = 401;
 
+type IncompleteToken = {
+  name: 'IncompleteToken';
+};
+
+type TokenDestroyed = {
+  name: 'TokenDestroyed';
+  message: 'refresh token destroyed';
+};
+
 type TokenNotExist = {
   name: 'TokenNotExist';
-  message: 'access token not exist' | 'refresh token not exist' | 'auto sign in not exist';
+  message: 'access token not exist' | 'refresh token not exist';
 };
 
 type TokenExpiredError = {
   name: 'TokenExpiredError';
   messsage: 'jwt expired';
   expiredAt: number;
+};
+
+type TokenTypeError = {
+  name: 'TokenTypeError';
+  message: 'bearer token required';
 };
 
 type JsonWebTokenError = {
@@ -34,7 +48,14 @@ type NotBeforeError = {
   date: Date;
 };
 
-type UnauthorizedDetail = TokenNotExist | TokenExpiredError | JsonWebTokenError | NotBeforeError;
+type UnauthorizedDetail =
+  | IncompleteToken
+  | TokenDestroyed
+  | TokenNotExist
+  | TokenExpiredError
+  | JsonWebTokenError
+  | NotBeforeError
+  | TokenTypeError;
 
 export class Unauthorized extends BaseError {
   type!: UnauthorizedType;

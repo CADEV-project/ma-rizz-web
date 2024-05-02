@@ -14,7 +14,7 @@ import { Typography } from '@mui/material';
 
 import * as S from './SignInForm.styles';
 
-import { AuthSignInRequestProps, authSignInRequest } from '@/(client)/request';
+import { AuthSignInRequestProps, authSignInRequest } from '@/(client)/requests';
 
 import { ROUTE_URL } from '@/constant';
 

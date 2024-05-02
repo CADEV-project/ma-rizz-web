@@ -4,7 +4,7 @@ import { Typography } from '@mui/material';
 
 import styles from './Header.module.css';
 
-import { SmartImage } from '@/(client)/component';
+import { SmartImage } from '@/(client)/components';
 
 import { ROUTE_URL } from '@/constant';
 
