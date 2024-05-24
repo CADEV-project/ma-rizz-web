@@ -18,12 +18,16 @@ html {
 
 html[data-theme='light'] {
   --background-color: #{$white};
+  --foreground-color: #{blackAlpha(0.04)};
   --font-color: #{$black};
+  --divider-color: #{blackAlpha(0.4)};
 }
 
 html[data-theme='dark'] {
   --background-color: #{$black};
+  --foreground-color: #{whiteAlpha(0.1)};
   --font-color: #{$white};
+  --divider-color: #{whiteAlpha(0.2)};
 }
 
 body {
@@ -32,7 +36,8 @@ body {
   overflow: hidden;
   margin: 0;
   padding: 0;
-  color: #000000;
+  background-color: var(--background-color);
+  color: var(--font-color);
   font-size: 1rem;
   font-weight: 400;
   touch-action: none;

@@ -22,6 +22,7 @@
     "@mui/x-date-pickers": "^6.19.7",
     "@tanstack/react-query": "^5.28.9",
     "@tanstack/react-query-devtools": "^5.28.10",
+    "@types/react-slick": "^0.23.13",
     "axios": "^1.6.7",
     "bcryptjs": "^2.4.3",
     "cookies-next": "^4.1.1",
@@ -37,8 +38,10 @@
     "react-dom": "^18",
     "react-hook-form": "^7.51.0",
     "react-hook-form-mui": "^7.0.0-beta.0",
+    "react-slick": "^0.30.2",
     "sass": "^1.76.0",
     "sharp": "^0.33.3",
+    "slick-carousel": "^1.8.1",
     "uuid": "^9.0.1",
     "zustand": "^4.5.0"
   },

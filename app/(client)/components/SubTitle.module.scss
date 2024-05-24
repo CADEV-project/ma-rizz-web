@@ -1,0 +1,33 @@
+@import '@/_mixin.scss';
+@import '@/_variable.scss';
+
+.subTitle {
+  margin-bottom: 5rem !important;
+
+  & > span {
+    font-weight: 700;
+    background: linear-gradient(
+      to right,
+      $theme1Light1 20%,
+      $theme1 40%,
+      $theme1Thick1 60%,
+      $theme1 80%,
+      $theme1Light1 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: spanShineAnimation 2s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes spanShineAnimation {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 100% 50%;
+  }
+}

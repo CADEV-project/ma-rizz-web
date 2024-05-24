@@ -1,9 +1,12 @@
-import { PaletteOptions } from '@mui/material';
+import { BreakpointsOptions, PaletteOptions } from '@mui/material';
 import { TypographyOptions } from '@mui/material/styles/createTypography';
 
 import { combinedFontFamily } from '@/(client)/utils';
 
-export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
+export const getTypography = (
+  breakpoints: BreakpointsOptions,
+  palette: PaletteOptions
+): TypographyOptions => ({
   fontFamily: combinedFontFamily,
   fontSize: 16,
   fontWeightLight: 300,
@@ -17,7 +20,7 @@ export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
     color: palette.text?.primary,
   },
   h2: {
-    fontSize: '2.25rem',
+    fontSize: '2rem',
     fontWeight: '700',
     lineHeight: 'normal',
   },
@@ -27,12 +30,12 @@ export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
     lineHeight: 'normal',
   },
   h4: {
-    fontSize: '1rem',
+    fontSize: '1.25rem',
     fontWeight: '400',
     lineHeight: 'normal',
   },
   h5: {
-    fontSize: '0.875rem',
+    fontSize: '1rem',
     fontWeight: '400',
     lineHeight: 'normal',
   },
@@ -47,7 +50,7 @@ export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
     lineHeight: 'normal',
   },
   body2: {
-    fontSize: '0.875rem',
+    fontSize: '.875rem',
     fontWeight: '400',
     lineHeight: 'normal',
   },

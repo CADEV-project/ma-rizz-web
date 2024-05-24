@@ -1,0 +1,10 @@
+@import '@/_mixin.scss';
+@import '@/_variable.scss';
+
+.title {
+  margin-bottom: 2rem !important;
+
+  & > span {
+    color: $theme1;
+  }
+}

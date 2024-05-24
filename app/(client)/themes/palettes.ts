@@ -5,7 +5,8 @@ import { COLOR, ThemeMode } from '@/constant';
 export const lightPalette: PaletteOptions = {
   mode: 'light',
   background: {
-    default: COLOR.success,
+    default: COLOR.white,
+    paper: COLOR.black,
   },
   text: {
     primary: COLOR.black,
@@ -16,7 +17,8 @@ export const lightPalette: PaletteOptions = {
 export const darkPalette: PaletteOptions = {
   mode: 'dark',
   background: {
-    default: COLOR.error,
+    default: COLOR.black,
+    paper: COLOR.whiteAlpha(0.05),
   },
   text: {
     primary: COLOR.white,

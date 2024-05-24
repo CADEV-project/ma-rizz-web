@@ -1,0 +1,13 @@
+.container {
+  text-decoration: none;
+  color: var(--font-color);
+  & > p {
+    transition: all 0.2s ease-in-out;
+  }
+}
+
+.container:hover {
+  & > p {
+    transform: scale(1.05);
+  }
+}

@@ -1,0 +1,46 @@
+@import '@/_mixin.scss';
+@import '@/_variable.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 30rem;
+  padding: 3rem 1.5rem;
+  background-color: var(--background-color);
+  border-radius: 0.5rem;
+  border: 0.25rem solid $theme1;
+  box-shadow: 0.25rem 0.5rem 0.5rem 0.5rem $theme1Light1;
+  opacity: 0.6;
+  transition: all 0.2s ease-in-out;
+}
+
+.container:hover {
+  transform: translateY(-0.5rem) scale(1.05);
+  opacity: 1;
+  & > .description {
+    & > h5 {
+      max-height: 12.5rem;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.featureImageWrapper {
+  position: relative;
+  width: 22.625rem;
+  align-self: center;
+  padding-top: 22.625rem;
+  margin: 1rem 0;
+}
+
+.description {
+  overflow: hidden;
+  & > h5 {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: all 0.2s ease-in-out;
+  }
+}

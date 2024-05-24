@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { ThemeProvider, createTheme } from '@mui/material';
 
@@ -23,23 +23,7 @@ export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = ({ childr
 
   const components = useMemo(() => getComponents(breakpoints, palette), [palette]);
 
-  const typography = useMemo(() => getTypography(palette), [palette]);
-
-  useEffect(() => {
-    console.info(themeMode);
-  }, [themeMode]);
-
-  useEffect(() => {
-    console.info(palette);
-  }, [palette]);
-
-  useEffect(() => {
-    console.info(components);
-  }, [components]);
-
-  useEffect(() => {
-    console.info(typography);
-  }, [typography]);
+  const typography = useMemo(() => getTypography(breakpoints, palette), [palette]);
 
   const theme = useMemo(
     () => createTheme({ breakpoints, palette, components, typography }),

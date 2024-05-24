@@ -7,6 +7,7 @@ export const API_URL = {
 export const ROUTE_URL = {
   home: '/',
   experience: '/experience',
+  notification: '/notification',
 } as const;
 
 export const OUTER_LINK = {
@@ -34,6 +35,16 @@ export const COLOR = {
   warningHover: '#ff8800',
   error: '#ff4444',
   errorHover: '#cc0000',
+  theme1: '#b455a2',
+  theme1Light1: '#cb8ac5',
+  theme1Light2: '#e3bfdf',
+  theme1Thick1: '#833a7b',
+  theme1Thick2: '#4e2346',
+  theme2: '#483a83',
+  theme2Light1: '#6856b4',
+  theme2Light2: '#978bcc',
+  theme2Thick1: '#2b234e',
+  theme2Thick2: '#0e0b19',
   blackAlpha: (opacity: number) => `rgba(0, 0, 0, ${opacity})`,
   whiteAlpha: (opacity: number) => `rgba(255, 255, 255, ${opacity})`,
 } as const;

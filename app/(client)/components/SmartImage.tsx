@@ -15,7 +15,7 @@ type StaticRequire = {
   default: StaticImageData;
 };
 
-type StaticImport = StaticRequire | StaticImageData;
+export type StaticImport = StaticRequire | StaticImageData;
 
 type Loading = 'eager' | 'lazy';
 

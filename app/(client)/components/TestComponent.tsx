@@ -22,11 +22,7 @@ export const TestComponent: React.FC = () => {
 
     if (!themeModeData) throw new Error('themeMode data is not found');
 
-    const themeModeCookie = Cookies.get(COOKIE_KEY.themeMode);
-
-    if (themeModeCookie) {
-      Cookies.set(COOKIE_KEY.themeMode, oppositeThemeMode);
-    }
+    Cookies.set(COOKIE_KEY.themeMode, oppositeThemeMode);
 
     html.dataset[DATASET_KEY.themeMode] = oppositeThemeMode;
 
