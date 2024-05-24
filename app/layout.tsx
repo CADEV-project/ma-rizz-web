@@ -24,6 +24,15 @@ export const metadata: Metadata = {
   title: 'MARIZZ | 마리즈',
   description: '나에게 집중하는법, 마리즈',
   keywords: '마리즈, MaRizz, 비서, 일정관리, 아이젠하워, 아이젠하워매트릭스, 습관, AI',
+  openGraph: {
+    type: 'website',
+    locale: 'ko_KR',
+    url: 'https://ma-rizz.com',
+    siteName: 'MaRizz',
+    title: 'MaRizz | 마리즈',
+    description: '나에게 집중하는법, 마리즈',
+    images: [{ url: `https://ma-rizz.com/images/logoBlackBig.png` }],
+  },
   metadataBase: new URL(SERVER_SETTINGS.DOMAIN),
 };
 
